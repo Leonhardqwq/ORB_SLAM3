@@ -91,3 +91,14 @@ my_settings.txt
 borrar/*
 
 */ExecMean.txt
+
+# Fixed-schedule replay artifacts (source/config/compact evidence stay tracked).
+Examples/Stereo/stereo_fixed_replay
+/runs/fixed-schedule/
+/tools/__pycache__/
+
+# Local runtime archives and temporary analysis (not source/configuration).
+/runs/
+/artifacts/
+/scratch/
+/.local/

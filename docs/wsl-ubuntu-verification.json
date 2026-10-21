@@ -1,0 +1,345 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-17",
+  "status": "environment_build_and_native_replay_passed",
+  "plan": "wsl-ubuntu-plan.md",
+  "budget_GiB": 50,
+  "review_at_GiB": 40,
+  "resource_limits": {
+    "memory_GiB": 8,
+    "swap_GiB": 4,
+    "build_jobs": 2
+  },
+  "preflight": {
+    "Windows": "10 Pro 21H2",
+    "build": "19044.1766",
+    "CPU": "Intel Core i9-12900K",
+    "RAM_bytes": 34137300992,
+    "firmware_virtualization": true,
+    "SLAT": true,
+    "hypervisor_present_before": false,
+    "features_before": {
+      "Microsoft-Windows-Subsystem-Linux": "Disabled",
+      "VirtualMachinePlatform": "Disabled"
+    }
+  },
+  "stages": {
+    "1_preflight": "passed",
+    "2_WSL_Ubuntu": "passed",
+    "3_dependencies": "passed",
+    "4_build": "passed",
+    "5_replay": "passed",
+    "6_resume_B2_B6": "environment_ready_measurement_contract_pending"
+  },
+  "automatic_restart_performed": false,
+  "Git_mutations": false,
+  "manual_restart_required": false,
+  "features": [
+    {
+      "feature": "Microsoft-Windows-Subsystem-Linux",
+      "before": "Disabled",
+      "after": "Enabled",
+      "restartNeeded": true,
+      "status": "enable_requested"
+    },
+    {
+      "feature": "VirtualMachinePlatform",
+      "before": "Disabled",
+      "after": "Enabled",
+      "restartNeeded": true,
+      "status": "enable_requested"
+    }
+  ],
+  "feature_result_time": "2026-10-17T02:08:28.4365259+08:00",
+  "Ubuntu_installed": true,
+  "WSL2_kernel_runtime_verified": true,
+  "resource_limits_applied": true,
+  "WSL_storage_created": true,
+  "disk_checkpoint": {
+    "before": {
+      "C:/": {
+        "total": 423206318080,
+        "free": 269843521536
+      },
+      "D:/": {
+        "total": 1023877124096,
+        "free": 471365824512
+      }
+    },
+    "after": {
+      "C:/": {
+        "total": 423206318080,
+        "free": 269780287488
+      },
+      "D:/": {
+        "total": 1023877124096,
+        "free": 471183360000
+      }
+    },
+    "free_space_decrease_bytes": {
+      "C:/": 63234048,
+      "D:/": 182464512
+    },
+    "interpretation": "whole-drive free-space changes include unrelated activity, not exact task allocation"
+  },
+  "raw_evidence_directory": "../refer-papers/manuscripts/reliability-study/build/wsl-setup-2026-10-17/",
+  "raw_feature_result_sha256": "2e6a905e97aab93691439e2fe72341b85e3815cfba4bfff822c32539d0802f54",
+  "resume": "Environment stages 1-5 passed. Next: freeze application measurement contract, then implement B2/B3. No fixed-schedule implementation or reliability validation yet.",
+  "protected_files": {
+    "Git_indexes": "unchanged_by_SHA256",
+    "ORB_SLAM3_cpp": "not_modified",
+    "existing_AGENTS": "not_modified"
+  },
+  "WSL_kernel": "5.10.16.3-microsoft-standard-WSL2",
+  "Ubuntu_version": "22.04.5 LTS",
+  "reboot_confirmed": true,
+  "default_Linux_user": "research",
+  "default_user_verified_after_distro_restart": true,
+  "Windows_reboot_performed_by_agent": false,
+  "versions": {
+    "gcc": "11.4.0",
+    "cmake": "cmake version 3.22.1",
+    "opencv": "4.5.4",
+    "eigen": "3.4.0",
+    "pangolin": "dd801d244db3a8e27b7fe8020cd751404aa818fd"
+  },
+  "source_head": "4452a3c4ab75b1cde34e5505a36ec3f9edcdc4c4",
+  "source_branch": "leonhardqwq",
+  "source_checked_files": 773,
+  "source_mismatches": [],
+  "native_build": {
+    "returncode": 0,
+    "seconds": 463.53422350000005,
+    "source_modifications": [],
+    "targets": [
+      "g2o",
+      "ORB_SLAM3",
+      "stereo_euroc"
+    ],
+    "dynamic_dependencies_resolved": true
+  },
+  "replay": {
+    "command": [
+      "xvfb-run",
+      "-a",
+      "-s",
+      "-screen 0 1280x1024x24",
+      "/home/research/orb-slam3-work/source/Examples/Stereo/stereo_euroc",
+      "/home/research/orb-slam3-work/source/Vocabulary/ORBvoc.txt",
+      "/home/research/orb-slam3-work/source/Examples/Stereo/EuRoC.yaml",
+      "/home/research/orb-slam3-work/data/V1_01_easy",
+      "/home/research/orb-slam3-work/runs/native-v101-02/V101-lf.txt",
+      "native_v101"
+    ],
+    "environment_overrides": {
+      "LIBGL_ALWAYS_SOFTWARE": "1",
+      "QT_X11_NO_MITSHM": "1"
+    },
+    "requested_stereo_pairs": 2912,
+    "timeout_seconds": 900,
+    "source_modified": false,
+    "purpose": "environment_smoke_not_timing_validation",
+    "timestamp_input": {
+      "source": "/home/research/orb-slam3-work/source/Examples/Stereo/EuRoC_TimeStamps/V101.txt",
+      "source_sha256": "ea25c15d85a622f0ef0642e034d55b4a50de055139ea06753c06c7e3c4be4072",
+      "runtime_sha256": "da79e209000d3db1cec733c2eebce528ff789b823d8326b84c1178fecf148b71",
+      "transformation": "CRLF to LF only; timestamp values unchanged"
+    },
+    "returncode": 0,
+    "elapsed_seconds": 162.96534339799996,
+    "outputs": {
+      "f_native_v101.txt": {
+        "exists": true,
+        "rows": 2912,
+        "finite_eight_columns": true,
+        "strict_timestamps": true,
+        "sha256": "5c2cbd276162bc228d39451868fb0175cfb3d138a8cac305ad763ca2ccbb1ed2",
+        "first_timestamp": 1.403715273262143e+18,
+        "last_timestamp": 1.403715418812143e+18
+      },
+      "kf_native_v101.txt": {
+        "exists": true,
+        "rows": 90,
+        "finite_eight_columns": true,
+        "strict_timestamps": true,
+        "sha256": "539900b2d2fd42ccc12ac349a3a667937a88b7e2331a18af5d09960b28ff2c18",
+        "first_timestamp": 1.403715273262143e+18,
+        "last_timestamp": 1.403715416612143e+18
+      }
+    },
+    "basic_output_checks_passed": true
+  },
+  "dataset": {
+    "source": "https://www.research-collection.ethz.ch/server/api/core/bitstreams/02ecda9a-298f-498b-970c-b7c44334d880/content",
+    "parent_name": "vicon_room1.zip",
+    "parent_size": 6042263426,
+    "parent_MD5_not_verified": "Only selected ZIP member downloaded",
+    "member": {
+      "name": "vicon_room1/V1_01_easy/V1_01_easy.zip",
+      "bytes": 1149702102,
+      "compressed": 1149535352,
+      "offset": 1540401879,
+      "CRC32": 448686605,
+      "compression": 8
+    },
+    "download_range": [
+      1540401978,
+      2689937329
+    ],
+    "download_bytes": 1149535352,
+    "member_CRC32_verified": true,
+    "sha256": "a920fe5b5e69a6ad19b32f1cfaf90ac2f59d45dfd1ca18cc9722e07684ba45fa",
+    "zip_bytes": 1149702102,
+    "seconds": 124.909291241,
+    "frames": {
+      "cam0": 2912,
+      "cam1": 2912
+    },
+    "license": "In Copyright - Non-Commercial Use Permitted",
+    "DOI": "10.3929/ethz-b-000690084"
+  },
+  "Git_index_unchanged": {
+    "orb": true,
+    "paper": true
+  },
+  "disk_final": {
+    "Windows_file_allocation": {
+      "WSL_files": {
+        "D:\\WSL\\swap.vhdx": {
+          "length_bytes": 66060288,
+          "allocated_bytes": 66060288,
+          "compressed_size_API_bytes": 66060288
+        },
+        "D:\\WSL\\downloads\\SHA256SUMS": {
+          "length_bytes": 440,
+          "allocated_bytes": 440,
+          "compressed_size_API_bytes": 440
+        },
+        "D:\\WSL\\downloads\\SHA256SUMS.json": {
+          "length_bytes": 292,
+          "allocated_bytes": 296,
+          "compressed_size_API_bytes": 292
+        },
+        "D:\\WSL\\downloads\\ubuntu-jammy-wsl-amd64-ubuntu22.04lts.rootfs.tar.gz": {
+          "length_bytes": 341130963,
+          "allocated_bytes": 341131264,
+          "compressed_size_API_bytes": 341130963
+        },
+        "D:\\WSL\\downloads\\ubuntu-jammy-wsl-amd64-ubuntu22.04lts.rootfs.tar.gz.json": {
+          "length_bytes": 379,
+          "allocated_bytes": 384,
+          "compressed_size_API_bytes": 379
+        },
+        "D:\\WSL\\downloads\\wsl_update_x64.msi": {
+          "length_bytes": 17104896,
+          "allocated_bytes": 17104896,
+          "compressed_size_API_bytes": 17104896
+        },
+        "D:\\WSL\\downloads\\wsl_update_x64.msi.json": {
+          "length_bytes": 320,
+          "allocated_bytes": 320,
+          "compressed_size_API_bytes": 320
+        },
+        "D:\\WSL\\Ubuntu-22.04\\ext4.vhdx": {
+          "length_bytes": 7045382144,
+          "allocated_bytes": 7045382144,
+          "compressed_size_API_bytes": 7045382144
+        }
+      },
+      "host_runtime_files": {
+        "C:\\Windows\\System32\\lxss\\tools\\kernel": {
+          "length_bytes": 70722784,
+          "allocated_bytes": 70725632,
+          "compressed_size_API_bytes": 70722784
+        },
+        "C:\\Users\\Administrator\\.wslconfig": {
+          "length_bytes": 59,
+          "allocated_bytes": 64,
+          "compressed_size_API_bytes": 59
+        }
+      },
+      "task_evidence": {
+        "length_bytes": 2203093,
+        "allocated_bytes": 2327744,
+        "compressed_size_API_bytes": 2203093
+      },
+      "Git_index_unchanged": {
+        "orb": true,
+        "paper": true
+      },
+      "source_unchanged": true,
+      "disk_free": {
+        "C:/": {
+          "total": 423206318080,
+          "used": 152909541376,
+          "free": 270296776704
+        },
+        "D:/": {
+          "total": 1023877124096,
+          "used": 558045523968,
+          "free": 465831600128
+        }
+      },
+      "source_mismatches": []
+    },
+    "Linux_allocated_by_directory": {
+      "source": 256790528,
+      "deps": 5165056,
+      "build": 21532672,
+      "install": 4104192,
+      "data": 3396657152,
+      "runs": 434176
+    },
+    "Linux_df_bytes": "Filesystem        1B-blocks       Used    Available Use% Mounted on\n/dev/sdb       269490393088 6542376960 249187344384   3% /",
+    "measured_new_allocated_bytes": 7542733472,
+    "measured_new_GiB": 7.024717956781387,
+    "interpretation": "Sum Windows host files plus task evidence; Linux figures are inside ext4.vhdx and MUST NOT be added again. Windows component store / MSI cache delta not separately attributed. FileStandardInfo AllocationSize used. Checkpoint, not continuously measured exact peak.",
+    "removed_redundant_source_archives_bytes": 210309120,
+    "swap_capacity_GiB": 4,
+    "budget_GiB": 50
+  },
+  "installers": {
+    "wsl_update_x64.msi": {
+      "url": "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi",
+      "resolved_url": "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi",
+      "bytes": 17104896,
+      "sha256": "4d09c776c8d45f70a202281d18e19be1118f53159b0c217a5274a31ce18525fe",
+      "seconds": 33.62906989999999
+    },
+    "ubuntu-jammy-wsl-amd64-ubuntu22.04lts.rootfs.tar.gz": {
+      "url": "https://cloud-images.ubuntu.com/wsl/jammy/current/ubuntu-jammy-wsl-amd64-ubuntu22.04lts.rootfs.tar.gz",
+      "resolved_url": "https://cloud-images.ubuntu.com/wsl/jammy/current/ubuntu-jammy-wsl-amd64-ubuntu22.04lts.rootfs.tar.gz",
+      "bytes": 341130963,
+      "sha256": "1483cc5c1dce13064f774834cbffdff226559fd522a67a381a8ea77d63fb4109",
+      "seconds": 65.91407820000006
+    }
+  },
+  "checks": {
+    "reusable_build_entry": {
+      "command": [
+        "wsl",
+        "-d",
+        "Ubuntu-22.04",
+        "-u",
+        "research",
+        "--exec",
+        "bash",
+        "/mnt/d/THU/THU/research/ORB_SLAM3/tools/build_native_stereo.sh",
+        "/home/research/orb-slam3-work",
+        "2"
+      ],
+      "returncode": 0,
+      "seconds": 9.889685799999825
+    },
+    "snapshot_pack_unpack": {
+      "verified_files": 773,
+      "returncode": 0
+    },
+    "native_replay_failure_01": "CRLF timestamp input retained carriage return in PNG path, exit 139; preserved. Runtime LF-only input fixes it without modifying source or values.",
+    "whole_parent_dataset_MD5_verified": false,
+    "repository_algorithm_sources_modified": false,
+    "B2_B6_implemented": false,
+    "probability_model_validated": false,
+    "localization_accuracy_evaluated": false
+  }
+}
