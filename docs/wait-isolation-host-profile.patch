@@ -1,0 +1,11 @@
+--- a/tools/wait_isolation_host.wprp
++++ b/tools/wait_isolation_host.wprp
+@@ -15,5 +15,8 @@
+     <Profile Id="WaitProbe.Light.Memory" Name="WaitProbe" Description="Bounded scheduling diagnostic" LoggingMode="Memory" DetailLevel="Light">
+       <Collectors><SystemCollectorId Value="WaitSystem"><SystemProviderId Value="WaitProvider"/></SystemCollectorId></Collectors>
+     </Profile>
++    <Profile Id="WaitProbe.Light.File" Name="WaitProbe" Description="Bounded duration scheduling diagnostic" LoggingMode="File" DetailLevel="Light">
++      <Collectors><SystemCollectorId Value="WaitSystem"><SystemProviderId Value="WaitProvider"/></SystemCollectorId></Collectors>
++    </Profile>
+   </Profiles>
+ </WindowsPerformanceRecorder>

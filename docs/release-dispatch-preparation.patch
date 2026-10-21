@@ -1,0 +1,84 @@
+--- a/Examples/Stereo/stereo_fixed_replay.cc
++++ b/Examples/Stereo/stereo_fixed_replay.cc
+@@ -90,12 +90,12 @@
+ int main(int argc,char** argv)
+ {
+     if (argc < 8 || (argc-8)%2 != 0) {
+-        std::cerr << "usage: stereo_fixed_replay VOC SETTINGS DATA TIMES OUTPUT_PREFIX instrument|plain|selftest|native_selftest EVAL_FRAMES [--period-ns N --spin-us N --init-limit N --preload-limit N --offset N --cv-threads N --eigen-threads N --release-diagnostics 0|1|2]\n";
++        std::cerr << "usage: stereo_fixed_replay VOC SETTINGS DATA TIMES OUTPUT_PREFIX instrument|plain|selftest|native_selftest EVAL_FRAMES [--period-ns N --spin-us N --init-limit N --preload-limit N --offset N --cv-threads N --eigen-threads N --release-diagnostics 0|1|2 --prepare-before-wait 0|1]\n";
+         return 2;
+     }
+     const std::string kind=argv[6];
+     if (kind!="instrument" && kind!="plain" && kind!="selftest" && kind!="native_selftest") return 2;
+-    int evaluation=0,initialLimit=100,preloadLimit=0,offset=0,cvThreads=0,eigenThreads=0,diagnostics=0;
++    int evaluation=0,initialLimit=100,preloadLimit=0,offset=0,cvThreads=0,eigenThreads=0,diagnostics=0,prepareBeforeWait=0;
+     i64 h=50000000,spin=0;
+     try {
+         evaluation=std::stoi(argv[7]);
+@@ -105,6 +105,7 @@
+             if(key=="--period-ns") h=value;
+             else if(key=="--spin-us") { if(value>5000) throw std::invalid_argument("spin max 5000 us"); spin=value*1000; }
+             else if(value>1000000) throw std::invalid_argument("option range");
++            else if(key=="--prepare-before-wait") prepareBeforeWait=value;
+             else if(key=="--release-diagnostics") diagnostics=value;
+             else if(key=="--init-limit") initialLimit=value;
+             else if(key=="--preload-limit") preloadLimit=value;
+@@ -116,7 +117,8 @@
+         if (!preloadLimit) preloadLimit=evaluation+initialLimit+1;
+         if(evaluation<1 || initialLimit<1 || evaluation>100000 || h<1000 || spin>h/10 ||
+            preloadLimit<evaluation+initialLimit+1 || cvThreads>256 || eigenThreads>256 || diagnostics>2 ||
+-           (diagnostics && kind!="instrument"))
++           (diagnostics && kind!="instrument") || prepareBeforeWait>1 ||
++           (prepareBeforeWait && kind!="instrument"))
+             throw std::invalid_argument("invalid replay limits");
+     } catch(const std::exception& e) { std::cerr<<e.what()<<'\n';return 2; }
+     const std::string prefix=argv[5];
+@@ -185,8 +187,11 @@
+             const bool evaluate=initializedAt>=0;
+             const i64 release=evaluate ? origin+evaluated*h : nowNs();
+             ReleaseTrace releaseTrace;
+-            if (evaluate) waitRelease(release,spin,diagnostics,releaseTrace);
+-            if (evaluate && evaluated==0) cpuBegin=cpuNs();
++            const auto awaitRelease=[&] {
++                if(evaluate) waitRelease(release,spin,diagnostics,releaseTrace);
++                if(evaluate && evaluated==0) cpuBegin=cpuNs();
++            };
++            if(!prepareBeforeWait) awaitRelease();
+             if (kind=="native_selftest") {
+                 if(i==10) {slam.ActivateLocalizationMode();++checks;}
+                 if(i==20) {slam.DeactivateLocalizationMode();++checks;}
+@@ -194,6 +199,8 @@
+                 if(i==45) {slam.Reset();++checks;}
+             }
+             Row row;row.round=round;row.k=evaluate ? evaluated : -1;row.release=release;row.sensorTime=sensorTime;
++            // Optional layout: prepare the record before waiting; retain actual aT.
++            if(prepareBeforeWait) awaitRelease();
+             if (kind!="plain") row.aT=nowNs();
+             auto pose=fixed ? slam.TrackStereoFixed(round,left[i],right[i],sensorTime)
+                             : slam.TrackStereo(left[i],right[i],sensorTime);
+@@ -291,6 +298,7 @@
+             <<",\"keyframes_processed\":"<<keyframes<<",\"invalid_pose_frames\":"<<invalid
+             <<",\"self_checks\":"<<checks<<",\"evaluation_elapsed_ns\":"<<end-begin
+             <<",\"threads_at_evaluation_start\":"<<threadsAtStart<<",\"threads_at_evaluation_end\":"<<threadsAtEnd
++            <<",\"prepare_before_wait\":"<<prepareBeforeWait
+             <<",\"release_diagnostics\":"<<diagnostics
+             <<",\"period_ns\":"<<h<<",\"spin_ns\":"<<spin<<",\"offset\":"<<offset
+             <<",\"preload_limit\":"<<preloadLimit<<",\"initialization_limit\":"<<initialLimit
+--- a/tools/run_fixed_replay.py
++++ b/tools/run_fixed_replay.py
+@@ -21,6 +21,7 @@
+     p.add_argument('--timestamps',type=Path)
+     p.add_argument('--period-ns',type=int,default=50000000)
+     p.add_argument('--spin-us',type=int,default=0)
++    p.add_argument('--prepare-before-wait',type=int,choices=[0,1],default=0)
+     p.add_argument('--release-diagnostics',type=int,choices=[0,1,2],default=0)
+     p.add_argument('--offset',type=int,default=0)
+     p.add_argument('--init-limit',type=int,default=100)
+@@ -45,6 +46,7 @@
+          '--init-limit',str(a.init_limit),'--preload-limit',str(a.preload_limit),
+          '--cv-threads',str(a.threads),'--eigen-threads',str(a.threads)]
+     if a.release_diagnostics:cmd+=['--release-diagnostics',str(a.release_diagnostics)]
++    if a.prepare_before_wait:cmd+=['--prepare-before-wait',str(a.prepare_before_wait)]
+     overrides={k:str(a.threads) for k in ['OMP_NUM_THREADS','OPENBLAS_NUM_THREADS','MKL_NUM_THREADS']} if a.threads else {}
+     start=time.monotonic();rss=0;threads=0;timed_out=False
+     with (out/'console.log').open('wb') as log:

@@ -1,0 +1,252 @@
+"""Linux-only standalone probe runner; trace mode needs root and restores its own tracefs instance.
+
+No dependencies beyond Python stdlib. Raw results go to an explicit new directory.
+"""
+import argparse
+import hashlib
+import itertools
+import json
+import os
+from pathlib import Path
+import platform
+import pwd
+import re
+import subprocess
+import time
+
+
+def save(path, data):
+    path.write_text(json.dumps(data, indent=2) + '\n')
+
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def control(path, value):
+    path.write_text(str(value))
+
+
+def host_command(cmd, records):
+    before = {'mono_ns': time.monotonic_ns(), 'utc_ns': time.time_ns()}
+    p = subprocess.run(cmd, capture_output=True, timeout=30)
+    def decode(s):
+        return s.decode('utf-16-le' if b'\x00' in s else 'utf-8', errors='replace')
+    record = {'command': cmd, 'returncode': p.returncode, 'stdout': decode(p.stdout),
+              'stderr': decode(p.stderr), 'before_guest_clocks': before,
+              'after_guest_clocks': {'mono_ns': time.monotonic_ns(), 'utc_ns': time.time_ns()}}
+    records.append(record)
+    return record
+
+
+def run_one(args, cfg, directory, work, spin, instance, user):
+    directory.mkdir()
+    if user:
+        os.chown(directory, user.pw_uid, user.pw_gid)
+    prefix = directory / 'probe'
+    cmd = [str(args.binary), str(prefix), '--rounds', str(cfg['rounds']),
+           '--spin-us', str(spin), '--work-us', str(work),
+           '--probes', str(int(bool(instance))), '--cpu', str(cfg['affinity_cpu'])]
+    if instance:
+        cmd += ['--start-file', str(directory / 'start')]
+
+    marker_fd = None
+    marker_token = 'orb_wait_probe_namespace_' + str(time.monotonic_ns())
+    if instance:
+        control(instance / 'tracing_on', '0')
+        control(instance / 'events/enable', '0')
+        control(instance / 'trace', '')
+        marker_fd = os.open(instance / 'trace_marker', os.O_WRONLY)
+        control(instance / 'tracing_on', '1')
+
+    def drop_privileges():
+        os.initgroups(user.pw_name, user.pw_gid)
+        os.setgid(user.pw_gid)
+        os.setuid(user.pw_uid)
+        # WSL distro PIDs can differ from ftrace's initial-namespace PIDs.
+        # A marker written by this very child gives its trace-visible identity.
+        os.write(marker_fd, (marker_token + '\n').encode())
+
+    t = time.monotonic()
+    record = {'command': cmd, 'trace': bool(instance), 'status': 'running'}
+    child, host_started = None, False
+    host_records = []
+    host_name = args.host_instance or ('ORBWait_' + str(os.getpid()))
+    try:
+        if args.host_wpr:
+            status = host_command([str(args.host_wpr), '-status'], host_records)
+            if 'WPR is not recording' not in status['stdout'] + status['stderr']:
+                raise RuntimeError('pre-existing or unrecognized host recording; leaving it untouched')
+            start_cmd = [str(args.host_wpr), '-start', args.host_profile + '!WaitProbe']
+            if args.host_filemode:
+                start_cmd += ['-filemode', '-recordtempto', args.host_temp_dir]
+            started = host_command(start_cmd + ['-instancename', host_name], host_records)
+            if started['returncode']:
+                raise RuntimeError('host recorder unavailable; inspect run.json')
+            host_started = True
+        with (directory / 'process.log').open('wb') as log:
+            child = subprocess.Popen(cmd, stdout=log, stderr=subprocess.STDOUT,
+                                     preexec_fn=drop_privileges if user else None,
+                                     pass_fds=(marker_fd,) if marker_fd is not None else ())
+            if marker_fd is not None:
+                os.close(marker_fd)
+                marker_fd = None
+            if instance:
+                ready = directory / 'probe-ready.json'
+                deadline = time.monotonic() + 10
+                while not ready.exists():
+                    if child.poll() is not None or time.monotonic() > deadline:
+                        raise RuntimeError('probe failed to become ready')
+                    time.sleep(.01)
+                # File existence can precede the close/write; wait for valid JSON.
+                while True:
+                    try:
+                        pid = json.loads(ready.read_text())['pid']
+                        break
+                    except (ValueError, KeyError):
+                        if time.monotonic() > deadline:
+                            raise
+                        time.sleep(.01)
+                assert pid == child.pid
+                control(instance / 'tracing_on', '0')
+                marker_lines = [line for line in (instance/'trace').read_text().splitlines() if marker_token in line]
+                assert len(marker_lines) == 1, 'missing namespace marker'
+                match = re.search(r'-(\d+)\s+\[', marker_lines[0])
+                assert match, marker_lines
+                trace_pid = int(match[1])
+                record.update(pid=pid, trace_pid=trace_pid, pid_marker=marker_lines[0])
+                control(instance / 'trace', '')
+                enabled, unavailable = [], []
+                event_conditions = [
+                    ('sched/sched_switch', f'prev_pid == {trace_pid} || next_pid == {trace_pid}'),
+                    ('sched/sched_wakeup', f'pid == {trace_pid}'),
+                    ('sched/sched_wakeup_new', f'pid == {trace_pid}'),
+                    ('sched/sched_migrate_task', f'pid == {trace_pid}'),
+                    ('irq/irq_handler_entry', f'common_pid == {trace_pid}'),
+                    ('irq/irq_handler_exit', f'common_pid == {trace_pid}'),
+                    ('irq/softirq_entry', f'common_pid == {trace_pid}'),
+                    ('irq/softirq_exit', f'common_pid == {trace_pid}')]
+                if cfg.get('include_irq_vectors', False):
+                    event_conditions += [(f'irq_vectors/{kind}_{end}', f'common_pid == {trace_pid}')
+                        for kind in ['local_timer', 'reschedule', 'call_function', 'call_function_single',
+                                     'irq_work', 'error_apic', 'spurious_apic', 'x86_platform_ipi']
+                        for end in ['entry', 'exit']]
+                for name, condition in event_conditions:
+                    event = instance / 'events' / name
+                    if not event.exists():
+                        unavailable.append(name)
+                        continue
+                    control(event / 'enable', '0')
+                    control(event / 'filter', condition)
+                    control(event / 'enable', '1')
+                    enabled.append(name)
+                record.update(pid=pid, enabled_events=enabled, unavailable_events=unavailable)
+                control(instance / 'tracing_on', '1')
+                (directory / 'start').touch()
+            child.wait(timeout=cfg['timeout_seconds_per_run'])
+            record.update(returncode=child.returncode, status='completed' if child.returncode == 0 else 'error')
+    except Exception as exc:
+        record.update(status='error', error=repr(exc))
+        if child is not None and child.poll() is None:
+            child.kill()
+            child.wait()
+    finally:
+        try:
+            if instance:
+                control(instance / 'tracing_on', '0')
+                (directory / 'trace.txt').write_text((instance / 'trace').read_text())
+                record['trace_stats'] = {p.parent.name: p.read_text() for p in (instance / 'per_cpu').glob('cpu*/stats')}
+                control(instance / 'events/enable', '0')
+                trace_text = (directory / 'trace.txt').read_text()
+                if 'sched_switch:' not in trace_text or 'sched_wakeup:' not in trace_text:
+                    record.update(status='error', error='trace positive control failed: missing sleep/wakeup events')
+        except Exception as exc:
+            record.update(status='error', trace_cleanup_error=repr(exc))
+        finally:
+            if host_started:
+                stopped = host_command([str(args.host_wpr), '-stop', args.host_out.rstrip('/\\') + '/' + directory.name + '.etl',
+                                        '-instancename', host_name], host_records)
+                if stopped['returncode']:
+                    record.update(status='error', error='host stop failed; inspect named session')
+        record['host_trace_commands'] = host_records
+        if marker_fd is not None:
+            os.close(marker_fd)
+        record['elapsed_seconds'] = time.monotonic() - t
+        save(directory / 'run.json', record)
+    print(directory.name, record['status'], round(record['elapsed_seconds'], 3), flush=True)
+    if record['status'] != 'completed':
+        raise RuntimeError(record)
+
+
+def main():
+    p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument('--binary', type=Path, required=True)
+    p.add_argument('--protocol', type=Path, required=True)
+    p.add_argument('--out', type=Path, required=True)
+    p.add_argument('--phase', choices=['baseline', 'traced'], required=True)
+    p.add_argument('--research-user', default='research')
+    p.add_argument('--host-wpr', type=Path, help='Optional WSL path to Windows wpr.exe; traced phase only')
+    p.add_argument('--host-profile', help='Windows absolute path to bounded WPR profile')
+    p.add_argument('--host-out', help='Existing Windows output directory for per-run ETLs')
+    p.add_argument('--host-filemode', action='store_true', help='WSL: stream host events to explicit disk directory')
+    p.add_argument('--host-temp-dir', help='Existing Windows temp directory for file-mode recording')
+    p.add_argument('--host-instance', help='Optional unique name for an externally monitored owned WPR session')
+    a = p.parse_args()
+    a.binary = a.binary.resolve()
+    cfg = json.loads(a.protocol.read_text())
+    if a.host_wpr:
+        assert a.phase == 'traced' and a.host_profile and a.host_out
+    if a.host_filemode:
+        assert a.host_wpr and a.host_temp_dir
+    a.out.mkdir(parents=True, exist_ok=False)
+    a.out = a.out.resolve()
+    record = {'protocol': cfg, 'protocol_sha256': sha(a.protocol), 'binary_sha256': sha(a.binary),
+              'runner_sha256': sha(Path(__file__)), 'phase': a.phase, 'platform': platform.platform(),
+              'clocksource': Path('/sys/devices/system/clocksource/clocksource0/current_clocksource').read_text().strip(),
+              'cpu_affinity': sorted(os.sched_getaffinity(0)), 'status': 'running'}
+    save(a.out / 'manifest.json', record)
+    root = Path('/sys/kernel/tracing')
+    instance, mounted, user = None, False, None
+    try:
+        if a.phase == 'traced':
+            assert os.geteuid() == 0, 'trace phase requires root'
+            user = pwd.getpwnam(a.research_user)
+            os.chown(a.out, user.pw_uid, user.pw_gid)
+            if not (root / 'instances').exists():
+                subprocess.run(['mount', '-t', 'tracefs', 'tracefs', str(root)], check=True)
+                mounted = True
+            record['global_tracer_before'] = {n: (root/n).read_text() for n in ['tracing_on', 'current_tracer', 'trace_clock', 'events/enable']}
+            instance = root / 'instances' / ('orb_wait_' + str(os.getpid()))
+            instance.mkdir()
+            record['trace_instance'] = str(instance)
+            control(instance / 'tracing_on', '0')
+            control(instance / 'buffer_size_kb', cfg['trace_buffer_kib_per_cpu'])
+            control(instance / 'trace_clock', cfg['trace_clock'])
+            # A new instance alone is modified; the global tracer remains untouched.
+        combos = list(itertools.product(cfg[a.phase]['work_us'], cfg[a.phase]['spin_us']))
+        for repeat in range(cfg['repetitions']):
+            offset = repeat % len(combos)
+            for work, spin in combos[offset:] + combos[:offset]:
+                run_one(a, cfg, a.out / f'r{repeat+1}-work{work}-spin{spin}', work, spin, instance, user)
+        record['status'] = 'completed'
+    except Exception as exc:
+        record.update(status='error', error=repr(exc))
+        raise
+    finally:
+        if instance and instance.exists():
+            control(instance / 'tracing_on', '0')
+            control(instance / 'events/enable', '0')
+            instance.rmdir()
+        if a.phase == 'traced' and 'global_tracer_before' in record:
+            record['global_tracer_after'] = {n: (root/n).read_text() for n in record['global_tracer_before']}
+            record['global_tracer_unchanged'] = record['global_tracer_before'] == record['global_tracer_after']
+        if mounted:
+            subprocess.run(['umount', str(root)], check=True)
+        record['tracefs_mounted_by_this_run'] = mounted
+        record['trace_cleanup_complete'] = not instance or not instance.exists()
+        record['tracefs_unmounted_after_run'] = not (root / 'instances').exists() if mounted else None
+        save(a.out / 'manifest.json', record)
+
+
+if __name__ == '__main__':
+    main()
