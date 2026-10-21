@@ -1,0 +1,257 @@
+{
+  "date": "2026-10-19",
+  "purpose": "Fixed observer budget with eight-frame opportunities; preserve previous failures",
+  "evaluation_frames": 1600,
+  "h_ns": 50000000,
+  "tau_ns": 50000000,
+  "H": 20,
+  "cumulative_timing_limit_ns": 100000,
+  "randomization_seed": 2026101946,
+  "sequences": [
+    "V1_01_easy",
+    "V1_02_medium",
+    "V2_01_easy",
+    "V2_02_medium"
+  ],
+  "schedule": [
+    {
+      "id": "V1_01_easy-1-observer4_cycle8",
+      "sequence": "V1_01_easy",
+      "block": 1,
+      "arm": "observer4_cycle8",
+      "control": 7,
+      "keyframe_period": 8,
+      "maintenance_keyframes": 8,
+      "backend_keyframes": 4,
+      "backend_points": 1200,
+      "backend_fixed_keyframes": 4,
+      "global_ba_iterations": 10,
+      "defer_routine_keyframes": 1,
+      "seed": 2026101946
+    },
+    {
+      "id": "V2_01_easy-1-observer4_cycle8",
+      "sequence": "V2_01_easy",
+      "block": 1,
+      "arm": "observer4_cycle8",
+      "control": 7,
+      "keyframe_period": 8,
+      "maintenance_keyframes": 8,
+      "backend_keyframes": 4,
+      "backend_points": 1200,
+      "backend_fixed_keyframes": 4,
+      "global_ba_iterations": 10,
+      "defer_routine_keyframes": 1,
+      "seed": 2026101946
+    },
+    {
+      "id": "V1_02_medium-1-observer4_cycle8",
+      "sequence": "V1_02_medium",
+      "block": 1,
+      "arm": "observer4_cycle8",
+      "control": 7,
+      "keyframe_period": 8,
+      "maintenance_keyframes": 8,
+      "backend_keyframes": 4,
+      "backend_points": 1200,
+      "backend_fixed_keyframes": 4,
+      "global_ba_iterations": 10,
+      "defer_routine_keyframes": 1,
+      "seed": 2026101946
+    },
+    {
+      "id": "V2_02_medium-1-observer4_cycle8",
+      "sequence": "V2_02_medium",
+      "block": 1,
+      "arm": "observer4_cycle8",
+      "control": 7,
+      "keyframe_period": 8,
+      "maintenance_keyframes": 8,
+      "backend_keyframes": 4,
+      "backend_points": 1200,
+      "backend_fixed_keyframes": 4,
+      "global_ba_iterations": 10,
+      "defer_routine_keyframes": 1,
+      "seed": 2026101946
+    },
+    {
+      "id": "V2_02_medium-2-observer4_cycle8",
+      "sequence": "V2_02_medium",
+      "block": 2,
+      "arm": "observer4_cycle8",
+      "control": 7,
+      "keyframe_period": 8,
+      "maintenance_keyframes": 8,
+      "backend_keyframes": 4,
+      "backend_points": 1200,
+      "backend_fixed_keyframes": 4,
+      "global_ba_iterations": 10,
+      "defer_routine_keyframes": 1,
+      "seed": 2026101946
+    },
+    {
+      "id": "V1_02_medium-2-observer4_cycle8",
+      "sequence": "V1_02_medium",
+      "block": 2,
+      "arm": "observer4_cycle8",
+      "control": 7,
+      "keyframe_period": 8,
+      "maintenance_keyframes": 8,
+      "backend_keyframes": 4,
+      "backend_points": 1200,
+      "backend_fixed_keyframes": 4,
+      "global_ba_iterations": 10,
+      "defer_routine_keyframes": 1,
+      "seed": 2026101946
+    },
+    {
+      "id": "V1_01_easy-2-observer4_cycle8",
+      "sequence": "V1_01_easy",
+      "block": 2,
+      "arm": "observer4_cycle8",
+      "control": 7,
+      "keyframe_period": 8,
+      "maintenance_keyframes": 8,
+      "backend_keyframes": 4,
+      "backend_points": 1200,
+      "backend_fixed_keyframes": 4,
+      "global_ba_iterations": 10,
+      "defer_routine_keyframes": 1,
+      "seed": 2026101946
+    },
+    {
+      "id": "V2_01_easy-2-observer4_cycle8",
+      "sequence": "V2_01_easy",
+      "block": 2,
+      "arm": "observer4_cycle8",
+      "control": 7,
+      "keyframe_period": 8,
+      "maintenance_keyframes": 8,
+      "backend_keyframes": 4,
+      "backend_points": 1200,
+      "backend_fixed_keyframes": 4,
+      "global_ba_iterations": 10,
+      "defer_routine_keyframes": 1,
+      "seed": 2026101946
+    },
+    {
+      "id": "V2_01_easy-3-observer4_cycle8",
+      "sequence": "V2_01_easy",
+      "block": 3,
+      "arm": "observer4_cycle8",
+      "control": 7,
+      "keyframe_period": 8,
+      "maintenance_keyframes": 8,
+      "backend_keyframes": 4,
+      "backend_points": 1200,
+      "backend_fixed_keyframes": 4,
+      "global_ba_iterations": 10,
+      "defer_routine_keyframes": 1,
+      "seed": 2026101946
+    },
+    {
+      "id": "V2_02_medium-3-observer4_cycle8",
+      "sequence": "V2_02_medium",
+      "block": 3,
+      "arm": "observer4_cycle8",
+      "control": 7,
+      "keyframe_period": 8,
+      "maintenance_keyframes": 8,
+      "backend_keyframes": 4,
+      "backend_points": 1200,
+      "backend_fixed_keyframes": 4,
+      "global_ba_iterations": 10,
+      "defer_routine_keyframes": 1,
+      "seed": 2026101946
+    },
+    {
+      "id": "V1_02_medium-3-observer4_cycle8",
+      "sequence": "V1_02_medium",
+      "block": 3,
+      "arm": "observer4_cycle8",
+      "control": 7,
+      "keyframe_period": 8,
+      "maintenance_keyframes": 8,
+      "backend_keyframes": 4,
+      "backend_points": 1200,
+      "backend_fixed_keyframes": 4,
+      "global_ba_iterations": 10,
+      "defer_routine_keyframes": 1,
+      "seed": 2026101946
+    },
+    {
+      "id": "V1_01_easy-3-observer4_cycle8",
+      "sequence": "V1_01_easy",
+      "block": 3,
+      "arm": "observer4_cycle8",
+      "control": 7,
+      "keyframe_period": 8,
+      "maintenance_keyframes": 8,
+      "backend_keyframes": 4,
+      "backend_points": 1200,
+      "backend_fixed_keyframes": 4,
+      "global_ba_iterations": 10,
+      "defer_routine_keyframes": 1,
+      "seed": 2026101946
+    }
+  ],
+  "profiles": [
+    {
+      "keyframes": 32,
+      "points": 2400
+    }
+  ],
+  "transition_probability": null,
+  "fit_block": 1,
+  "check_blocks": [
+    2,
+    3
+  ],
+  "history_gain_screen": 0.1,
+  "quality_V102_max_ATE_m": 0.15,
+  "adaptation": "Do not change profiles or thresholds within this campaign. Do not exclude poor runs.",
+  "final_E4_acceptance": "Requires independently designed new-scene joint-law tests; screening alone cannot accept E4.",
+  "version": 14,
+  "previous": "Observer4 cycle4 passed quality; two scenes failed prediction, three failed history",
+  "correction": "Change only request cadence from4 to8; keep complete map and all protections",
+  "arms": [
+    "observer4_cycle8"
+  ],
+  "final_user_probability_error": 0.1,
+  "final_user_scope": "Preliminary independent-data feasibility, still not accepted",
+  "mode_mechanisms": {
+    "observer4_cycle8": {
+      "kind": "cycle",
+      "count": 8
+    }
+  },
+  "phase_definition": "input round modulo 8, including initialization; known before processing",
+  "independent_data_used": false,
+  "backend_stage_diagnostics": true,
+  "backend_budgets": {
+    "observer4_cycle8": {
+      "keyframes": 4,
+      "points": 1200,
+      "fixed_keyframes": 4
+    }
+  },
+  "screen_calibration": "Raw 2ms projected-W1 threshold often fails a true conditional-IID simulation at current n; retain as descriptive, not an independence test",
+  "repetitions": 3,
+  "timestamps": {
+    "V1_01_easy": "V101.txt",
+    "V1_02_medium": "V102.txt",
+    "V2_01_easy": "V201.txt",
+    "V2_02_medium": "V202.txt"
+  },
+  "previously_tested_data": true,
+  "validation_role": "Development only; the preceding independent failure remains unchanged",
+  "cpu_affinity": [
+    0
+  ],
+  "resource_diagnostics": true,
+  "affinity_limits": "Eligible guest CPUs only; no dedicated host cores or host-load exclusion; all runs kept",
+  "serial_stereo": 1,
+  "thread_policy": "serial_contained",
+  "prediction_seed": 2026101947,
+  "build_kind": "reuse_observer_budget_build"
+}

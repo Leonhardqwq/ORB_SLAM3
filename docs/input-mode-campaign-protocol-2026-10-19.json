@@ -1,0 +1,93 @@
+{
+  "date": "2026-10-19",
+  "purpose": "Prospective input/workload diagnostics; not final model acceptance",
+  "randomization_seed": 20261019,
+  "h_ns": 50000000,
+  "tau_ns": 50000000,
+  "H": 20,
+  "evaluation_frames": 1600,
+  "cumulative_timing_limit_ns": 100000,
+  "wall_ratio_limit": 1.05,
+  "sequences": [
+    "V1_02_medium",
+    "V1_01_easy"
+  ],
+  "schedule": [
+    {
+      "id": "V1_02_medium-1-on",
+      "sequence": "V1_02_medium",
+      "block": 1,
+      "workload": 1
+    },
+    {
+      "id": "V1_02_medium-1-off",
+      "sequence": "V1_02_medium",
+      "block": 1,
+      "workload": 0
+    },
+    {
+      "id": "V1_01_easy-1-on",
+      "sequence": "V1_01_easy",
+      "block": 1,
+      "workload": 1
+    },
+    {
+      "id": "V1_01_easy-1-off",
+      "sequence": "V1_01_easy",
+      "block": 1,
+      "workload": 0
+    },
+    {
+      "id": "V1_02_medium-2-off",
+      "sequence": "V1_02_medium",
+      "block": 2,
+      "workload": 0
+    },
+    {
+      "id": "V1_02_medium-2-on",
+      "sequence": "V1_02_medium",
+      "block": 2,
+      "workload": 1
+    },
+    {
+      "id": "V1_01_easy-2-off",
+      "sequence": "V1_01_easy",
+      "block": 2,
+      "workload": 0
+    },
+    {
+      "id": "V1_01_easy-2-on",
+      "sequence": "V1_01_easy",
+      "block": 2,
+      "workload": 1
+    },
+    {
+      "id": "V1_01_easy-3-off",
+      "sequence": "V1_01_easy",
+      "block": 3,
+      "workload": 0
+    },
+    {
+      "id": "V1_01_easy-3-on",
+      "sequence": "V1_01_easy",
+      "block": 3,
+      "workload": 1
+    },
+    {
+      "id": "V1_02_medium-3-on",
+      "sequence": "V1_02_medium",
+      "block": 3,
+      "workload": 1
+    },
+    {
+      "id": "V1_02_medium-3-off",
+      "sequence": "V1_02_medium",
+      "block": 3,
+      "workload": 0
+    }
+  ],
+  "measurement": "Both arms have existing instrumentation. Ratio tests incremental workload probes, not total instrumentation overhead. Report CPU/RSS and probe durations separately.",
+  "validation": "Freeze input clusters/coefficients from old data; new runs are prospective timing diagnostics on existing input trajectories. Additional workload feature fits are exploratory only.",
+  "success": "Collection/probe correctness required. ATE, invalid poses, late windows preserved; no performance-based exclusions. Probability conditions remain separate.",
+  "stop": "Acquisition failure stops collection. Measurement failures retained and prevent acceptance; independent remaining collection may diagnose robustness. No E5/E6."
+}

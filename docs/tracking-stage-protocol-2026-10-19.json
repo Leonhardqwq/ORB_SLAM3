@@ -1,0 +1,165 @@
+{
+  "date": "2026-10-19",
+  "purpose": "Tracking-stage localization and independent repeat of workload probe differences",
+  "randomization_seed": 2026101902,
+  "h_ns": 50000000,
+  "tau_ns": 50000000,
+  "H": 20,
+  "evaluation_frames": 1600,
+  "cumulative_timing_limit_ns": 100000,
+  "wall_ratio_limit": 1.05,
+  "sequences": [
+    "V1_02_medium",
+    "V1_01_easy"
+  ],
+  "schedule": [
+    {
+      "id": "V1_02_medium-1-off",
+      "sequence": "V1_02_medium",
+      "block": 1,
+      "arm": "off",
+      "workload": 0,
+      "tracking": 0
+    },
+    {
+      "id": "V1_02_medium-1-stages",
+      "sequence": "V1_02_medium",
+      "block": 1,
+      "arm": "stages",
+      "workload": 0,
+      "tracking": 1
+    },
+    {
+      "id": "V1_02_medium-1-workload",
+      "sequence": "V1_02_medium",
+      "block": 1,
+      "arm": "workload",
+      "workload": 1,
+      "tracking": 0
+    },
+    {
+      "id": "V1_01_easy-1-stages",
+      "sequence": "V1_01_easy",
+      "block": 1,
+      "arm": "stages",
+      "workload": 0,
+      "tracking": 1
+    },
+    {
+      "id": "V1_01_easy-1-off",
+      "sequence": "V1_01_easy",
+      "block": 1,
+      "arm": "off",
+      "workload": 0,
+      "tracking": 0
+    },
+    {
+      "id": "V1_01_easy-1-workload",
+      "sequence": "V1_01_easy",
+      "block": 1,
+      "arm": "workload",
+      "workload": 1,
+      "tracking": 0
+    },
+    {
+      "id": "V1_02_medium-2-stages",
+      "sequence": "V1_02_medium",
+      "block": 2,
+      "arm": "stages",
+      "workload": 0,
+      "tracking": 1
+    },
+    {
+      "id": "V1_02_medium-2-off",
+      "sequence": "V1_02_medium",
+      "block": 2,
+      "arm": "off",
+      "workload": 0,
+      "tracking": 0
+    },
+    {
+      "id": "V1_02_medium-2-workload",
+      "sequence": "V1_02_medium",
+      "block": 2,
+      "arm": "workload",
+      "workload": 1,
+      "tracking": 0
+    },
+    {
+      "id": "V1_01_easy-2-off",
+      "sequence": "V1_01_easy",
+      "block": 2,
+      "arm": "off",
+      "workload": 0,
+      "tracking": 0
+    },
+    {
+      "id": "V1_01_easy-2-stages",
+      "sequence": "V1_01_easy",
+      "block": 2,
+      "arm": "stages",
+      "workload": 0,
+      "tracking": 1
+    },
+    {
+      "id": "V1_01_easy-2-workload",
+      "sequence": "V1_01_easy",
+      "block": 2,
+      "arm": "workload",
+      "workload": 1,
+      "tracking": 0
+    },
+    {
+      "id": "V1_01_easy-3-off",
+      "sequence": "V1_01_easy",
+      "block": 3,
+      "arm": "off",
+      "workload": 0,
+      "tracking": 0
+    },
+    {
+      "id": "V1_01_easy-3-stages",
+      "sequence": "V1_01_easy",
+      "block": 3,
+      "arm": "stages",
+      "workload": 0,
+      "tracking": 1
+    },
+    {
+      "id": "V1_01_easy-3-workload",
+      "sequence": "V1_01_easy",
+      "block": 3,
+      "arm": "workload",
+      "workload": 1,
+      "tracking": 0
+    },
+    {
+      "id": "V1_02_medium-3-workload",
+      "sequence": "V1_02_medium",
+      "block": 3,
+      "arm": "workload",
+      "workload": 1,
+      "tracking": 0
+    },
+    {
+      "id": "V1_02_medium-3-off",
+      "sequence": "V1_02_medium",
+      "block": 3,
+      "arm": "off",
+      "workload": 0,
+      "tracking": 0
+    },
+    {
+      "id": "V1_02_medium-3-stages",
+      "sequence": "V1_02_medium",
+      "block": 3,
+      "arm": "stages",
+      "workload": 0,
+      "tracking": 1
+    }
+  ],
+  "measurement": "Three arms on the SAME fresh library: off, old workload, new stages. Serial whole-process runs. Stage/context overhead remains in service; CPU/ATE are outcomes, not exclusions.",
+  "validation": "Stage fraction and training block1/test blocks2-3 prediction using pre-T map counts. Explanatory post-T stages never used as pre-T modes. No final E4 acceptance.",
+  "success": "Collection/probe correctness required. ATE, invalid poses, late windows preserved; no performance-based exclusions. Probability conditions remain separate.",
+  "stop": "Acquisition failure stops collection. Measurement failures retained and prevent acceptance; independent remaining collection may diagnose robustness. No E5/E6."
+}
