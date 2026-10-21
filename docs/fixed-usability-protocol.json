@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "frozen_before_new_replays": true,
+  "date": "2026-10-17",
+  "application": "20 Hz pinhole stereo local odometry and mapping without loop closure; EuRoC is an engineering proxy, not road-driving validation",
+  "sequence": "V1_01_easy",
+  "offset": 800,
+  "evaluation_frames": 800,
+  "initialization_limit": 100,
+  "preload_limit": 901,
+  "h_ns": 50000000,
+  "tau_ns": 50000000,
+  "H": 20,
+  "cumulative_timing_limit_ns": 100000,
+  "repetitions": 3,
+  "strategies": ["native_control", "fixed_sleep", "fixed_hybrid"],
+  "hybrid_spin_us": 500,
+  "process_threads": 1,
+  "loads": ["idle", "opencv_companion"],
+  "order": "For each load and repetition rotate the three strategies; all comparisons serial",
+  "quality": {
+    "online_SE3_ATE_RMSE_max_m": 0.15,
+    "fixed_vs_native_factor": 1.25,
+    "fixed_vs_native_allowance_m": 0.02,
+    "valid_fraction_min": 0.99,
+    "ground_truth_coverage_min": 0.99,
+    "reset_count_max": 0
+  },
+  "resources": {
+    "deadline_success_fraction_min": 0.99,
+    "throughput_min_hz": 19,
+    "mean_CPU_cores_max": 1.0,
+    "fixed_vs_native_CPU_factor": 1.2,
+    "fixed_vs_native_CPU_allowance_cores": 0.02,
+    "sampled_peak_RSS_max_bytes": 2147483648,
+    "companion_p95_factor": 1.2,
+    "companion_p95_allowance_ms": 0.2
+  },
+  "acceptance": "Every replicate must satisfy the absolute quality/resource criteria; compare relative limits to native median at the same load. Fixed model gate additionally requires original trace reconstruction <=100 us in all windows. Complete this comparison batch even if a strategy fails; do not begin probability fitting on failure.",
+  "limitations": "Predeclared research feasibility criteria, not automotive safety requirements. No live-camera, outdoor, RGB-D, fisheye or long-term closure validation. Companion is a periodic image-processing proxy, not actual planning or a perception network. No claim of statistical sample sufficiency."
+}

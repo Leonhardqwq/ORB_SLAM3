@@ -1,0 +1,15 @@
+{
+  "profiles_in_order": [
+    {
+      "id": "v102-continuous",
+      "sequence": "V1_02_medium",
+      "offset": 0,
+      "protocol": "effective-duration-v102-continuous-protocol-2026-10-18.json",
+      "protocol_sha256": "70919b8323e78528455c00b6a363cf84f0e20174971afd63b640208c53646cde"
+    }
+  ],
+  "frozen_before_replay": true,
+  "prior_failures_retained": true,
+  "E4_permitted": false,
+  "reason": "Diagnose loss of visual context caused by starting a new map at GT start; continuous replay preserves prefix instead of restarting after skipping it."
+}

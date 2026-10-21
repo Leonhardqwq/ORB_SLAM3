@@ -1,0 +1,2443 @@
+{
+  "date": "2026-10-18",
+  "environment": "Windows host, WSL2 Ubuntu 22.04, existing CPU-only stereo replay",
+  "scope": "effective-duration E1/E2 verification and bounded E3 feasibility; not a fitted reliability model",
+  "E1": {
+    "status": "passed_as_conditional_definition",
+    "original_model_report_unchanged": true,
+    "source_review": {
+      "src/System.cc": "mode checks 110-128, no fixed workers 251-254, single-owner phase checks 280-322",
+      "src/LocalMapping.cc": "ProcessRound 290-313; frozen queue, source frame and duplicate checks",
+      "src/Frame.cc": "serialStereo branch 119-130; no fixed stereo feature workers",
+      "Examples/Stereo/stereo_fixed_replay.cc": "preload 154-165, releases/stamps 182-224, summary 296-314"
+    }
+  },
+  "tests": {
+    "status": "passed",
+    "fixtures": {
+      "backlog_gaps_equality_and_one_ns_late": {
+        "status": "accounting_passed",
+        "errors": []
+      },
+      "zero_gap": {
+        "status": "accounting_passed",
+        "errors": []
+      },
+      "invalid_pose_not_latency_failure": {
+        "status": "accounting_passed",
+        "errors": []
+      },
+      "negative_ready_gap": {
+        "status": "acquisition_invalid",
+        "errors": [
+          "predecessor_overlap:2"
+        ]
+      },
+      "time_reversed": {
+        "status": "acquisition_invalid",
+        "errors": [
+          "time_order:1"
+        ]
+      },
+      "duplicate_k": {
+        "status": "acquisition_invalid",
+        "errors": [
+          "evaluation_coverage",
+          "online_state_mismatch:2"
+        ]
+      },
+      "missing_row": {
+        "status": "acquisition_invalid",
+        "errors": [
+          "online_event_length_mismatch",
+          "evaluation_coverage",
+          "round_index:2",
+          "online_state_mismatch:2",
+          "round_index:3",
+          "online_state_mismatch:3",
+          "release_period",
+          "empty_round_summary_mismatch"
+        ]
+      },
+      "missing_initial_history": {
+        "status": "acquisition_invalid",
+        "errors": [
+          "missing_or_invalid_initial_history",
+          "summary_evaluation_mismatch",
+          "round_index:0",
+          "round_index:1",
+          "round_index:2",
+          "round_index:3",
+          "mapping_feedback_or_summary_mismatch"
+        ]
+      },
+      "duplicate_keyframe": {
+        "status": "acquisition_invalid",
+        "errors": [
+          "duplicate_keyframe:1",
+          "mapping_feedback_or_summary_mismatch",
+          "empty_round_summary_mismatch"
+        ]
+      },
+      "empty_round_summary_wrong": {
+        "status": "acquisition_invalid",
+        "errors": [
+          "empty_round_summary_mismatch"
+        ]
+      },
+      "online_state_wrong": {
+        "status": "acquisition_invalid",
+        "errors": [
+          "online_state_mismatch:2"
+        ]
+      },
+      "wrong_summary_count": {
+        "status": "acquisition_invalid",
+        "errors": [
+          "summary_evaluation_mismatch"
+        ]
+      },
+      "native_not_fixed": {
+        "status": "acquisition_invalid",
+        "errors": [
+          "not_a_completed_fixed_instrument_run"
+        ]
+      },
+      "cancelled_or_timeout": {
+        "status": "acquisition_invalid",
+        "errors": [
+          "not_a_completed_fixed_instrument_run"
+        ]
+      },
+      "unexpected_worker": {
+        "status": "acquisition_invalid",
+        "errors": [
+          "unexpected_threads"
+        ]
+      },
+      "changed_release_period": {
+        "status": "acquisition_invalid",
+        "errors": [
+          "release_period"
+        ]
+      },
+      "duplicate_frame": {
+        "status": "acquisition_invalid",
+        "errors": [
+          "frame_order:2"
+        ]
+      }
+    }
+  },
+  "retrospective": {
+    "role": "retrospective accounting only; not new predictive validation",
+    "runs": [
+      {
+        "name": "idle-1-fixed_sleep",
+        "directory": "/home/research/orb-usability-work/usability-v3/idle-1-fixed_sleep/replay",
+        "status": "accounting_passed",
+        "errors": [],
+        "probability_assumptions_verified": false,
+        "identity_is_independent_validation": false,
+        "input_sha256": {
+          "run.json": "e510acc335df51af0666a7fdbe874739365db80658d3788c559fe1c63e2e4531",
+          "replay-events.csv": "b8bd4627d4d04560e583f8c2ea77c5a4d008b2d0d2c822bac6a47ee0663fabdf",
+          "replay-online.csv": "e9e382c9dcdd44d04e431ae63835a66eb7f216b9c7787bebecf876450a6f4a03"
+        },
+        "frames": 800,
+        "sampled_peak_threads": 1,
+        "keyframes_processed": 24,
+        "empty_rounds": 777,
+        "invalid_pose_frames": 0,
+        "backlog_frames": 5,
+        "max_identity_error_ns": 0,
+        "max_legacy_error_ns": 290784,
+        "legacy_failed_windows": 38,
+        "max_W_T_ns": 290685,
+        "max_W_B_ns": 1336,
+        "late_frames": 2,
+        "deadline_equal_frames": 0,
+        "min_abs_deadline_slack_ns": 463320,
+        "empirical_success_windows": 38,
+        "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b"
+      },
+      {
+        "name": "idle-1-fixed_hybrid",
+        "directory": "/home/research/orb-usability-work/usability-v3/idle-1-fixed_hybrid/replay",
+        "status": "accounting_passed",
+        "errors": [],
+        "probability_assumptions_verified": false,
+        "identity_is_independent_validation": false,
+        "input_sha256": {
+          "run.json": "4b40c52bf0357fd9ecc70f7d3bd36aafb53aee684074153ebc5636c31aeedd6a",
+          "replay-events.csv": "57a6cbc7ad37f44bc1fe108e1b0ff846b55249a77b23a312e2d0a639b5296827",
+          "replay-online.csv": "e9e382c9dcdd44d04e431ae63835a66eb7f216b9c7787bebecf876450a6f4a03"
+        },
+        "frames": 800,
+        "sampled_peak_threads": 1,
+        "keyframes_processed": 24,
+        "empty_rounds": 777,
+        "invalid_pose_frames": 0,
+        "backlog_frames": 1,
+        "max_identity_error_ns": 0,
+        "max_legacy_error_ns": 55415,
+        "legacy_failed_windows": 0,
+        "max_W_T_ns": 55261,
+        "max_W_B_ns": 7241,
+        "late_frames": 0,
+        "deadline_equal_frames": 0,
+        "min_abs_deadline_slack_ns": 18467485,
+        "empirical_success_windows": 40,
+        "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b"
+      },
+      {
+        "name": "idle-2-fixed_sleep",
+        "directory": "/home/research/orb-usability-work/usability-v3/idle-2-fixed_sleep/replay",
+        "status": "accounting_passed",
+        "errors": [],
+        "probability_assumptions_verified": false,
+        "identity_is_independent_validation": false,
+        "input_sha256": {
+          "run.json": "5502c031f326ea6ec28be2464e662eb481c29515f931299aa5755036dcded8fa",
+          "replay-events.csv": "e31b23c42fb2c2b502c0e5fa8ab59f2dbdc566568e7f67ccdba15fe72ec82ccf",
+          "replay-online.csv": "e9e382c9dcdd44d04e431ae63835a66eb7f216b9c7787bebecf876450a6f4a03"
+        },
+        "frames": 800,
+        "sampled_peak_threads": 1,
+        "keyframes_processed": 24,
+        "empty_rounds": 777,
+        "invalid_pose_frames": 0,
+        "backlog_frames": 2,
+        "max_identity_error_ns": 0,
+        "max_legacy_error_ns": 303733,
+        "legacy_failed_windows": 34,
+        "max_W_T_ns": 303658,
+        "max_W_B_ns": 759,
+        "late_frames": 0,
+        "deadline_equal_frames": 0,
+        "min_abs_deadline_slack_ns": 11870419,
+        "empirical_success_windows": 40,
+        "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b"
+      },
+      {
+        "name": "idle-2-fixed_hybrid",
+        "directory": "/home/research/orb-usability-work/usability-v3/idle-2-fixed_hybrid/replay",
+        "status": "accounting_passed",
+        "errors": [],
+        "probability_assumptions_verified": false,
+        "identity_is_independent_validation": false,
+        "input_sha256": {
+          "run.json": "3ab520d78d732c793ac5fb2c1c622984206d3c226a137cc2f096236f1f94ebec",
+          "replay-events.csv": "b5445a3e1f2fe99166c55abc69f19425cc426eeba80c3258478b64b7f755da85",
+          "replay-online.csv": "e9e382c9dcdd44d04e431ae63835a66eb7f216b9c7787bebecf876450a6f4a03"
+        },
+        "frames": 800,
+        "sampled_peak_threads": 1,
+        "keyframes_processed": 24,
+        "empty_rounds": 777,
+        "invalid_pose_frames": 0,
+        "backlog_frames": 4,
+        "max_identity_error_ns": 0,
+        "max_legacy_error_ns": 100515,
+        "legacy_failed_windows": 1,
+        "max_W_T_ns": 100342,
+        "max_W_B_ns": 4034,
+        "late_frames": 2,
+        "deadline_equal_frames": 0,
+        "min_abs_deadline_slack_ns": 414369,
+        "empirical_success_windows": 38,
+        "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b"
+      },
+      {
+        "name": "idle-3-fixed_sleep",
+        "directory": "/home/research/orb-usability-work/usability-v3/idle-3-fixed_sleep/replay",
+        "status": "accounting_passed",
+        "errors": [],
+        "probability_assumptions_verified": false,
+        "identity_is_independent_validation": false,
+        "input_sha256": {
+          "run.json": "6342ea50e51aa9bf2f21bad73aae010d1c8f8dbce1b0b24869570ab75fb622ed",
+          "replay-events.csv": "63c3b9d4264edb4c34b59aff90ed496c79bbfc8ce501d09c932c98b6ed935759",
+          "replay-online.csv": "e9e382c9dcdd44d04e431ae63835a66eb7f216b9c7787bebecf876450a6f4a03"
+        },
+        "frames": 800,
+        "sampled_peak_threads": 1,
+        "keyframes_processed": 24,
+        "empty_rounds": 777,
+        "invalid_pose_frames": 0,
+        "backlog_frames": 2,
+        "max_identity_error_ns": 0,
+        "max_legacy_error_ns": 300612,
+        "legacy_failed_windows": 40,
+        "max_W_T_ns": 300501,
+        "max_W_B_ns": 572,
+        "late_frames": 0,
+        "deadline_equal_frames": 0,
+        "min_abs_deadline_slack_ns": 5467026,
+        "empirical_success_windows": 40,
+        "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b"
+      },
+      {
+        "name": "idle-3-fixed_hybrid",
+        "directory": "/home/research/orb-usability-work/usability-v3/idle-3-fixed_hybrid/replay",
+        "status": "accounting_passed",
+        "errors": [],
+        "probability_assumptions_verified": false,
+        "identity_is_independent_validation": false,
+        "input_sha256": {
+          "run.json": "c21b24b11d0030edbadfcb30b42183669ce02cf5ac6f0363ad75267c03c1960c",
+          "replay-events.csv": "89e014414680f510e9c010351d67d54a51f76e4e256103e4b2be5159061dab68",
+          "replay-online.csv": "e9e382c9dcdd44d04e431ae63835a66eb7f216b9c7787bebecf876450a6f4a03"
+        },
+        "frames": 800,
+        "sampled_peak_threads": 1,
+        "keyframes_processed": 24,
+        "empty_rounds": 777,
+        "invalid_pose_frames": 0,
+        "backlog_frames": 3,
+        "max_identity_error_ns": 0,
+        "max_legacy_error_ns": 84019,
+        "legacy_failed_windows": 0,
+        "max_W_T_ns": 83944,
+        "max_W_B_ns": 609,
+        "late_frames": 0,
+        "deadline_equal_frames": 0,
+        "min_abs_deadline_slack_ns": 23958419,
+        "empirical_success_windows": 40,
+        "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b"
+      },
+      {
+        "name": "opencv_companion-1-fixed_sleep",
+        "directory": "/home/research/orb-usability-work/usability-v3/opencv_companion-1-fixed_sleep/replay",
+        "status": "accounting_passed",
+        "errors": [],
+        "probability_assumptions_verified": false,
+        "identity_is_independent_validation": false,
+        "input_sha256": {
+          "run.json": "1c2d4b263d73555f636ab11aa2062d048886f69ab474656dd4bf98f2b291e068",
+          "replay-events.csv": "6a1e819b4dd506a52e8ed702001416d93c2d3ffee61ee236fb242c5e19a6bc6e",
+          "replay-online.csv": "70bd85d4cccad046c15a0117c96d774e4e3c4bbddc0de383e323959660db049b"
+        },
+        "frames": 800,
+        "sampled_peak_threads": 1,
+        "keyframes_processed": 23,
+        "empty_rounds": 778,
+        "invalid_pose_frames": 0,
+        "backlog_frames": 2,
+        "max_identity_error_ns": 0,
+        "max_legacy_error_ns": 256660,
+        "legacy_failed_windows": 39,
+        "max_W_T_ns": 256553,
+        "max_W_B_ns": 2333,
+        "late_frames": 0,
+        "deadline_equal_frames": 0,
+        "min_abs_deadline_slack_ns": 24764636,
+        "empirical_success_windows": 40,
+        "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b"
+      },
+      {
+        "name": "opencv_companion-1-fixed_hybrid",
+        "directory": "/home/research/orb-usability-work/usability-v3/opencv_companion-1-fixed_hybrid/replay",
+        "status": "accounting_passed",
+        "errors": [],
+        "probability_assumptions_verified": false,
+        "identity_is_independent_validation": false,
+        "input_sha256": {
+          "run.json": "f32bfc1f74f31855730066f41eb4b29a2dcdffbe20653bb551eb4970b3ce985c",
+          "replay-events.csv": "7d238df46ef3aed5c77c44f6d547f4ddde8eed8a5627c5e6c7b9435aeada82ec",
+          "replay-online.csv": "70bd85d4cccad046c15a0117c96d774e4e3c4bbddc0de383e323959660db049b"
+        },
+        "frames": 800,
+        "sampled_peak_threads": 1,
+        "keyframes_processed": 23,
+        "empty_rounds": 778,
+        "invalid_pose_frames": 0,
+        "backlog_frames": 2,
+        "max_identity_error_ns": 0,
+        "max_legacy_error_ns": 91770,
+        "legacy_failed_windows": 0,
+        "max_W_T_ns": 91685,
+        "max_W_B_ns": 73995,
+        "late_frames": 0,
+        "deadline_equal_frames": 0,
+        "min_abs_deadline_slack_ns": 23504956,
+        "empirical_success_windows": 40,
+        "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b"
+      },
+      {
+        "name": "opencv_companion-2-fixed_sleep",
+        "directory": "/home/research/orb-usability-work/usability-v3/opencv_companion-2-fixed_sleep/replay",
+        "status": "accounting_passed",
+        "errors": [],
+        "probability_assumptions_verified": false,
+        "identity_is_independent_validation": false,
+        "input_sha256": {
+          "run.json": "4200e064566d920d440e95ce7194ca1c865c227cbc7054dff405db7600490b28",
+          "replay-events.csv": "bd48e7516ee0063f679471a43692af8faa654eb49008194bd4f7db1b669db877",
+          "replay-online.csv": "70bd85d4cccad046c15a0117c96d774e4e3c4bbddc0de383e323959660db049b"
+        },
+        "frames": 800,
+        "sampled_peak_threads": 1,
+        "keyframes_processed": 23,
+        "empty_rounds": 778,
+        "invalid_pose_frames": 0,
+        "backlog_frames": 1,
+        "max_identity_error_ns": 0,
+        "max_legacy_error_ns": 270633,
+        "legacy_failed_windows": 36,
+        "max_W_T_ns": 270555,
+        "max_W_B_ns": 14147,
+        "late_frames": 0,
+        "deadline_equal_frames": 0,
+        "min_abs_deadline_slack_ns": 16422901,
+        "empirical_success_windows": 40,
+        "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b"
+      },
+      {
+        "name": "opencv_companion-2-fixed_hybrid",
+        "directory": "/home/research/orb-usability-work/usability-v3/opencv_companion-2-fixed_hybrid/replay",
+        "status": "accounting_passed",
+        "errors": [],
+        "probability_assumptions_verified": false,
+        "identity_is_independent_validation": false,
+        "input_sha256": {
+          "run.json": "cff75ad9fddf8dcd9411b476ecfdd76e5314646cf3aefff59b528dee4cf2e94b",
+          "replay-events.csv": "51332792c2250d2eeda3f07ad5c46e69f0d8d783cb1cb47e24a5d499dc0d385f",
+          "replay-online.csv": "70bd85d4cccad046c15a0117c96d774e4e3c4bbddc0de383e323959660db049b"
+        },
+        "frames": 800,
+        "sampled_peak_threads": 1,
+        "keyframes_processed": 23,
+        "empty_rounds": 778,
+        "invalid_pose_frames": 0,
+        "backlog_frames": 2,
+        "max_identity_error_ns": 0,
+        "max_legacy_error_ns": 26988,
+        "legacy_failed_windows": 0,
+        "max_W_T_ns": 26912,
+        "max_W_B_ns": 577,
+        "late_frames": 0,
+        "deadline_equal_frames": 0,
+        "min_abs_deadline_slack_ns": 23370918,
+        "empirical_success_windows": 40,
+        "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b"
+      },
+      {
+        "name": "opencv_companion-3-fixed_sleep",
+        "directory": "/home/research/orb-usability-work/usability-v3/opencv_companion-3-fixed_sleep/replay",
+        "status": "accounting_passed",
+        "errors": [],
+        "probability_assumptions_verified": false,
+        "identity_is_independent_validation": false,
+        "input_sha256": {
+          "run.json": "36212aa4858835d8c96ae59efcf0066fca05faebc34fc5701b8740eb44ea0ef6",
+          "replay-events.csv": "b5c4e9c0e53431494af1589751c6cf7e3af7522767f8fea7d1a72a0e2ed31eda",
+          "replay-online.csv": "70bd85d4cccad046c15a0117c96d774e4e3c4bbddc0de383e323959660db049b"
+        },
+        "frames": 800,
+        "sampled_peak_threads": 1,
+        "keyframes_processed": 23,
+        "empty_rounds": 778,
+        "invalid_pose_frames": 0,
+        "backlog_frames": 2,
+        "max_identity_error_ns": 0,
+        "max_legacy_error_ns": 259078,
+        "legacy_failed_windows": 36,
+        "max_W_T_ns": 259002,
+        "max_W_B_ns": 3974,
+        "late_frames": 1,
+        "deadline_equal_frames": 0,
+        "min_abs_deadline_slack_ns": 5415009,
+        "empirical_success_windows": 39,
+        "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b"
+      },
+      {
+        "name": "opencv_companion-3-fixed_hybrid",
+        "directory": "/home/research/orb-usability-work/usability-v3/opencv_companion-3-fixed_hybrid/replay",
+        "status": "accounting_passed",
+        "errors": [],
+        "probability_assumptions_verified": false,
+        "identity_is_independent_validation": false,
+        "input_sha256": {
+          "run.json": "732bb622bb5848d091f66052c43a6cd15e8de991aea186f3eea918d5d94b551a",
+          "replay-events.csv": "8d65642c1249d3ee3e0a5ec72c92a5d91bf139358b7c1a7d26ea909fb26e0b38",
+          "replay-online.csv": "70bd85d4cccad046c15a0117c96d774e4e3c4bbddc0de383e323959660db049b"
+        },
+        "frames": 800,
+        "sampled_peak_threads": 1,
+        "keyframes_processed": 23,
+        "empty_rounds": 778,
+        "invalid_pose_frames": 0,
+        "backlog_frames": 4,
+        "max_identity_error_ns": 0,
+        "max_legacy_error_ns": 58332,
+        "legacy_failed_windows": 0,
+        "max_W_T_ns": 53466,
+        "max_W_B_ns": 723,
+        "late_frames": 2,
+        "deadline_equal_frames": 0,
+        "min_abs_deadline_slack_ns": 2080660,
+        "empirical_success_windows": 38,
+        "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b"
+      }
+    ],
+    "checker_sha256": "bc7a581bca61479d57c3df911d12370df6f037d0f851b32cd2911363b6ecab2b",
+    "all_accounting_passed": true
+  },
+  "E2": {
+    "stage": "E2",
+    "status": "passed",
+    "runs": 6,
+    "wall_ns": {
+      "plain": [
+        39972107800,
+        39967929428,
+        39967674086
+      ],
+      "instrument": [
+        39968005804,
+        39968231133,
+        39967554449
+      ]
+    },
+    "cpu_ns": {
+      "plain": [
+        14568809800,
+        14910118400,
+        14770267300
+      ],
+      "instrument": [
+        14667658500,
+        14693804200,
+        14769232800
+      ]
+    },
+    "wall_median_ratio": 1.0000019109321172,
+    "cpu_median_ratio": 0.994823174256298,
+    "interpretation": "Wall-time gate includes waiting; neither a CPU bound nor probabilistic validation",
+    "probability_stage": "not_entered",
+    "records": [
+      {
+        "name": "r1-instrument",
+        "kind": "instrument",
+        "returncode": 0,
+        "command": [
+          "/usr/bin/python3",
+          "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+          "--source",
+          "/home/research/orb-dispatch-check-2026-10-18/source",
+          "--data",
+          "/home/research/orb-slam3-work/data/V1_01_easy",
+          "--output",
+          "/home/research/orb-effective-duration-2026-10-18/pilot-v2/r1-instrument/replay",
+          "--mode",
+          "fixed",
+          "--kind",
+          "instrument",
+          "--frames",
+          "800",
+          "--offset",
+          "800",
+          "--init-limit",
+          "100",
+          "--preload-limit",
+          "901",
+          "--period-ns",
+          "50000000",
+          "--threads",
+          "1",
+          "--spin-us",
+          "0",
+          "--timeout",
+          "180"
+        ],
+        "evaluation_frames": 800,
+        "evaluation_wall_ns": 39968005804,
+        "evaluation_cpu_ns": 14667658500,
+        "sampled_peak_RSS_bytes": 1216434176,
+        "invalid_pose_frames": 0,
+        "clock_pair_max_ns": 39,
+        "run_sha256": "a98fe1f3ab2d853f2e8e8dbe53538d26149c6ecdccc4edc13b0c417af432a5d0",
+        "accounting": {
+          "directory": "/home/research/orb-effective-duration-2026-10-18/pilot-v2/r1-instrument/replay",
+          "status": "accounting_passed",
+          "errors": [],
+          "probability_assumptions_verified": false,
+          "identity_is_independent_validation": false,
+          "input_sha256": {
+            "run.json": "a98fe1f3ab2d853f2e8e8dbe53538d26149c6ecdccc4edc13b0c417af432a5d0",
+            "replay-events.csv": "918f14948b052118b07f0dd9f847a2c8584b4cae265ff2674ce1f2d5f7064686",
+            "replay-online.csv": "36c95974a5858d99ee143e67a37b9aed023b781b120fe4be8c7a5f63ea10ba77"
+          },
+          "frames": 800,
+          "sampled_peak_threads": 1,
+          "keyframes_processed": 23,
+          "empty_rounds": 778,
+          "invalid_pose_frames": 0,
+          "backlog_frames": 1,
+          "max_identity_error_ns": 0,
+          "max_legacy_error_ns": 205244,
+          "legacy_failed_windows": 32,
+          "max_W_T_ns": 205167,
+          "max_W_B_ns": 189,
+          "late_frames": 0,
+          "deadline_equal_frames": 0,
+          "min_abs_deadline_slack_ns": 25156690,
+          "empirical_success_windows": 40,
+          "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b"
+        }
+      },
+      {
+        "name": "r1-plain",
+        "kind": "plain",
+        "returncode": 0,
+        "command": [
+          "/usr/bin/python3",
+          "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+          "--source",
+          "/home/research/orb-dispatch-check-2026-10-18/source",
+          "--data",
+          "/home/research/orb-slam3-work/data/V1_01_easy",
+          "--output",
+          "/home/research/orb-effective-duration-2026-10-18/pilot-v2/r1-plain/replay",
+          "--mode",
+          "fixed",
+          "--kind",
+          "plain",
+          "--frames",
+          "800",
+          "--offset",
+          "800",
+          "--init-limit",
+          "100",
+          "--preload-limit",
+          "901",
+          "--period-ns",
+          "50000000",
+          "--threads",
+          "1",
+          "--spin-us",
+          "0",
+          "--timeout",
+          "180"
+        ],
+        "evaluation_frames": 800,
+        "evaluation_wall_ns": 39972107800,
+        "evaluation_cpu_ns": 14568809800,
+        "sampled_peak_RSS_bytes": 1217236992,
+        "invalid_pose_frames": 0,
+        "clock_pair_max_ns": 41,
+        "run_sha256": "5b975071a6e27960fd111b8e6ee2f5c46ac74e86b9e1536ff4b610412c5c3719"
+      },
+      {
+        "name": "r2-plain",
+        "kind": "plain",
+        "returncode": 0,
+        "command": [
+          "/usr/bin/python3",
+          "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+          "--source",
+          "/home/research/orb-dispatch-check-2026-10-18/source",
+          "--data",
+          "/home/research/orb-slam3-work/data/V1_01_easy",
+          "--output",
+          "/home/research/orb-effective-duration-2026-10-18/pilot-v2/r2-plain/replay",
+          "--mode",
+          "fixed",
+          "--kind",
+          "plain",
+          "--frames",
+          "800",
+          "--offset",
+          "800",
+          "--init-limit",
+          "100",
+          "--preload-limit",
+          "901",
+          "--period-ns",
+          "50000000",
+          "--threads",
+          "1",
+          "--spin-us",
+          "0",
+          "--timeout",
+          "180"
+        ],
+        "evaluation_frames": 800,
+        "evaluation_wall_ns": 39967929428,
+        "evaluation_cpu_ns": 14910118400,
+        "sampled_peak_RSS_bytes": 1216966656,
+        "invalid_pose_frames": 0,
+        "clock_pair_max_ns": 38,
+        "run_sha256": "2930712defa6b5da293a906613e04c1c5f9260d8d257a4656aeba77dfcca0356"
+      },
+      {
+        "name": "r2-instrument",
+        "kind": "instrument",
+        "returncode": 0,
+        "command": [
+          "/usr/bin/python3",
+          "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+          "--source",
+          "/home/research/orb-dispatch-check-2026-10-18/source",
+          "--data",
+          "/home/research/orb-slam3-work/data/V1_01_easy",
+          "--output",
+          "/home/research/orb-effective-duration-2026-10-18/pilot-v2/r2-instrument/replay",
+          "--mode",
+          "fixed",
+          "--kind",
+          "instrument",
+          "--frames",
+          "800",
+          "--offset",
+          "800",
+          "--init-limit",
+          "100",
+          "--preload-limit",
+          "901",
+          "--period-ns",
+          "50000000",
+          "--threads",
+          "1",
+          "--spin-us",
+          "0",
+          "--timeout",
+          "180"
+        ],
+        "evaluation_frames": 800,
+        "evaluation_wall_ns": 39968231133,
+        "evaluation_cpu_ns": 14693804200,
+        "sampled_peak_RSS_bytes": 1217257472,
+        "invalid_pose_frames": 0,
+        "clock_pair_max_ns": 40,
+        "run_sha256": "8bd03609fdf2384fcc1dffc0fbd357c9fc4aee4e3f49496633af637d35c51e65",
+        "accounting": {
+          "directory": "/home/research/orb-effective-duration-2026-10-18/pilot-v2/r2-instrument/replay",
+          "status": "accounting_passed",
+          "errors": [],
+          "probability_assumptions_verified": false,
+          "identity_is_independent_validation": false,
+          "input_sha256": {
+            "run.json": "8bd03609fdf2384fcc1dffc0fbd357c9fc4aee4e3f49496633af637d35c51e65",
+            "replay-events.csv": "08d9d3cf12200f40c6a4bb1b81a71b9cfe566467c3c8116ba49415685130510e",
+            "replay-online.csv": "36c95974a5858d99ee143e67a37b9aed023b781b120fe4be8c7a5f63ea10ba77"
+          },
+          "frames": 800,
+          "sampled_peak_threads": 1,
+          "keyframes_processed": 23,
+          "empty_rounds": 778,
+          "invalid_pose_frames": 0,
+          "backlog_frames": 1,
+          "max_identity_error_ns": 0,
+          "max_legacy_error_ns": 223285,
+          "legacy_failed_windows": 33,
+          "max_W_T_ns": 223190,
+          "max_W_B_ns": 137,
+          "late_frames": 0,
+          "deadline_equal_frames": 0,
+          "min_abs_deadline_slack_ns": 25372249,
+          "empirical_success_windows": 40,
+          "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b"
+        }
+      },
+      {
+        "name": "r3-instrument",
+        "kind": "instrument",
+        "returncode": 0,
+        "command": [
+          "/usr/bin/python3",
+          "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+          "--source",
+          "/home/research/orb-dispatch-check-2026-10-18/source",
+          "--data",
+          "/home/research/orb-slam3-work/data/V1_01_easy",
+          "--output",
+          "/home/research/orb-effective-duration-2026-10-18/pilot-v2/r3-instrument/replay",
+          "--mode",
+          "fixed",
+          "--kind",
+          "instrument",
+          "--frames",
+          "800",
+          "--offset",
+          "800",
+          "--init-limit",
+          "100",
+          "--preload-limit",
+          "901",
+          "--period-ns",
+          "50000000",
+          "--threads",
+          "1",
+          "--spin-us",
+          "0",
+          "--timeout",
+          "180"
+        ],
+        "evaluation_frames": 800,
+        "evaluation_wall_ns": 39967554449,
+        "evaluation_cpu_ns": 14769232800,
+        "sampled_peak_RSS_bytes": 1217396736,
+        "invalid_pose_frames": 0,
+        "clock_pair_max_ns": 40,
+        "run_sha256": "35930fa51a5bb9b69bc48301a7a11cd87421eb263e5ef4819c83faad6261babb",
+        "accounting": {
+          "directory": "/home/research/orb-effective-duration-2026-10-18/pilot-v2/r3-instrument/replay",
+          "status": "accounting_passed",
+          "errors": [],
+          "probability_assumptions_verified": false,
+          "identity_is_independent_validation": false,
+          "input_sha256": {
+            "run.json": "35930fa51a5bb9b69bc48301a7a11cd87421eb263e5ef4819c83faad6261babb",
+            "replay-events.csv": "df464c4da59d98493a8652618bc60439e70415a79316a0da9307682cfb1d882d",
+            "replay-online.csv": "36c95974a5858d99ee143e67a37b9aed023b781b120fe4be8c7a5f63ea10ba77"
+          },
+          "frames": 800,
+          "sampled_peak_threads": 1,
+          "keyframes_processed": 23,
+          "empty_rounds": 778,
+          "invalid_pose_frames": 0,
+          "backlog_frames": 1,
+          "max_identity_error_ns": 0,
+          "max_legacy_error_ns": 232252,
+          "legacy_failed_windows": 36,
+          "max_W_T_ns": 232174,
+          "max_W_B_ns": 210,
+          "late_frames": 0,
+          "deadline_equal_frames": 0,
+          "min_abs_deadline_slack_ns": 6943914,
+          "empirical_success_windows": 40,
+          "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b"
+        }
+      },
+      {
+        "name": "r3-plain",
+        "kind": "plain",
+        "returncode": 0,
+        "command": [
+          "/usr/bin/python3",
+          "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+          "--source",
+          "/home/research/orb-dispatch-check-2026-10-18/source",
+          "--data",
+          "/home/research/orb-slam3-work/data/V1_01_easy",
+          "--output",
+          "/home/research/orb-effective-duration-2026-10-18/pilot-v2/r3-plain/replay",
+          "--mode",
+          "fixed",
+          "--kind",
+          "plain",
+          "--frames",
+          "800",
+          "--offset",
+          "800",
+          "--init-limit",
+          "100",
+          "--preload-limit",
+          "901",
+          "--period-ns",
+          "50000000",
+          "--threads",
+          "1",
+          "--spin-us",
+          "0",
+          "--timeout",
+          "180"
+        ],
+        "evaluation_frames": 800,
+        "evaluation_wall_ns": 39967674086,
+        "evaluation_cpu_ns": 14770267300,
+        "sampled_peak_RSS_bytes": 1216163840,
+        "invalid_pose_frames": 0,
+        "clock_pair_max_ns": 39,
+        "run_sha256": "5f5197b5a7b83b402598f1399d1d9447fcb77505dfb479c535d566329bc2899f"
+      }
+    ]
+  },
+  "E3": {
+    "stage": "E3",
+    "status": "first_block_set_passed",
+    "reason": "requires_further_sequence_and_sample_sufficiency_before_E4",
+    "blocks": [
+      {
+        "name": "idle-1",
+        "load": "idle",
+        "repeat": 1,
+        "runs": [
+          {
+            "strategy": "native_control",
+            "execution": {
+              "command": [
+                "/usr/bin/python3",
+                "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+                "--source",
+                "/home/research/orb-dispatch-check-2026-10-18/source",
+                "--data",
+                "/home/research/orb-slam3-work/data/V1_01_easy",
+                "--output",
+                "/home/research/orb-effective-duration-2026-10-18/collection/idle-1/native_control/replay",
+                "--mode",
+                "native_control",
+                "--kind",
+                "instrument",
+                "--frames",
+                "800",
+                "--offset",
+                "800",
+                "--init-limit",
+                "100",
+                "--preload-limit",
+                "901",
+                "--period-ns",
+                "50000000",
+                "--threads",
+                "1",
+                "--spin-us",
+                "0",
+                "--timeout",
+                "180"
+              ],
+              "returncode": 0,
+              "timeout": false,
+              "seconds": 46.458916165000005
+            },
+            "run_json_sha256": "af037ee87cb9361e34e35dc1443d452c6167c0b375bd0fda0e942e70fb070e2c",
+            "quality": {
+              "frames": 800,
+              "valid_frames": 800,
+              "matched_frames": 800,
+              "valid_fraction": 1.0,
+              "ground_truth_coverage": 1.0,
+              "ATE_RMSE_m": 0.04644711545406667,
+              "ATE_p95_m": 0.06877082531953906,
+              "ATE_max_m": 0.14223854329288335,
+              "alignment": "SE3, scale fixed to 1",
+              "pose": "online left-camera position; body GT + rotated T_BS translation"
+            },
+            "CPU": 0.36579712352678606,
+            "throughput": 20.01591496774032,
+            "RSS": 1220444160,
+            "deadline_fraction": 1.0,
+            "reset_count": 0,
+            "data_sha256": {
+              "replay-events.csv": "e943010dc3f54fe13137594bb6bf613d5f93b430d2205b59e0d6aaa982585656",
+              "replay-online.csv": "b0996a4970001717f16310bffdda9fc1f6f01e1917fbcdbf4c323d8dc9ade09a",
+              "replay-summary.json": "7f49a07c438d58b1bb5a9bd556aecf934f0e52ad609bc3b9e5676012ae15713b"
+            },
+            "gates": {
+              "absolute_ATE": true,
+              "valid_poses": true,
+              "ground_truth_coverage": true,
+              "deadline_fraction": true,
+              "throughput": true,
+              "CPU": true,
+              "RSS": true
+            }
+          },
+          {
+            "strategy": "fixed_sleep",
+            "execution": {
+              "command": [
+                "/usr/bin/python3",
+                "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+                "--source",
+                "/home/research/orb-dispatch-check-2026-10-18/source",
+                "--data",
+                "/home/research/orb-slam3-work/data/V1_01_easy",
+                "--output",
+                "/home/research/orb-effective-duration-2026-10-18/collection/idle-1/fixed_sleep/replay",
+                "--mode",
+                "fixed",
+                "--kind",
+                "instrument",
+                "--frames",
+                "800",
+                "--offset",
+                "800",
+                "--init-limit",
+                "100",
+                "--preload-limit",
+                "901",
+                "--period-ns",
+                "50000000",
+                "--threads",
+                "1",
+                "--spin-us",
+                "0",
+                "--timeout",
+                "180"
+              ],
+              "returncode": 0,
+              "timeout": false,
+              "seconds": 45.40968380700002
+            },
+            "run_json_sha256": "d3be5d60a4068c0d06e774c3c6a76ccbb05c01466e1c56dd279908bc84a921bf",
+            "quality": {
+              "frames": 800,
+              "valid_frames": 800,
+              "matched_frames": 800,
+              "valid_fraction": 1.0,
+              "ground_truth_coverage": 1.0,
+              "ATE_RMSE_m": 0.0478301350699519,
+              "ATE_p95_m": 0.06677556265150039,
+              "ATE_max_m": 0.14328145446142462,
+              "alignment": "SE3, scale fixed to 1",
+              "pose": "online left-camera position; body GT + rotated T_BS translation"
+            },
+            "CPU": 0.35875143053941094,
+            "throughput": 20.01612235955559,
+            "RSS": 1215438848,
+            "deadline_fraction": 1.0,
+            "reset_count": 0,
+            "data_sha256": {
+              "replay-events.csv": "5556e3993b00d12f04eff9f1870f038cc46f16bac6605b2011bb73d672981595",
+              "replay-online.csv": "36c95974a5858d99ee143e67a37b9aed023b781b120fe4be8c7a5f63ea10ba77",
+              "replay-summary.json": "d7c38406ddaf940b46943368f2a234166820fcf0c03dfc13467b3ca6bd06a928"
+            },
+            "accounting": {
+              "directory": "/home/research/orb-effective-duration-2026-10-18/collection/idle-1/fixed_sleep/replay",
+              "status": "accounting_passed",
+              "errors": [],
+              "probability_assumptions_verified": false,
+              "identity_is_independent_validation": false,
+              "input_sha256": {
+                "run.json": "d3be5d60a4068c0d06e774c3c6a76ccbb05c01466e1c56dd279908bc84a921bf",
+                "replay-events.csv": "5556e3993b00d12f04eff9f1870f038cc46f16bac6605b2011bb73d672981595",
+                "replay-online.csv": "36c95974a5858d99ee143e67a37b9aed023b781b120fe4be8c7a5f63ea10ba77"
+              },
+              "frames": 800,
+              "sampled_peak_threads": 1,
+              "keyframes_processed": 23,
+              "empty_rounds": 778,
+              "invalid_pose_frames": 0,
+              "backlog_frames": 1,
+              "max_identity_error_ns": 0,
+              "max_legacy_error_ns": 191311,
+              "legacy_failed_windows": 33,
+              "max_W_T_ns": 191227,
+              "max_W_B_ns": 304,
+              "late_frames": 0,
+              "deadline_equal_frames": 0,
+              "min_abs_deadline_slack_ns": 25268276,
+              "empirical_success_windows": 40,
+              "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b"
+            },
+            "gates": {
+              "absolute_ATE": true,
+              "valid_poses": true,
+              "ground_truth_coverage": true,
+              "deadline_fraction": true,
+              "throughput": true,
+              "CPU": true,
+              "RSS": true,
+              "no_reset": true,
+              "relative_ATE": true,
+              "relative_CPU": true,
+              "accounting": true
+            }
+          }
+        ]
+      },
+      {
+        "name": "opencv_companion-1",
+        "load": "opencv_companion",
+        "repeat": 1,
+        "runs": [
+          {
+            "strategy": "native_control",
+            "execution": {
+              "command": [
+                "/usr/bin/python3",
+                "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+                "--source",
+                "/home/research/orb-dispatch-check-2026-10-18/source",
+                "--data",
+                "/home/research/orb-slam3-work/data/V1_01_easy",
+                "--output",
+                "/home/research/orb-effective-duration-2026-10-18/collection/opencv_companion-1/native_control/replay",
+                "--mode",
+                "native_control",
+                "--kind",
+                "instrument",
+                "--frames",
+                "800",
+                "--offset",
+                "800",
+                "--init-limit",
+                "100",
+                "--preload-limit",
+                "901",
+                "--period-ns",
+                "50000000",
+                "--threads",
+                "1",
+                "--spin-us",
+                "0",
+                "--timeout",
+                "180"
+              ],
+              "returncode": 0,
+              "timeout": false,
+              "seconds": 45.50616988899998
+            },
+            "run_json_sha256": "bae894039127ed0e5d358325302ae4cd565e964cc8f03ecc1a04a731b3e6829e",
+            "quality": {
+              "frames": 800,
+              "valid_frames": 800,
+              "matched_frames": 800,
+              "valid_fraction": 1.0,
+              "ground_truth_coverage": 1.0,
+              "ATE_RMSE_m": 0.04199424738859897,
+              "ATE_p95_m": 0.06097716924540163,
+              "ATE_max_m": 0.13448330251458918,
+              "alignment": "SE3, scale fixed to 1",
+              "pose": "online left-camera position; body GT + rotated T_BS translation"
+            },
+            "CPU": 0.36889372799553843,
+            "throughput": 20.016241999424253,
+            "RSS": 1222172672,
+            "deadline_fraction": 1.0,
+            "reset_count": 0,
+            "data_sha256": {
+              "replay-events.csv": "59eaa3114cacf6a26e4c4ce36c0e149343be0709172126ed1a0627ed2895554b",
+              "replay-online.csv": "67e33b4556f01e4bd2867879b32735aee1971857dc04f332dca0e2d15ecd2b93",
+              "replay-summary.json": "86eb146dce72ba8b28dc83fe5093c46b860635c977a328bafbc3d7e6ff01dd62"
+            },
+            "companion": {
+              "samples": 799,
+              "p95_ms": 3.7811215,
+              "deadline_fraction": 1.0
+            },
+            "gates": {
+              "absolute_ATE": true,
+              "valid_poses": true,
+              "ground_truth_coverage": true,
+              "deadline_fraction": true,
+              "throughput": true,
+              "CPU": true,
+              "RSS": true,
+              "companion_p95": true
+            }
+          },
+          {
+            "strategy": "fixed_sleep",
+            "execution": {
+              "command": [
+                "/usr/bin/python3",
+                "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+                "--source",
+                "/home/research/orb-dispatch-check-2026-10-18/source",
+                "--data",
+                "/home/research/orb-slam3-work/data/V1_01_easy",
+                "--output",
+                "/home/research/orb-effective-duration-2026-10-18/collection/opencv_companion-1/fixed_sleep/replay",
+                "--mode",
+                "fixed",
+                "--kind",
+                "instrument",
+                "--frames",
+                "800",
+                "--offset",
+                "800",
+                "--init-limit",
+                "100",
+                "--preload-limit",
+                "901",
+                "--period-ns",
+                "50000000",
+                "--threads",
+                "1",
+                "--spin-us",
+                "0",
+                "--timeout",
+                "180"
+              ],
+              "returncode": 0,
+              "timeout": false,
+              "seconds": 45.409372245999975
+            },
+            "run_json_sha256": "fb3669f5ba30dd359caf02fe53d56508265c4041a81e4701e3eaeb323cf8fdbd",
+            "quality": {
+              "frames": 800,
+              "valid_frames": 800,
+              "matched_frames": 800,
+              "valid_fraction": 1.0,
+              "ground_truth_coverage": 1.0,
+              "ATE_RMSE_m": 0.04352296435571172,
+              "ATE_p95_m": 0.06707479812335801,
+              "ATE_max_m": 0.1332034084695387,
+              "alignment": "SE3, scale fixed to 1",
+              "pose": "online left-camera position; body GT + rotated T_BS translation"
+            },
+            "CPU": 0.3594055211431844,
+            "throughput": 20.01588596718301,
+            "RSS": 1219055616,
+            "deadline_fraction": 1.0,
+            "reset_count": 0,
+            "data_sha256": {
+              "replay-events.csv": "261880acebc268dcfa25fc97775409f4da274d80e79c3a5e0a4da6e1e70b8b8e",
+              "replay-online.csv": "bbe6e4ce8b0329713bf88067c40a8e270389b7281b5ceec1f798d8178f0f1ca0",
+              "replay-summary.json": "a8ad4af4928934231da28ce0a4ecc3ba662b2c867f9cc1d555f280a019c0c171"
+            },
+            "accounting": {
+              "directory": "/home/research/orb-effective-duration-2026-10-18/collection/opencv_companion-1/fixed_sleep/replay",
+              "status": "accounting_passed",
+              "errors": [],
+              "probability_assumptions_verified": false,
+              "identity_is_independent_validation": false,
+              "input_sha256": {
+                "run.json": "fb3669f5ba30dd359caf02fe53d56508265c4041a81e4701e3eaeb323cf8fdbd",
+                "replay-events.csv": "261880acebc268dcfa25fc97775409f4da274d80e79c3a5e0a4da6e1e70b8b8e",
+                "replay-online.csv": "bbe6e4ce8b0329713bf88067c40a8e270389b7281b5ceec1f798d8178f0f1ca0"
+              },
+              "frames": 800,
+              "sampled_peak_threads": 1,
+              "keyframes_processed": 25,
+              "empty_rounds": 776,
+              "invalid_pose_frames": 0,
+              "backlog_frames": 0,
+              "max_identity_error_ns": 0,
+              "max_legacy_error_ns": 199156,
+              "legacy_failed_windows": 32,
+              "max_W_T_ns": 199055,
+              "max_W_B_ns": 329,
+              "late_frames": 0,
+              "deadline_equal_frames": 0,
+              "min_abs_deadline_slack_ns": 28302628,
+              "empirical_success_windows": 40,
+              "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b"
+            },
+            "companion": {
+              "samples": 799,
+              "p95_ms": 3.7697309,
+              "deadline_fraction": 1.0
+            },
+            "gates": {
+              "absolute_ATE": true,
+              "valid_poses": true,
+              "ground_truth_coverage": true,
+              "deadline_fraction": true,
+              "throughput": true,
+              "CPU": true,
+              "RSS": true,
+              "no_reset": true,
+              "relative_ATE": true,
+              "relative_CPU": true,
+              "accounting": true,
+              "companion_p95": true
+            }
+          }
+        ],
+        "before": {
+          "command": {
+            "command": [
+              "/home/research/orb-usability-work/opencv_companion",
+              "/home/research/orb-slam3-work/data/V1_01_easy/mav0/cam0/data/1403715313262142976.png",
+              "load.csv",
+              "30"
+            ],
+            "returncode": 0,
+            "timeout": false,
+            "seconds": 30.035338947000014
+          },
+          "score": {
+            "samples": 600,
+            "p95_ms": 3.8053820499999995,
+            "deadline_fraction": 1.0
+          },
+          "sha256": "9e01850d60e2f75d601de2f15540f3f86016b124b960b9162b0d7628b3f5aeda"
+        },
+        "after": {
+          "command": {
+            "command": [
+              "/home/research/orb-usability-work/opencv_companion",
+              "/home/research/orb-slam3-work/data/V1_01_easy/mav0/cam0/data/1403715313262142976.png",
+              "load.csv",
+              "30"
+            ],
+            "returncode": 0,
+            "timeout": false,
+            "seconds": 30.03510956499997
+          },
+          "score": {
+            "samples": 600,
+            "p95_ms": 3.7733783,
+            "deadline_fraction": 1.0
+          },
+          "sha256": "16fc0911a32c31626471609c65fb1fff6c7fccf58fa2caaccff69b3c4a5f36aa"
+        },
+        "companion_reference_p95_ms": 3.789380175
+      },
+      {
+        "name": "opencv_companion-2",
+        "load": "opencv_companion",
+        "repeat": 2,
+        "runs": [
+          {
+            "strategy": "fixed_sleep",
+            "execution": {
+              "command": [
+                "/usr/bin/python3",
+                "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+                "--source",
+                "/home/research/orb-dispatch-check-2026-10-18/source",
+                "--data",
+                "/home/research/orb-slam3-work/data/V1_01_easy",
+                "--output",
+                "/home/research/orb-effective-duration-2026-10-18/collection/opencv_companion-2/fixed_sleep/replay",
+                "--mode",
+                "fixed",
+                "--kind",
+                "instrument",
+                "--frames",
+                "800",
+                "--offset",
+                "800",
+                "--init-limit",
+                "100",
+                "--preload-limit",
+                "901",
+                "--period-ns",
+                "50000000",
+                "--threads",
+                "1",
+                "--spin-us",
+                "0",
+                "--timeout",
+                "180"
+              ],
+              "returncode": 0,
+              "timeout": false,
+              "seconds": 45.50979439399998
+            },
+            "run_json_sha256": "a81434e55c8ab08881f62665edfae53a966f477c4f1305e6f3251c5678e44c9c",
+            "quality": {
+              "frames": 800,
+              "valid_frames": 800,
+              "matched_frames": 800,
+              "valid_fraction": 1.0,
+              "ground_truth_coverage": 1.0,
+              "ATE_RMSE_m": 0.04352296435571172,
+              "ATE_p95_m": 0.06707479812335801,
+              "ATE_max_m": 0.1332034084695387,
+              "alignment": "SE3, scale fixed to 1",
+              "pose": "online left-camera position; body GT + rotated T_BS translation"
+            },
+            "CPU": 0.3569328168085946,
+            "throughput": 20.0162996325838,
+            "RSS": 1219035136,
+            "deadline_fraction": 1.0,
+            "reset_count": 0,
+            "data_sha256": {
+              "replay-events.csv": "3a22e062cf23c640eefeda0f6b74ac02d19e7473cb3041e9e30ac2c98ffd49ba",
+              "replay-online.csv": "bbe6e4ce8b0329713bf88067c40a8e270389b7281b5ceec1f798d8178f0f1ca0",
+              "replay-summary.json": "d2ed6b5883eca020f7ca80eea4f6f1c45d971c6a082bbcb0ba7b7015eb66d391"
+            },
+            "accounting": {
+              "directory": "/home/research/orb-effective-duration-2026-10-18/collection/opencv_companion-2/fixed_sleep/replay",
+              "status": "accounting_passed",
+              "errors": [],
+              "probability_assumptions_verified": false,
+              "identity_is_independent_validation": false,
+              "input_sha256": {
+                "run.json": "a81434e55c8ab08881f62665edfae53a966f477c4f1305e6f3251c5678e44c9c",
+                "replay-events.csv": "3a22e062cf23c640eefeda0f6b74ac02d19e7473cb3041e9e30ac2c98ffd49ba",
+                "replay-online.csv": "bbe6e4ce8b0329713bf88067c40a8e270389b7281b5ceec1f798d8178f0f1ca0"
+              },
+              "frames": 800,
+              "sampled_peak_threads": 1,
+              "keyframes_processed": 25,
+              "empty_rounds": 776,
+              "invalid_pose_frames": 0,
+              "backlog_frames": 0,
+              "max_identity_error_ns": 0,
+              "max_legacy_error_ns": 183433,
+              "legacy_failed_windows": 35,
+              "max_W_T_ns": 183344,
+              "max_W_B_ns": 254,
+              "late_frames": 0,
+              "deadline_equal_frames": 0,
+              "min_abs_deadline_slack_ns": 24900096,
+              "empirical_success_windows": 40,
+              "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b"
+            },
+            "companion": {
+              "samples": 799,
+              "p95_ms": 3.7713680000000003,
+              "deadline_fraction": 1.0
+            },
+            "gates": {
+              "absolute_ATE": true,
+              "valid_poses": true,
+              "ground_truth_coverage": true,
+              "deadline_fraction": true,
+              "throughput": true,
+              "CPU": true,
+              "RSS": true,
+              "no_reset": true,
+              "relative_ATE": true,
+              "relative_CPU": true,
+              "accounting": true,
+              "companion_p95": true
+            }
+          },
+          {
+            "strategy": "native_control",
+            "execution": {
+              "command": [
+                "/usr/bin/python3",
+                "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+                "--source",
+                "/home/research/orb-dispatch-check-2026-10-18/source",
+                "--data",
+                "/home/research/orb-slam3-work/data/V1_01_easy",
+                "--output",
+                "/home/research/orb-effective-duration-2026-10-18/collection/opencv_companion-2/native_control/replay",
+                "--mode",
+                "native_control",
+                "--kind",
+                "instrument",
+                "--frames",
+                "800",
+                "--offset",
+                "800",
+                "--init-limit",
+                "100",
+                "--preload-limit",
+                "901",
+                "--period-ns",
+                "50000000",
+                "--threads",
+                "1",
+                "--spin-us",
+                "0",
+                "--timeout",
+                "180"
+              ],
+              "returncode": 0,
+              "timeout": false,
+              "seconds": 45.45741832199997
+            },
+            "run_json_sha256": "bc4296daedfdfb04e965db220350bf05e520ed51e193e1bc7ee25ea0ca939b58",
+            "quality": {
+              "frames": 800,
+              "valid_frames": 800,
+              "matched_frames": 800,
+              "valid_fraction": 1.0,
+              "ground_truth_coverage": 1.0,
+              "ATE_RMSE_m": 0.04199424738859897,
+              "ATE_p95_m": 0.06097716924540163,
+              "ATE_max_m": 0.13448330251458918,
+              "alignment": "SE3, scale fixed to 1",
+              "pose": "online left-camera position; body GT + rotated T_BS translation"
+            },
+            "CPU": 0.3685874136181887,
+            "throughput": 20.016224698873824,
+            "RSS": 1222881280,
+            "deadline_fraction": 1.0,
+            "reset_count": 0,
+            "data_sha256": {
+              "replay-events.csv": "f00582bca1577cd258f8dec9f010d375f931b63df1229126ccd6142d10dcdad3",
+              "replay-online.csv": "67e33b4556f01e4bd2867879b32735aee1971857dc04f332dca0e2d15ecd2b93",
+              "replay-summary.json": "b4c4f9588b83668eba7293ba7b6e91764867b098170df69ee6da07c450c67819"
+            },
+            "companion": {
+              "samples": 800,
+              "p95_ms": 3.75830835,
+              "deadline_fraction": 1.0
+            },
+            "gates": {
+              "absolute_ATE": true,
+              "valid_poses": true,
+              "ground_truth_coverage": true,
+              "deadline_fraction": true,
+              "throughput": true,
+              "CPU": true,
+              "RSS": true,
+              "companion_p95": true
+            }
+          }
+        ],
+        "before": {
+          "command": {
+            "command": [
+              "/home/research/orb-usability-work/opencv_companion",
+              "/home/research/orb-slam3-work/data/V1_01_easy/mav0/cam0/data/1403715313262142976.png",
+              "load.csv",
+              "30"
+            ],
+            "returncode": 0,
+            "timeout": false,
+            "seconds": 30.03393035299996
+          },
+          "score": {
+            "samples": 600,
+            "p95_ms": 3.77677345,
+            "deadline_fraction": 1.0
+          },
+          "sha256": "7dc6de2e9845daaf4b024d8a3cbdb7949e683aed8f0aa02fc439b5be888ca31f"
+        },
+        "after": {
+          "command": {
+            "command": [
+              "/home/research/orb-usability-work/opencv_companion",
+              "/home/research/orb-slam3-work/data/V1_01_easy/mav0/cam0/data/1403715313262142976.png",
+              "load.csv",
+              "30"
+            ],
+            "returncode": 0,
+            "timeout": false,
+            "seconds": 30.036083821000034
+          },
+          "score": {
+            "samples": 600,
+            "p95_ms": 3.8106663999999997,
+            "deadline_fraction": 1.0
+          },
+          "sha256": "b6c881230ed381ea70b10521c89764c5c7e85f5c18be772beaba0047ce3206ad"
+        },
+        "companion_reference_p95_ms": 3.7937199249999995
+      },
+      {
+        "name": "idle-2",
+        "load": "idle",
+        "repeat": 2,
+        "runs": [
+          {
+            "strategy": "fixed_sleep",
+            "execution": {
+              "command": [
+                "/usr/bin/python3",
+                "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+                "--source",
+                "/home/research/orb-dispatch-check-2026-10-18/source",
+                "--data",
+                "/home/research/orb-slam3-work/data/V1_01_easy",
+                "--output",
+                "/home/research/orb-effective-duration-2026-10-18/collection/idle-2/fixed_sleep/replay",
+                "--mode",
+                "fixed",
+                "--kind",
+                "instrument",
+                "--frames",
+                "800",
+                "--offset",
+                "800",
+                "--init-limit",
+                "100",
+                "--preload-limit",
+                "901",
+                "--period-ns",
+                "50000000",
+                "--threads",
+                "1",
+                "--spin-us",
+                "0",
+                "--timeout",
+                "180"
+              ],
+              "returncode": 0,
+              "timeout": false,
+              "seconds": 45.510473686999944
+            },
+            "run_json_sha256": "9ccf4be58da478521fbb65c1bd0ce213c6fa9f8273c02753c98b2ef6d31c92df",
+            "quality": {
+              "frames": 800,
+              "valid_frames": 800,
+              "matched_frames": 800,
+              "valid_fraction": 1.0,
+              "ground_truth_coverage": 1.0,
+              "ATE_RMSE_m": 0.0478301350699519,
+              "ATE_p95_m": 0.06677556265150039,
+              "ATE_max_m": 0.14328145446142462,
+              "alignment": "SE3, scale fixed to 1",
+              "pose": "online left-camera position; body GT + rotated T_BS translation"
+            },
+            "CPU": 0.35691661854895856,
+            "throughput": 20.016199021797064,
+            "RSS": 1219313664,
+            "deadline_fraction": 1.0,
+            "reset_count": 0,
+            "data_sha256": {
+              "replay-events.csv": "3e77b09b6b278b8df94b98a72b399fac330b89ef4acc125ca442fd9d3bfdd845",
+              "replay-online.csv": "36c95974a5858d99ee143e67a37b9aed023b781b120fe4be8c7a5f63ea10ba77",
+              "replay-summary.json": "289f07eeb28c0fd06e85fbc1c58e84e90b02d5c596e0df20fba40d9216316bab"
+            },
+            "accounting": {
+              "directory": "/home/research/orb-effective-duration-2026-10-18/collection/idle-2/fixed_sleep/replay",
+              "status": "accounting_passed",
+              "errors": [],
+              "probability_assumptions_verified": false,
+              "identity_is_independent_validation": false,
+              "input_sha256": {
+                "run.json": "9ccf4be58da478521fbb65c1bd0ce213c6fa9f8273c02753c98b2ef6d31c92df",
+                "replay-events.csv": "3e77b09b6b278b8df94b98a72b399fac330b89ef4acc125ca442fd9d3bfdd845",
+                "replay-online.csv": "36c95974a5858d99ee143e67a37b9aed023b781b120fe4be8c7a5f63ea10ba77"
+              },
+              "frames": 800,
+              "sampled_peak_threads": 1,
+              "keyframes_processed": 23,
+              "empty_rounds": 778,
+              "invalid_pose_frames": 0,
+              "backlog_frames": 0,
+              "max_identity_error_ns": 0,
+              "max_legacy_error_ns": 191425,
+              "legacy_failed_windows": 29,
+              "max_W_T_ns": 191343,
+              "max_W_B_ns": 7834,
+              "late_frames": 0,
+              "deadline_equal_frames": 0,
+              "min_abs_deadline_slack_ns": 26878057,
+              "empirical_success_windows": 40,
+              "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b"
+            },
+            "gates": {
+              "absolute_ATE": true,
+              "valid_poses": true,
+              "ground_truth_coverage": true,
+              "deadline_fraction": true,
+              "throughput": true,
+              "CPU": true,
+              "RSS": true,
+              "no_reset": true,
+              "relative_ATE": true,
+              "relative_CPU": true,
+              "accounting": true
+            }
+          },
+          {
+            "strategy": "native_control",
+            "execution": {
+              "command": [
+                "/usr/bin/python3",
+                "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+                "--source",
+                "/home/research/orb-dispatch-check-2026-10-18/source",
+                "--data",
+                "/home/research/orb-slam3-work/data/V1_01_easy",
+                "--output",
+                "/home/research/orb-effective-duration-2026-10-18/collection/idle-2/native_control/replay",
+                "--mode",
+                "native_control",
+                "--kind",
+                "instrument",
+                "--frames",
+                "800",
+                "--offset",
+                "800",
+                "--init-limit",
+                "100",
+                "--preload-limit",
+                "901",
+                "--period-ns",
+                "50000000",
+                "--threads",
+                "1",
+                "--spin-us",
+                "0",
+                "--timeout",
+                "180"
+              ],
+              "returncode": 0,
+              "timeout": false,
+              "seconds": 45.45679997599996
+            },
+            "run_json_sha256": "a49cfd4624cb5a58c9131ed4767c7d5bf64950dd717f06a3ee36be747263c7fa",
+            "quality": {
+              "frames": 800,
+              "valid_frames": 800,
+              "matched_frames": 800,
+              "valid_fraction": 1.0,
+              "ground_truth_coverage": 1.0,
+              "ATE_RMSE_m": 0.04644711545406667,
+              "ATE_p95_m": 0.06877082531953906,
+              "ATE_max_m": 0.14223854329288335,
+              "alignment": "SE3, scale fixed to 1",
+              "pose": "online left-camera position; body GT + rotated T_BS translation"
+            },
+            "CPU": 0.36475402587933337,
+            "throughput": 20.016006365943504,
+            "RSS": 1222569984,
+            "deadline_fraction": 1.0,
+            "reset_count": 0,
+            "data_sha256": {
+              "replay-events.csv": "ff322121cace122be2b9895ad1c953532fab797d481bbd6fc37191266812c867",
+              "replay-online.csv": "b0996a4970001717f16310bffdda9fc1f6f01e1917fbcdbf4c323d8dc9ade09a",
+              "replay-summary.json": "4e2c5427a3f918533f5dc53750f4e375451ad6409825eef3f512a478e6d3c088"
+            },
+            "gates": {
+              "absolute_ATE": true,
+              "valid_poses": true,
+              "ground_truth_coverage": true,
+              "deadline_fraction": true,
+              "throughput": true,
+              "CPU": true,
+              "RSS": true
+            }
+          }
+        ]
+      },
+      {
+        "name": "idle-3",
+        "load": "idle",
+        "repeat": 3,
+        "runs": [
+          {
+            "strategy": "native_control",
+            "execution": {
+              "command": [
+                "/usr/bin/python3",
+                "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+                "--source",
+                "/home/research/orb-dispatch-check-2026-10-18/source",
+                "--data",
+                "/home/research/orb-slam3-work/data/V1_01_easy",
+                "--output",
+                "/home/research/orb-effective-duration-2026-10-18/collection/idle-3/native_control/replay",
+                "--mode",
+                "native_control",
+                "--kind",
+                "instrument",
+                "--frames",
+                "800",
+                "--offset",
+                "800",
+                "--init-limit",
+                "100",
+                "--preload-limit",
+                "901",
+                "--period-ns",
+                "50000000",
+                "--threads",
+                "1",
+                "--spin-us",
+                "0",
+                "--timeout",
+                "180"
+              ],
+              "returncode": 0,
+              "timeout": false,
+              "seconds": 45.455421548000004
+            },
+            "run_json_sha256": "9510842137b8b6e71b74d748c2adfedbd9e40f594657ed6c77f750f2529d2531",
+            "quality": {
+              "frames": 800,
+              "valid_frames": 800,
+              "matched_frames": 800,
+              "valid_fraction": 1.0,
+              "ground_truth_coverage": 1.0,
+              "ATE_RMSE_m": 0.04644711545406667,
+              "ATE_p95_m": 0.06877082531953906,
+              "ATE_max_m": 0.14223854329288335,
+              "alignment": "SE3, scale fixed to 1",
+              "pose": "online left-camera position; body GT + rotated T_BS translation"
+            },
+            "CPU": 0.3646914434351342,
+            "throughput": 20.016126528770094,
+            "RSS": 1219964928,
+            "deadline_fraction": 1.0,
+            "reset_count": 0,
+            "data_sha256": {
+              "replay-events.csv": "cde620e77dd8dddababc6731890f914ca12ace1260d61ac19f7a16f6a973be93",
+              "replay-online.csv": "b0996a4970001717f16310bffdda9fc1f6f01e1917fbcdbf4c323d8dc9ade09a",
+              "replay-summary.json": "44390765d6da23efa792bae642827bf93e9299b60f685bc65ef4009e38469753"
+            },
+            "gates": {
+              "absolute_ATE": true,
+              "valid_poses": true,
+              "ground_truth_coverage": true,
+              "deadline_fraction": true,
+              "throughput": true,
+              "CPU": true,
+              "RSS": true
+            }
+          },
+          {
+            "strategy": "fixed_sleep",
+            "execution": {
+              "command": [
+                "/usr/bin/python3",
+                "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+                "--source",
+                "/home/research/orb-dispatch-check-2026-10-18/source",
+                "--data",
+                "/home/research/orb-slam3-work/data/V1_01_easy",
+                "--output",
+                "/home/research/orb-effective-duration-2026-10-18/collection/idle-3/fixed_sleep/replay",
+                "--mode",
+                "fixed",
+                "--kind",
+                "instrument",
+                "--frames",
+                "800",
+                "--offset",
+                "800",
+                "--init-limit",
+                "100",
+                "--preload-limit",
+                "901",
+                "--period-ns",
+                "50000000",
+                "--threads",
+                "1",
+                "--spin-us",
+                "0",
+                "--timeout",
+                "180"
+              ],
+              "returncode": 0,
+              "timeout": false,
+              "seconds": 45.45977364300006
+            },
+            "run_json_sha256": "0654122ead5e5211000dfa3f727c50f792c0236ac3c19b2fb496e890bfaf8d1a",
+            "quality": {
+              "frames": 800,
+              "valid_frames": 800,
+              "matched_frames": 800,
+              "valid_fraction": 1.0,
+              "ground_truth_coverage": 1.0,
+              "ATE_RMSE_m": 0.0478301350699519,
+              "ATE_p95_m": 0.06677556265150039,
+              "ATE_max_m": 0.14328145446142462,
+              "alignment": "SE3, scale fixed to 1",
+              "pose": "online left-camera position; body GT + rotated T_BS translation"
+            },
+            "CPU": 0.35696381273658684,
+            "throughput": 20.016193746262974,
+            "RSS": 1217191936,
+            "deadline_fraction": 1.0,
+            "reset_count": 0,
+            "data_sha256": {
+              "replay-events.csv": "4b9e069ba9290bbee45011e1999225440a90a5676a7c88b666ba522ac09af54e",
+              "replay-online.csv": "36c95974a5858d99ee143e67a37b9aed023b781b120fe4be8c7a5f63ea10ba77",
+              "replay-summary.json": "91f51b6576fd2e8bb052a93448f819dac34dbc7b62e946f5ccacba17b1073e91"
+            },
+            "accounting": {
+              "directory": "/home/research/orb-effective-duration-2026-10-18/collection/idle-3/fixed_sleep/replay",
+              "status": "accounting_passed",
+              "errors": [],
+              "probability_assumptions_verified": false,
+              "identity_is_independent_validation": false,
+              "input_sha256": {
+                "run.json": "0654122ead5e5211000dfa3f727c50f792c0236ac3c19b2fb496e890bfaf8d1a",
+                "replay-events.csv": "4b9e069ba9290bbee45011e1999225440a90a5676a7c88b666ba522ac09af54e",
+                "replay-online.csv": "36c95974a5858d99ee143e67a37b9aed023b781b120fe4be8c7a5f63ea10ba77"
+              },
+              "frames": 800,
+              "sampled_peak_threads": 1,
+              "keyframes_processed": 23,
+              "empty_rounds": 778,
+              "invalid_pose_frames": 0,
+              "backlog_frames": 0,
+              "max_identity_error_ns": 0,
+              "max_legacy_error_ns": 210887,
+              "legacy_failed_windows": 31,
+              "max_W_T_ns": 210814,
+              "max_W_B_ns": 311,
+              "late_frames": 0,
+              "deadline_equal_frames": 0,
+              "min_abs_deadline_slack_ns": 26053352,
+              "empirical_success_windows": 40,
+              "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b"
+            },
+            "gates": {
+              "absolute_ATE": true,
+              "valid_poses": true,
+              "ground_truth_coverage": true,
+              "deadline_fraction": true,
+              "throughput": true,
+              "CPU": true,
+              "RSS": true,
+              "no_reset": true,
+              "relative_ATE": true,
+              "relative_CPU": true,
+              "accounting": true
+            }
+          }
+        ]
+      },
+      {
+        "name": "opencv_companion-3",
+        "load": "opencv_companion",
+        "repeat": 3,
+        "runs": [
+          {
+            "strategy": "native_control",
+            "execution": {
+              "command": [
+                "/usr/bin/python3",
+                "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+                "--source",
+                "/home/research/orb-dispatch-check-2026-10-18/source",
+                "--data",
+                "/home/research/orb-slam3-work/data/V1_01_easy",
+                "--output",
+                "/home/research/orb-effective-duration-2026-10-18/collection/opencv_companion-3/native_control/replay",
+                "--mode",
+                "native_control",
+                "--kind",
+                "instrument",
+                "--frames",
+                "800",
+                "--offset",
+                "800",
+                "--init-limit",
+                "100",
+                "--preload-limit",
+                "901",
+                "--period-ns",
+                "50000000",
+                "--threads",
+                "1",
+                "--spin-us",
+                "0",
+                "--timeout",
+                "180"
+              ],
+              "returncode": 0,
+              "timeout": false,
+              "seconds": 45.45703476699998
+            },
+            "run_json_sha256": "c9e7970f79fc58592ab7d6dcdf2bf1b15706854b97c5b6185d5ebac348be1385",
+            "quality": {
+              "frames": 800,
+              "valid_frames": 800,
+              "matched_frames": 800,
+              "valid_fraction": 1.0,
+              "ground_truth_coverage": 1.0,
+              "ATE_RMSE_m": 0.0417495529529248,
+              "ATE_p95_m": 0.05987080705884935,
+              "ATE_max_m": 0.13443904144424781,
+              "alignment": "SE3, scale fixed to 1",
+              "pose": "online left-camera position; body GT + rotated T_BS translation"
+            },
+            "CPU": 0.3655836214124192,
+            "throughput": 20.015851551634732,
+            "RSS": 1220882432,
+            "deadline_fraction": 1.0,
+            "reset_count": 0,
+            "data_sha256": {
+              "replay-events.csv": "9b892b718f94d4f4662bafc772c10c80267e6c2255557a8c66f7092752d9781e",
+              "replay-online.csv": "8be9445ffc200556e8aa466816e686b4601cd56ac7502fb9c1ae2ba19ce5367d",
+              "replay-summary.json": "5c7e34ba17a01ffbc0c9ac8f6c09b9b524ed5cb913bc75aee39ce3a06f9e52da"
+            },
+            "companion": {
+              "samples": 799,
+              "p95_ms": 3.7637881,
+              "deadline_fraction": 1.0
+            },
+            "gates": {
+              "absolute_ATE": true,
+              "valid_poses": true,
+              "ground_truth_coverage": true,
+              "deadline_fraction": true,
+              "throughput": true,
+              "CPU": true,
+              "RSS": true,
+              "companion_p95": true
+            }
+          },
+          {
+            "strategy": "fixed_sleep",
+            "execution": {
+              "command": [
+                "/usr/bin/python3",
+                "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+                "--source",
+                "/home/research/orb-dispatch-check-2026-10-18/source",
+                "--data",
+                "/home/research/orb-slam3-work/data/V1_01_easy",
+                "--output",
+                "/home/research/orb-effective-duration-2026-10-18/collection/opencv_companion-3/fixed_sleep/replay",
+                "--mode",
+                "fixed",
+                "--kind",
+                "instrument",
+                "--frames",
+                "800",
+                "--offset",
+                "800",
+                "--init-limit",
+                "100",
+                "--preload-limit",
+                "901",
+                "--period-ns",
+                "50000000",
+                "--threads",
+                "1",
+                "--spin-us",
+                "0",
+                "--timeout",
+                "180"
+              ],
+              "returncode": 0,
+              "timeout": false,
+              "seconds": 45.460389308
+            },
+            "run_json_sha256": "2cb3adaa6198677e1d8475bca5238d21420ca49006988613ad5aca29f755168c",
+            "quality": {
+              "frames": 800,
+              "valid_frames": 800,
+              "matched_frames": 800,
+              "valid_fraction": 1.0,
+              "ground_truth_coverage": 1.0,
+              "ATE_RMSE_m": 0.04352296435571172,
+              "ATE_p95_m": 0.06707479812335801,
+              "ATE_max_m": 0.1332034084695387,
+              "alignment": "SE3, scale fixed to 1",
+              "pose": "online left-camera position; body GT + rotated T_BS translation"
+            },
+            "CPU": 0.3574423641506139,
+            "throughput": 20.016131075594718,
+            "RSS": 1219579904,
+            "deadline_fraction": 1.0,
+            "reset_count": 0,
+            "data_sha256": {
+              "replay-events.csv": "9f213549ee02d8974da65149a51602582041a85e44ccba7d15c76123052effa0",
+              "replay-online.csv": "bbe6e4ce8b0329713bf88067c40a8e270389b7281b5ceec1f798d8178f0f1ca0",
+              "replay-summary.json": "219cb3cd68469132b966a45370df9bcee3b324be58114b1f4a68a60ea61eeeea"
+            },
+            "accounting": {
+              "directory": "/home/research/orb-effective-duration-2026-10-18/collection/opencv_companion-3/fixed_sleep/replay",
+              "status": "accounting_passed",
+              "errors": [],
+              "probability_assumptions_verified": false,
+              "identity_is_independent_validation": false,
+              "input_sha256": {
+                "run.json": "2cb3adaa6198677e1d8475bca5238d21420ca49006988613ad5aca29f755168c",
+                "replay-events.csv": "9f213549ee02d8974da65149a51602582041a85e44ccba7d15c76123052effa0",
+                "replay-online.csv": "bbe6e4ce8b0329713bf88067c40a8e270389b7281b5ceec1f798d8178f0f1ca0"
+              },
+              "frames": 800,
+              "sampled_peak_threads": 1,
+              "keyframes_processed": 25,
+              "empty_rounds": 776,
+              "invalid_pose_frames": 0,
+              "backlog_frames": 0,
+              "max_identity_error_ns": 0,
+              "max_legacy_error_ns": 169298,
+              "legacy_failed_windows": 31,
+              "max_W_T_ns": 169218,
+              "max_W_B_ns": 291,
+              "late_frames": 0,
+              "deadline_equal_frames": 0,
+              "min_abs_deadline_slack_ns": 27279448,
+              "empirical_success_windows": 40,
+              "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b"
+            },
+            "companion": {
+              "samples": 800,
+              "p95_ms": 3.7836919499999997,
+              "deadline_fraction": 1.0
+            },
+            "gates": {
+              "absolute_ATE": true,
+              "valid_poses": true,
+              "ground_truth_coverage": true,
+              "deadline_fraction": true,
+              "throughput": true,
+              "CPU": true,
+              "RSS": true,
+              "no_reset": true,
+              "relative_ATE": true,
+              "relative_CPU": true,
+              "accounting": true,
+              "companion_p95": true
+            }
+          }
+        ],
+        "before": {
+          "command": {
+            "command": [
+              "/home/research/orb-usability-work/opencv_companion",
+              "/home/research/orb-slam3-work/data/V1_01_easy/mav0/cam0/data/1403715313262142976.png",
+              "load.csv",
+              "30"
+            ],
+            "returncode": 0,
+            "timeout": false,
+            "seconds": 30.04099487499991
+          },
+          "score": {
+            "samples": 600,
+            "p95_ms": 3.80002395,
+            "deadline_fraction": 1.0
+          },
+          "sha256": "bc3dceb005ea4bacd780c703ee822bff208fbd158f02e77e147291612b09d752"
+        },
+        "after": {
+          "command": {
+            "command": [
+              "/home/research/orb-usability-work/opencv_companion",
+              "/home/research/orb-slam3-work/data/V1_01_easy/mav0/cam0/data/1403715313262142976.png",
+              "load.csv",
+              "30"
+            ],
+            "returncode": 0,
+            "timeout": false,
+            "seconds": 30.03538132599988
+          },
+          "score": {
+            "samples": 600,
+            "p95_ms": 3.84503605,
+            "deadline_fraction": 1.0
+          },
+          "sha256": "1526d8f8d381d4b6eb2b6ea0fdee767f18b64244433e22db906b58e2b9b5ecd3"
+        },
+        "companion_reference_p95_ms": 3.82253
+      }
+    ],
+    "probability_stage": "not_entered",
+    "full_E3_passed": false
+  },
+  "input_identity": {
+    "protocol": {
+      "version": 1,
+      "date": "2026-10-18",
+      "purpose": "E2 measurement validation; no probability fitting or held-out prediction",
+      "duration_semantics": "post-ready dispatch gap plus measured execution wall time",
+      "sequence": "V1_01_easy",
+      "offset": 800,
+      "evaluation_frames": 800,
+      "initialization_limit": 100,
+      "preload_limit": 901,
+      "h_ns": 50000000,
+      "tau_ns": 50000000,
+      "H": 20,
+      "cumulative_timing_limit_ns": 100000,
+      "effective_identity_limit_ns": 0,
+      "instrumentation_overhead_limit": 0.05,
+      "process_threads": 1,
+      "spin_us": 0,
+      "timeout_seconds": 180,
+      "order": [
+        "r1-instrument",
+        "r1-plain",
+        "r2-plain",
+        "r2-instrument",
+        "r3-instrument",
+        "r3-plain"
+      ],
+      "no_retry_for_acceptance": true,
+      "output": "returned Tracking pose plus status available at caller, before mapping",
+      "failure_policy": "retain acquisition failures and stop dependent steps; no missing-output service invention",
+      "data_role": "measurement pilot only; never a final holdout",
+      "probability_stage": "not_entered"
+    },
+    "protocol_sha256": "0ac9525fbbc0e498473bd837bab604ff9ec8211d9b5b79e64c58c52c430b2f9c",
+    "data_role": "measurement_pilot",
+    "source": {
+      "src/Viewer.cc": "fc097ebccc9a6d042a6b2e89d9542c6a8b743012ef6b55c1d62200414e2ce717",
+      "src/LoopClosing.cc": "376e24f3b4b3d6498affe7a3ca1716b5f0d9bb13f1ac14b969598a2ae56764b3",
+      "src/TwoViewReconstruction.cc": "d5dab968e29e6d063a2d04d4a545fe5acd674596a4559aa975c50b754ed54f55",
+      "src/ImuTypes.cc": "0d062e75b9367d8c93978f309504849bff00e7bad1bb34503a8bbace2e74ff36",
+      "src/Config.cc": "02894ce63d0806ccc82cc676363e9239a8bc95435d50c01c81509f7751816012",
+      "src/LocalMapping.cc": "e578c0d2f6412f1c99f68470d2fcb92634eb6ce36e197436b9ddf9e289492649",
+      "src/G2oTypes.cc": "b3ab3e6f8c7b4c78e4face22deefbb40ba9b3abea35ef51541a286b134ff7c12",
+      "src/Tracking.cc": "3d13829cf071fdb0da971e3e4479b3251214ea908bb293afda53808e2a0c9f6f",
+      "src/Optimizer.cc": "215ff5908e7c34272ab86c9386f0496bd1bd3daa770076e3270915b5f189f408",
+      "src/GeometricTools.cc": "2306547ec791ae80ade6fc5bbf10c8eef2a9a7768a93879bf952d4c39ce6299e",
+      "src/Settings.cc": "431f04d5f4f68870d7b1ca8558bec45d092753bd582cddfbb7928271163c9d2c",
+      "src/Atlas.cc": "e75fce62a43301342eddbd8a58037f7380b311af202078169e72fc7916c9ea40",
+      "src/KeyFrame.cc": "355507e1b35ff3eb30f75567c0bc2b3adb96c93d81b4e147d31696083a4b25f0",
+      "src/System.cc": "599c79b35d73aca57c0fae8d361e428feeef6efd9fe578e286715b4aa10c7997",
+      "src/Frame.cc": "e7dcefcc6ed213dd365972c73d263d4b2a0be1730632b35f6a92523558b2d614",
+      "src/MapPoint.cc": "f8e86159e88c22ce226e5eb69952cad0b2d3f517c8f87a5e472881d40ec5ba8f",
+      "src/MapDrawer.cc": "533e4507458863b7c806ef795e99413ad83cc182eee8dabfe62ff17dbf32e798",
+      "src/KeyFrameDatabase.cc": "d8f0bd96b0c6377c24e7d12d9d87aba8013d5a3fcbc55f3428019fd1e124b457",
+      "src/Map.cc": "76a46fd4a39075c53f730485a5301311fa5095273e01fd1f7a91caee00e90068",
+      "src/Converter.cc": "49ba273af11884ef2fc16bf8edea7889f1d7f8b185c84a8e130949b9d085892f",
+      "src/FrameDrawer.cc": "1f2e01b9ea7f41aee07d5b58aaa17297380bef4ddee326bca374f7a37497ba2f",
+      "src/Sim3Solver.cc": "95859d9994d9f9e6139613ae75fd5b2b47b2448bdc182001e7a72ded3b5d1960",
+      "src/ORBextractor.cc": "388d093203497310998abae8b81f97e00acf95dd3544aa7a819fad665c4fc978",
+      "src/ORBmatcher.cc": "c28d83d33c0aecd476d229821fd8e6d76ea7cc71174f50af3e775868c329c9be",
+      "include/Converter.h": "a42b523c74b43d1b079f08357504ba248a0363bbc95b5aba7f389f5945206dd2",
+      "include/LoopClosing.h": "d2b4a2e7535ec819346ab7575fbeb2608fe071b81d76c5358f26453f48693d5f",
+      "include/Atlas.h": "0cf2f818165575bfcc5b308bda9f054c86b85ee72efe834447497dda117b36c0",
+      "include/KeyFrame.h": "a0e146cd27a4cc2aa791133899ddd7a437a4503f94a71a0c20fcdb337103f6d7",
+      "include/Settings.h": "d8576f19b1760ce4d64b526c05071eda03a2b53d0165ab81fd4b010ddb88df7c",
+      "include/TwoViewReconstruction.h": "8143c89f1a86a6064b245fcaecf27f23b192f1b39052f3f38c38ef3481bf4d85",
+      "include/LocalMapping.h": "f47f6f4408b230a13e0a3e719714d0c3858af88307b3313e42b00629b8b43fdd",
+      "include/Config.h": "e9e9c6c4b84445de66ec39fb5a91120689856f179d8e4af80f7a0de5dfc06bb4",
+      "include/Tracking.h": "ba988cd16a0c49c69e5296b53e0b5896d53e936915cb61faa4f7406ef1ce4fed",
+      "include/MapPoint.h": "6d80d371078222541a8ea4131f353578ed6b0f606fff8aa71f0a615b923ef38a",
+      "include/Frame.h": "9fe88db79ec427ab8cf6b6d1bb0cf2913e2038b025221f68c7540699ac026c88",
+      "include/ORBmatcher.h": "a98085aa7cdd17fdeb1b2d009b52078ef745bdf25a4e77b37ecd8cd66c7839cb",
+      "include/OptimizableTypes.h": "873c559d42f14840ee1b6704ba26659e5a8a17cd591d82bf5923f3428a33ce03",
+      "include/Viewer.h": "8905029b6168170430401c59015a9588f86ad6a57b8c6d7833052a6cfb1b3cba",
+      "include/ImuTypes.h": "33bd15160ea7a7dc7afef976cd4df211c72735381f7ee8b1f83c3bc52ec11da0",
+      "include/G2oTypes.h": "9bc1eca55ebb151d119e3def91c5544496463919ea79825c6fc9161329ade614",
+      "include/System.h": "07d6a6dd3197932818cef2bf760bcf0881e8dc9b0d312563e807c258f1e338b0",
+      "include/Optimizer.h": "e6c6a4ee26ccadb38a61653eb368cd1fd5c943b2fb04f064e2ec0fca470d8c5b",
+      "include/FrameDrawer.h": "1d0bdc3a414d57a462c5203a5ce2620a14ad17042e0885d9dabcfd555b0c91c1",
+      "include/MLPnPsolver.h": "7fc8fc1639ae5c5d5c57074e001c221bf2280a992e77be701d5495321c495280",
+      "include/MapDrawer.h": "be56f43249d8f496cae3183ae07337658814334aed977916c77071d54b2783d5",
+      "include/ORBVocabulary.h": "ad1381993e44af7ee7e062f2bbb33bb48a1d5de849289c6ff4d9b325da38ec2c",
+      "include/Sim3Solver.h": "49e25bc2442442b39742d11f9c26b0c5cd329fac6109e5c469dc86bf2163ad5d",
+      "include/SerializationUtils.h": "49bc1413401be7f1c70bc4d7df5f143c0384a2eadd41edcb4dbe655704eceab7",
+      "include/GeometricTools.h": "ceb88b8ca1bb4366b24dda20a018faf56087edca3835986408a7a76dc7b921dc",
+      "include/ORBextractor.h": "6d3349f766947d1d2a6e72c5e1caf9e52611c7e073e1e89493f3cc2aeadfaf77",
+      "include/Map.h": "34af884ae8f222b19b54d298cfb368eafe38f3f80730fb2c257169667d9fd3ef",
+      "include/KeyFrameDatabase.h": "28414b687d3c182f8ba1d022850a61dfb14693995e832aefe51981dd50034891",
+      "Examples/Stereo/stereo_fixed_replay.cc": "308c287ddbe2198f18352e25d2136ba1f61d284f332e3c1b8ef5bb3d532eba90",
+      "CMakeLists.txt": "294789ac0b518148e933da0720a3ccc9034e5017c2dc930e8682e24dbc73ed20"
+    },
+    "binary_sha256": "485357470d1d6312da5c6357da83f21e1ef0b1de1f57de9182c86711b0bf02da",
+    "library": "/home/research/orb-usability-work/source/lib/libORB_SLAM3.so",
+    "library_sha256": "3a62d2a6b7bfd3a8f58dbc40e90fb9fe0d4a89484b507034a2a3b4f0f126f62f",
+    "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b",
+    "tools": {
+      "run_effective_duration_pilot.py": "6ba92a57cd6e9aa0ead82e07fa944087f035ea506608924767d60f520d3d56dc",
+      "check_effective_events.py": "bc7a581bca61479d57c3df911d12370df6f037d0f851b32cd2911363b6ecab2b",
+      "run_fixed_replay.py": "a95583c64fdaa48cce83458ffec89a9e0da87cb1ec3e8138d541c7d2b071a6a0",
+      "run_usability_batch.py": "28440cf2e577efad6c262dcf6917f30807a4f12e524631c4035bc47a42cab308"
+    },
+    "data": {
+      "mav0/cam0/data.csv": "fde68e2c385fba8b927023b912bf37ff48e33128035efe852e396e6dbb499877",
+      "mav0/cam1/data.csv": "fde68e2c385fba8b927023b912bf37ff48e33128035efe852e396e6dbb499877",
+      "mav0/state_groundtruth_estimate0/data.csv": "701200e6924ba845ccdeea884bd717c82d1ed91f480913ea6e2e6ccb9c0fbf6d"
+    }
+  },
+  "probability_assumptions_verified": false,
+  "E4_E5_E6": "not_entered",
+  "raw_work": "/home/research/orb-effective-duration-2026-10-18",
+  "preflight_correction": "pilot/ aborted before any replay: library path assumption fixed via ldd; pilot-v2 retains first executed samples",
+  "clock_uncertainty": "recorded integer-ns event classification; 100us is not a certified uncertainty bound",
+  "historical_record_hash_changes": [],
+  "retained_raw_bytes": 6075481,
+  "derived_tables": {
+    "records": [
+      {
+        "name": "E2-r1-instrument",
+        "frames": 800,
+        "table_sha256": "b2a2c1148ee6df456dcc90ffe75beab203ffdb7836fa99102c567443625eca5a",
+        "late_frames": 0,
+        "backlog_frames": 1,
+        "backlog_examples": [
+          {
+            "k": 666,
+            "release_ns": 97548483694,
+            "ready_T_ns": 97551728675,
+            "backlog_ns": 3244981,
+            "W_T_ns": 3583,
+            "C_T_ns": 19025776,
+            "S_effective_T_ns": 19029359,
+            "W_B_ns": 76,
+            "C_B_ns": 1253,
+            "S_effective_B_ns": 1329,
+            "D_ns": 22274340,
+            "deadline_slack_ns": 27725660,
+            "timely": true,
+            "valid": true,
+            "identity_error_ns": 0,
+            "legacy_error_ns": 86933,
+            "keyframes": 0
+          }
+        ],
+        "observed_success_windows": 40,
+        "min_abs_deadline_slack_ns": 25156690
+      },
+      {
+        "name": "E2-r2-instrument",
+        "frames": 800,
+        "table_sha256": "76c5a44f99bd16cee2515602ec3771eb497fad3a62a62b89a3f314f95008e2d4",
+        "late_frames": 0,
+        "backlog_frames": 1,
+        "backlog_examples": [
+          {
+            "k": 666,
+            "release_ns": 234097784789,
+            "ready_T_ns": 234099264986,
+            "backlog_ns": 1480197,
+            "W_T_ns": 2755,
+            "C_T_ns": 19027074,
+            "S_effective_T_ns": 19029829,
+            "W_B_ns": 75,
+            "C_B_ns": 657,
+            "S_effective_B_ns": 732,
+            "D_ns": 20510026,
+            "deadline_slack_ns": 29489974,
+            "timely": true,
+            "valid": true,
+            "identity_error_ns": 0,
+            "legacy_error_ns": 83464,
+            "keyframes": 0
+          }
+        ],
+        "observed_success_windows": 40,
+        "min_abs_deadline_slack_ns": 25372249
+      },
+      {
+        "name": "E2-r3-instrument",
+        "frames": 800,
+        "table_sha256": "7d1d03732d2e70c0ba18c71d129da2ed4bd77d902049d3fbe566d79c5956249a",
+        "late_frames": 0,
+        "backlog_frames": 1,
+        "backlog_examples": [
+          {
+            "k": 666,
+            "release_ns": 279621321847,
+            "ready_T_ns": 279622317709,
+            "backlog_ns": 995862,
+            "W_T_ns": 2815,
+            "C_T_ns": 18452758,
+            "S_effective_T_ns": 18455573,
+            "W_B_ns": 76,
+            "C_B_ns": 472,
+            "S_effective_B_ns": 548,
+            "D_ns": 19451435,
+            "deadline_slack_ns": 30548565,
+            "timely": true,
+            "valid": true,
+            "identity_error_ns": 0,
+            "legacy_error_ns": 83903,
+            "keyframes": 0
+          }
+        ],
+        "observed_success_windows": 40,
+        "min_abs_deadline_slack_ns": 6943914
+      },
+      {
+        "name": "E3-idle-1-fixed_sleep",
+        "frames": 800,
+        "table_sha256": "a252ef89202c1a5329881ae065caae414d6375c2fa4eb19be9afb9818773e049",
+        "late_frames": 0,
+        "backlog_frames": 1,
+        "backlog_examples": [
+          {
+            "k": 666,
+            "release_ns": 467768073910,
+            "ready_T_ns": 467768208087,
+            "backlog_ns": 134177,
+            "W_T_ns": 2518,
+            "C_T_ns": 18904041,
+            "S_effective_T_ns": 18906559,
+            "W_B_ns": 83,
+            "C_B_ns": 411,
+            "S_effective_B_ns": 494,
+            "D_ns": 19040736,
+            "deadline_slack_ns": 30959264,
+            "timely": true,
+            "valid": true,
+            "identity_error_ns": 0,
+            "legacy_error_ns": 74973,
+            "keyframes": 0
+          }
+        ],
+        "observed_success_windows": 40,
+        "min_abs_deadline_slack_ns": 25268276
+      },
+      {
+        "name": "E3-idle-2-fixed_sleep",
+        "frames": 800,
+        "table_sha256": "89c759392e4ef97b0a2b64f3bfcaae8d917eb9716719eb8c66c587a5a0a76ca1",
+        "late_frames": 0,
+        "backlog_frames": 0,
+        "backlog_examples": [],
+        "observed_success_windows": 40,
+        "min_abs_deadline_slack_ns": 26878057
+      },
+      {
+        "name": "E3-idle-3-fixed_sleep",
+        "frames": 800,
+        "table_sha256": "ef3972930e6726b0d2dd899e3491749ce9a0a39d7dd1156717d87bb960f7fcf1",
+        "late_frames": 0,
+        "backlog_frames": 0,
+        "backlog_examples": [],
+        "observed_success_windows": 40,
+        "min_abs_deadline_slack_ns": 26053352
+      },
+      {
+        "name": "E3-opencv_companion-1-fixed_sleep",
+        "frames": 800,
+        "table_sha256": "1a66279df073b19c6fab63d87eb1cb9f1bfc27c9b3d92d65d2bade61e61e314b",
+        "late_frames": 0,
+        "backlog_frames": 0,
+        "backlog_examples": [],
+        "observed_success_windows": 40,
+        "min_abs_deadline_slack_ns": 28302628
+      },
+      {
+        "name": "E3-opencv_companion-2-fixed_sleep",
+        "frames": 800,
+        "table_sha256": "2897e39c367e70d76cd1ff1ddae13eca872c8e5a98200ba2eea93ae2b9829dc7",
+        "late_frames": 0,
+        "backlog_frames": 0,
+        "backlog_examples": [],
+        "observed_success_windows": 40,
+        "min_abs_deadline_slack_ns": 24900096
+      },
+      {
+        "name": "E3-opencv_companion-3-fixed_sleep",
+        "frames": 800,
+        "table_sha256": "afc7803c43ac26a1f21e5ee58b87b6646f8d9b02354caf1bb7327fd1c6fe7220",
+        "late_frames": 0,
+        "backlog_frames": 0,
+        "backlog_examples": [],
+        "observed_success_windows": 40,
+        "min_abs_deadline_slack_ns": 27279448
+      }
+    ],
+    "environment": {
+      "python": "3.10.12 (main, Feb  4 2025, 14:57:36) [GCC 11.4.0]",
+      "platform": "Linux-5.10.16.3-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+      "numpy": "1.21.5"
+    },
+    "interpretation": "descriptive data coverage only; not E4 independence tests or probability fitting"
+  },
+  "E3_acceptance": {
+    "status": "insufficient_evidence",
+    "full_step_passed": false,
+    "practical_failures": [],
+    "data_coverage": {
+      "idle": {
+        "fixed_runs": 3,
+        "frames": 2400,
+        "backlog_frames": 1,
+        "late_frames": 0
+      },
+      "opencv_companion": {
+        "fixed_runs": 3,
+        "frames": 2400,
+        "backlog_frames": 0,
+        "late_frames": 0
+      }
+    },
+    "reasons": [
+      "Only V1_01_easy, offset 800 has been observed; no second sequence.",
+      "Only three independent starts per condition in E3; no formal sufficient-size or final-holdout collection.",
+      "Zero observed failures is not R=1; windows within each run are not assumed independent.",
+      "No observed backlog in opencv_companion: no data for its backlog-conditional law."
+    ],
+    "E4_permitted": false
+  },
+  "protection": {
+    "repos": {
+      "orb": {
+        "index_unchanged": true,
+        "head_unchanged": true,
+        "branch_unchanged": true
+      },
+      "paper": {
+        "index_unchanged": true,
+        "head_unchanged": true,
+        "branch_unchanged": true
+      },
+      "library": {
+        "index_unchanged": true,
+        "head_unchanged": true,
+        "branch_unchanged": true
+      }
+    },
+    "unexpected_preexisting_ORB_file_changes": [],
+    "theory_report_changes": [],
+    "original_historical_record_changes": []
+  },
+  "published_tools_sha256": {
+    "check_effective_events.py": "bc7a581bca61479d57c3df911d12370df6f037d0f851b32cd2911363b6ecab2b",
+    "run_effective_collection.py": "ace7994f091c83192fc2a90cfe11b0b7b7991efda9f7090f2745ec5b31a7ab87",
+    "run_effective_duration_pilot.py": "6ba92a57cd6e9aa0ead82e07fa944087f035ea506608924767d60f520d3d56dc",
+    "test_effective_events.py": "1e9393afee3abf31a1117602d335eec230187281773e28a70a302fbd7472fc57"
+  }
+}

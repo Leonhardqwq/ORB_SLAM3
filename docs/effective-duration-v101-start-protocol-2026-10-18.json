@@ -1,0 +1,68 @@
+{
+  "version": 2,
+  "stage": "E3 continuation exploratory feasibility",
+  "sequence": "V1_01_easy",
+  "offset": 0,
+  "evaluation_frames": 800,
+  "initialization_limit": 100,
+  "preload_limit": 901,
+  "h_ns": 50000000,
+  "tau_ns": 50000000,
+  "H": 20,
+  "cumulative_timing_limit_ns": 100000,
+  "repetitions": 3,
+  "process_threads": 1,
+  "spin_us": 0,
+  "timeout_seconds": 180,
+  "companion_alone_seconds": 30,
+  "blocks": [
+    "idle-1",
+    "opencv_companion-1",
+    "opencv_companion-2",
+    "idle-2",
+    "idle-3",
+    "opencv_companion-3"
+  ],
+  "strategy_order": [
+    [
+      "native_control",
+      "fixed_sleep"
+    ],
+    [
+      "fixed_sleep",
+      "native_control"
+    ],
+    [
+      "native_control",
+      "fixed_sleep"
+    ]
+  ],
+  "quality": {
+    "online_SE3_ATE_RMSE_max_m": 0.15,
+    "fixed_vs_native_factor": 1.25,
+    "fixed_vs_native_allowance_m": 0.02,
+    "valid_fraction_min": 0.99,
+    "ground_truth_coverage_min": 0.99,
+    "reset_count_max": 0
+  },
+  "resources": {
+    "deadline_success_fraction_min": 0.99,
+    "throughput_min_hz": 19,
+    "mean_CPU_cores_max": 1.0,
+    "fixed_vs_native_CPU_factor": 1.2,
+    "fixed_vs_native_CPU_allowance_cores": 0.02,
+    "sampled_peak_RSS_max_bytes": 2147483648,
+    "companion_p95_factor": 1.2,
+    "companion_p95_allowance_ms": 0.2
+  },
+  "baseline_rule": "30s companion-only before and after each loaded block; median of two p95 values, same image/period. Preserve drift; no adjusted post-hoc threshold.",
+  "relative_rule": "Compare each fixed run to native run within the same block; all absolute and relative gates must pass in every planned replicate.",
+  "stop_rule": "Complete a begun paired block including its after-reference; if any acquisition, fixed accounting or practical gate fails, stop subsequent blocks and E4-E6. No acceptance reruns. If all blocks pass, assess representation and determine further acquisition before probability work.",
+  "data_role": "Exploratory pilot only; no final holdout or acceptance of probability assumptions",
+  "clock_uncertainty": "deadline equality uses recorded integer ns; no proved clock uncertainty bound",
+  "scope": "Two sequences and distinct predeclared segments; do not infer road-driving validation or universal software applicability",
+  "timestamps": "Examples/Stereo/EuRoC_TimeStamps/V101.txt",
+  "settings": "Examples/Stereo/EuRoC.yaml",
+  "segment_note": "Offset is before initialization; evaluated frame starts depend on initialization. Record actual frame range; segments are not guaranteed independent.",
+  "continuation_rule": "Insufficient coverage triggers E3 design/collection, not automatic termination. A substantive failed gate stops downstream validation and triggers diagnosis; failed data retained."
+}

@@ -1,0 +1,4217 @@
+{
+  "stage": "E3",
+  "status": "practical_failure_diagnosed",
+  "E4_permitted": false,
+  "real_new_replays": 9,
+  "raw_evaluated_frames_all_strategies": 11200,
+  "no_CPP_changes": true,
+  "no_threshold_relaxation": true,
+  "no_final_holdout": true,
+  "batches": [
+    {
+      "sequence": "V1_02_medium",
+      "offset": 0,
+      "status": "failed",
+      "reason": "predeclared_practical_or_accounting_gate",
+      "result_sha256": "d71a8bfe42f3e4b651c45197c88af0ceafcb5ff858bb24e97f127f5de2c12009",
+      "inputs_sha256": "86d74ff2f3b1af380b4711adedbeb58e88e8f7c3d9bd723c121838c8ed975ee7",
+      "protocol": {
+        "version": 2,
+        "stage": "E3 continuation exploratory feasibility",
+        "sequence": "V1_02_medium",
+        "offset": 0,
+        "evaluation_frames": 800,
+        "initialization_limit": 100,
+        "preload_limit": 901,
+        "h_ns": 50000000,
+        "tau_ns": 50000000,
+        "H": 20,
+        "cumulative_timing_limit_ns": 100000,
+        "repetitions": 3,
+        "process_threads": 1,
+        "spin_us": 0,
+        "timeout_seconds": 180,
+        "companion_alone_seconds": 30,
+        "blocks": [
+          "idle-1",
+          "opencv_companion-1",
+          "opencv_companion-2",
+          "idle-2",
+          "idle-3",
+          "opencv_companion-3"
+        ],
+        "strategy_order": [
+          [
+            "native_control",
+            "fixed_sleep"
+          ],
+          [
+            "fixed_sleep",
+            "native_control"
+          ],
+          [
+            "native_control",
+            "fixed_sleep"
+          ]
+        ],
+        "quality": {
+          "online_SE3_ATE_RMSE_max_m": 0.15,
+          "fixed_vs_native_factor": 1.25,
+          "fixed_vs_native_allowance_m": 0.02,
+          "valid_fraction_min": 0.99,
+          "ground_truth_coverage_min": 0.99,
+          "reset_count_max": 0
+        },
+        "resources": {
+          "deadline_success_fraction_min": 0.99,
+          "throughput_min_hz": 19,
+          "mean_CPU_cores_max": 1.0,
+          "fixed_vs_native_CPU_factor": 1.2,
+          "fixed_vs_native_CPU_allowance_cores": 0.02,
+          "sampled_peak_RSS_max_bytes": 2147483648,
+          "companion_p95_factor": 1.2,
+          "companion_p95_allowance_ms": 0.2
+        },
+        "baseline_rule": "30s companion-only before and after each loaded block; median of two p95 values, same image/period. Preserve drift; no adjusted post-hoc threshold.",
+        "relative_rule": "Compare each fixed run to native run within the same block; all absolute and relative gates must pass in every planned replicate.",
+        "stop_rule": "Complete a begun paired block including its after-reference; if any acquisition, fixed accounting or practical gate fails, stop subsequent blocks and E4-E6. No acceptance reruns. If all blocks pass, assess representation and determine further acquisition before probability work.",
+        "data_role": "Exploratory pilot only; no final holdout or acceptance of probability assumptions",
+        "clock_uncertainty": "deadline equality uses recorded integer ns; no proved clock uncertainty bound",
+        "scope": "Two sequences and distinct predeclared segments; do not infer road-driving validation or universal software applicability",
+        "timestamps": "Examples/Stereo/EuRoC_TimeStamps/V102.txt",
+        "settings": "Examples/Stereo/EuRoC.yaml",
+        "segment_note": "Offset is before initialization; evaluated frame starts depend on initialization. Record actual frame range; segments are not guaranteed independent.",
+        "continuation_rule": "Insufficient coverage triggers E3 design/collection, not automatic termination. A substantive failed gate stops downstream validation and triggers diagnosis; failed data retained."
+      },
+      "records": [
+        {
+          "block": "idle-1",
+          "strategy": "native_control",
+          "record": {
+            "strategy": "native_control",
+            "execution": {
+              "command": [
+                "/usr/bin/python3",
+                "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+                "--source",
+                "/home/research/orb-dispatch-check-2026-10-18/source",
+                "--data",
+                "/home/research/orb-slam3-work/data/V1_02_medium",
+                "--output",
+                "/home/research/orb-effective-duration-2026-10-18/continuation/v102-start/idle-1/native_control/replay",
+                "--mode",
+                "native_control",
+                "--kind",
+                "instrument",
+                "--settings",
+                "/home/research/orb-usability-work/source/Examples/Stereo/EuRoC.yaml",
+                "--timestamps",
+                "/home/research/orb-usability-work/source/Examples/Stereo/EuRoC_TimeStamps/V102.txt",
+                "--frames",
+                "800",
+                "--offset",
+                "0",
+                "--init-limit",
+                "100",
+                "--preload-limit",
+                "901",
+                "--period-ns",
+                "50000000",
+                "--threads",
+                "1",
+                "--spin-us",
+                "0",
+                "--timeout",
+                "180"
+              ],
+              "returncode": 0,
+              "timeout": false,
+              "seconds": 45.919354681000016
+            },
+            "run_json_sha256": "915aca863b9011506c546194fdcd1f1884acb794ba84bc24339f0b4173011627",
+            "quality": {
+              "frames": 800,
+              "valid_frames": 800,
+              "matched_frames": 781,
+              "valid_fraction": 1.0,
+              "ground_truth_coverage": 0.97625,
+              "ATE_RMSE_m": 0.0488473560067759,
+              "ATE_p95_m": 0.08271472370792991,
+              "ATE_max_m": 0.11903890192563103,
+              "alignment": "SE3, scale fixed to 1",
+              "pose": "online left-camera position; body GT + rotated T_BS translation"
+            },
+            "CPU": 0.38613486600922875,
+            "throughput": 20.009161539769018,
+            "RSS": 1242693632,
+            "deadline_fraction": 1.0,
+            "reset_count": 0,
+            "data_sha256": {
+              "replay-events.csv": "9c431d900310ff1f6918c33545876540ca887beb951a76a88fad25e2cc7a8abb",
+              "replay-online.csv": "e4ca16637c85083c325504e5e6864253349c1ad1d2feafad940fe27e07b202d2",
+              "replay-summary.json": "2090602c1c0788fb3a80ed7da43504f869e1ebac84183b2d06d60c1fc6e03afb"
+            },
+            "gates": {
+              "absolute_ATE": true,
+              "valid_poses": true,
+              "ground_truth_coverage": false,
+              "deadline_fraction": true,
+              "throughput": true,
+              "CPU": true,
+              "RSS": true
+            }
+          }
+        },
+        {
+          "block": "idle-1",
+          "strategy": "fixed_sleep",
+          "record": {
+            "strategy": "fixed_sleep",
+            "execution": {
+              "command": [
+                "/usr/bin/python3",
+                "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+                "--source",
+                "/home/research/orb-dispatch-check-2026-10-18/source",
+                "--data",
+                "/home/research/orb-slam3-work/data/V1_02_medium",
+                "--output",
+                "/home/research/orb-effective-duration-2026-10-18/continuation/v102-start/idle-1/fixed_sleep/replay",
+                "--mode",
+                "fixed",
+                "--kind",
+                "instrument",
+                "--settings",
+                "/home/research/orb-usability-work/source/Examples/Stereo/EuRoC.yaml",
+                "--timestamps",
+                "/home/research/orb-usability-work/source/Examples/Stereo/EuRoC_TimeStamps/V102.txt",
+                "--frames",
+                "800",
+                "--offset",
+                "0",
+                "--init-limit",
+                "100",
+                "--preload-limit",
+                "901",
+                "--period-ns",
+                "50000000",
+                "--threads",
+                "1",
+                "--spin-us",
+                "0",
+                "--timeout",
+                "180"
+              ],
+              "returncode": 0,
+              "timeout": false,
+              "seconds": 45.67421631299999
+            },
+            "run_json_sha256": "a97633b769ce573fa9440232f3e869227918dc2dc4e07151ac980d77f4bc7c4a",
+            "quality": {
+              "frames": 800,
+              "valid_frames": 800,
+              "matched_frames": 781,
+              "valid_fraction": 1.0,
+              "ground_truth_coverage": 0.97625,
+              "ATE_RMSE_m": 0.04506753467613176,
+              "ATE_p95_m": 0.07141326694179782,
+              "ATE_max_m": 0.22507535805621753,
+              "alignment": "SE3, scale fixed to 1",
+              "pose": "online left-camera position; body GT + rotated T_BS translation"
+            },
+            "CPU": 0.37018389248325667,
+            "throughput": 20.016445614300995,
+            "RSS": 1236447232,
+            "deadline_fraction": 1.0,
+            "reset_count": 0,
+            "data_sha256": {
+              "replay-events.csv": "087edc9a42fd0d74fd7ac1a8203996c0b2e102f7e10c4fa52ac6c0f04bf5acba",
+              "replay-online.csv": "339a723425f4a61ef67c9f03ab46daf9dabec4f64e0740b6eca8f12f8c359f41",
+              "replay-summary.json": "08ebf45361119c4e353f6527d3f43a75ba984a042f27be4a36ed65b27c74df5d"
+            },
+            "accounting": {
+              "directory": "/home/research/orb-effective-duration-2026-10-18/continuation/v102-start/idle-1/fixed_sleep/replay",
+              "status": "accounting_passed",
+              "errors": [],
+              "probability_assumptions_verified": false,
+              "identity_is_independent_validation": false,
+              "input_sha256": {
+                "run.json": "a97633b769ce573fa9440232f3e869227918dc2dc4e07151ac980d77f4bc7c4a",
+                "replay-events.csv": "087edc9a42fd0d74fd7ac1a8203996c0b2e102f7e10c4fa52ac6c0f04bf5acba",
+                "replay-online.csv": "339a723425f4a61ef67c9f03ab46daf9dabec4f64e0740b6eca8f12f8c359f41"
+              },
+              "frames": 800,
+              "windows": [
+                {
+                  "index": 0,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 217819
+                },
+                {
+                  "index": 1,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 120561
+                },
+                {
+                  "index": 2,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 137145
+                },
+                {
+                  "index": 3,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 120645
+                },
+                {
+                  "index": 4,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 102883
+                },
+                {
+                  "index": 5,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 108189
+                },
+                {
+                  "index": 6,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 136144
+                },
+                {
+                  "index": 7,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 80179
+                },
+                {
+                  "index": 8,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 116685
+                },
+                {
+                  "index": 9,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 129766
+                },
+                {
+                  "index": 10,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 122306
+                },
+                {
+                  "index": 11,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 204327
+                },
+                {
+                  "index": 12,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 202476
+                },
+                {
+                  "index": 13,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 178992
+                },
+                {
+                  "index": 14,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 174689
+                },
+                {
+                  "index": 15,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 125341
+                },
+                {
+                  "index": 16,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 154706
+                },
+                {
+                  "index": 17,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 159382
+                },
+                {
+                  "index": 18,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 152740
+                },
+                {
+                  "index": 19,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 189454
+                },
+                {
+                  "index": 20,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 168031
+                },
+                {
+                  "index": 21,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 187728
+                },
+                {
+                  "index": 22,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 165888
+                },
+                {
+                  "index": 23,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 147159
+                },
+                {
+                  "index": 24,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 229329
+                },
+                {
+                  "index": 25,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 128705
+                },
+                {
+                  "index": 26,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 127904
+                },
+                {
+                  "index": 27,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 182233
+                },
+                {
+                  "index": 28,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 190698
+                },
+                {
+                  "index": 29,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 212952
+                },
+                {
+                  "index": 30,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 200362
+                },
+                {
+                  "index": 31,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 162229
+                },
+                {
+                  "index": 32,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 167901
+                },
+                {
+                  "index": 33,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 143148
+                },
+                {
+                  "index": 34,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 167565
+                },
+                {
+                  "index": 35,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 167368
+                },
+                {
+                  "index": 36,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 200817
+                },
+                {
+                  "index": 37,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 151773
+                },
+                {
+                  "index": 38,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 133937
+                },
+                {
+                  "index": 39,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 169348
+                }
+              ],
+              "sampled_peak_threads": 1,
+              "keyframes_processed": 41,
+              "empty_rounds": 760,
+              "invalid_pose_frames": 0,
+              "backlog_frames": 7,
+              "max_identity_error_ns": 0,
+              "max_legacy_error_ns": 229329,
+              "legacy_failed_windows": 39,
+              "max_W_T_ns": 229233,
+              "max_W_B_ns": 450,
+              "late_frames": 0,
+              "deadline_equal_frames": 0,
+              "min_abs_deadline_slack_ns": 11677166,
+              "empirical_success_windows": 40,
+              "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b"
+            },
+            "gates": {
+              "absolute_ATE": true,
+              "valid_poses": true,
+              "ground_truth_coverage": false,
+              "deadline_fraction": true,
+              "throughput": true,
+              "CPU": true,
+              "RSS": true,
+              "no_reset": true,
+              "relative_ATE": true,
+              "relative_CPU": true,
+              "accounting": true
+            }
+          },
+          "coverage": {
+            "evaluation_frames": 800,
+            "frames": [
+              1,
+              800
+            ],
+            "backlog_frames": 7,
+            "late_frames": 0,
+            "failed_latency_windows": 0,
+            "windows": 40,
+            "backlog_k": [
+              265,
+              475,
+              485,
+              544,
+              556,
+              779,
+              795
+            ],
+            "late_k": [],
+            "duration": {
+              "WT": {
+                "n": 800,
+                "min_ms": 0.002209,
+                "median_ms": 0.083265,
+                "p95_ms": 0.14001194999999986,
+                "max_ms": 0.229233,
+                "mean_ms": 0.09122082125
+              },
+              "WB": {
+                "n": 800,
+                "min_ms": 6e-05,
+                "median_ms": 7.8e-05,
+                "p95_ms": 0.000104,
+                "max_ms": 0.00045,
+                "mean_ms": 8.388249999999999e-05
+              },
+              "CT": {
+                "n": 800,
+                "min_ms": 14.064065,
+                "median_ms": 17.2644395,
+                "p95_ms": 21.383439499999998,
+                "max_ms": 32.86276,
+                "mean_ms": 17.53673173875
+              },
+              "CB": {
+                "n": 800,
+                "min_ms": 0.000312,
+                "median_ms": 0.000518,
+                "p95_ms": 0.15198314999986492,
+                "max_ms": 52.964045,
+                "mean_ms": 0.9365973925
+              },
+              "ST": {
+                "n": 800,
+                "min_ms": 14.140055,
+                "median_ms": 17.3496505,
+                "p95_ms": 21.525596749999995,
+                "max_ms": 33.001793,
+                "mean_ms": 17.627952559999997
+              },
+              "SB": {
+                "n": 800,
+                "min_ms": 0.000384,
+                "median_ms": 0.0006025,
+                "p95_ms": 0.15207534999986494,
+                "max_ms": 52.964127,
+                "mean_ms": 0.936681275
+              },
+              "backlog": {
+                "n": 800,
+                "min_ms": 0.0,
+                "median_ms": 0.0,
+                "p95_ms": 0.0,
+                "max_ms": 20.142348,
+                "mean_ms": 0.04574203125
+              },
+              "latency": {
+                "n": 800,
+                "min_ms": 14.140055,
+                "median_ms": 17.358311,
+                "p95_ms": 21.67304925,
+                "max_ms": 38.322834,
+                "mean_ms": 17.673694591249998
+              }
+            },
+            "conditional_descriptions": {
+              "False": {
+                "WT": {
+                  "n": 793,
+                  "min_ms": 0.066091,
+                  "median_ms": 0.083421,
+                  "p95_ms": 0.14113859999999992,
+                  "max_ms": 0.229233,
+                  "mean_ms": 0.09200251702395965
+                },
+                "CT": {
+                  "n": 793,
+                  "min_ms": 14.064065,
+                  "median_ms": 17.24661,
+                  "p95_ms": 21.3410632,
+                  "max_ms": 32.86276,
+                  "mean_ms": 17.51075864564943
+                },
+                "ST": {
+                  "n": 793,
+                  "min_ms": 14.140055,
+                  "median_ms": 17.337957,
+                  "p95_ms": 21.4388078,
+                  "max_ms": 33.001793,
+                  "mean_ms": 17.602761162673392
+                },
+                "SB": {
+                  "n": 793,
+                  "min_ms": 0.000384,
+                  "median_ms": 0.000604,
+                  "p95_ms": 1.1915987999999325,
+                  "max_ms": 52.964127,
+                  "mean_ms": 0.9449445901639344
+                }
+              },
+              "True": {
+                "WT": {
+                  "n": 7,
+                  "min_ms": 0.002209,
+                  "median_ms": 0.002615,
+                  "p95_ms": 0.0029877999999999997,
+                  "max_ms": 0.003037,
+                  "mean_ms": 0.0026658571428571426
+                },
+                "CT": {
+                  "n": 7,
+                  "min_ms": 17.231708,
+                  "median_ms": 18.61634,
+                  "p95_ms": 26.112838399999998,
+                  "max_ms": 27.005795,
+                  "mean_ms": 20.47911214285714
+                },
+                "ST": {
+                  "n": 7,
+                  "min_ms": 17.234745,
+                  "median_ms": 18.619213,
+                  "p95_ms": 26.1151692,
+                  "max_ms": 27.008004,
+                  "mean_ms": 20.481778
+                },
+                "SB": {
+                  "n": 7,
+                  "min_ms": 0.000495,
+                  "median_ms": 0.00054,
+                  "p95_ms": 0.0006607,
+                  "max_ms": 0.000679,
+                  "mean_ms": 0.0005657142857142857
+                }
+              }
+            },
+            "quarter_medians_ms": {
+              "ST": [
+                15.791448,
+                17.380793,
+                18.1903835,
+                17.7399925
+              ],
+              "SB": [
+                0.0006,
+                0.0005875,
+                0.000627,
+                0.0006045
+              ]
+            },
+            "rank_serial_correlation": {
+              "WT": {
+                "1": 0.28703333196492464,
+                "2": 0.19194613023948848,
+                "5": 0.1581957788318737,
+                "10": 0.04398064328287781,
+                "20": 0.08818073060868716
+              },
+              "CT": {
+                "1": 0.6963023798545174,
+                "2": 0.6179353350847436,
+                "5": 0.5627737088560526,
+                "10": 0.4606549703318126,
+                "20": 0.4174433099128899
+              },
+              "CB": {
+                "1": 0.12789163445239862,
+                "2": 0.021446832714249117,
+                "5": 0.07262977269380987,
+                "10": 0.03728973593246062,
+                "20": 0.06250414559226757
+              },
+              "ST": {
+                "1": 0.695023807955433,
+                "2": 0.6160529290588435,
+                "5": 0.5606038605173579,
+                "10": 0.4593062553914431,
+                "20": 0.4171712212645876
+              },
+              "SB": {
+                "1": 0.11612626256905126,
+                "2": 0.016649368694618846,
+                "5": 0.07104673926461566,
+                "10": 0.043985259238719335,
+                "20": 0.047217723741559775
+              }
+            },
+            "same_round_ST_SB_rank_correlation": 0.23744422100332632,
+            "keyframe_rounds": 40,
+            "interpretation": "Descriptive exploratory statistics only; no iid-frame inference, independence acceptance or reliability confidence statement"
+          }
+        }
+      ],
+      "E4_permitted": false,
+      "full_E3_passed": false,
+      "inputs_provenance": {
+        "protocol_sha256": "9f13d3aeeab82c84af37571fbbd32f8fd9099bf6abc13bfecc4d024e9d4861cc",
+        "e2_result_sha256": "2ff3c6e6882494226bd242960c723c5090d64959976a102d763c56fd2ffe64a1",
+        "e2_inputs_sha256": "7de0a34ff469d466fdd10a5522b00b5776c1c0ab3ac268df17b424a7a4dd97ef",
+        "companion_binary_sha256": "24fd47986d61834713e2f4c130784122fcc6a021f2942805e2dd9a770b7143e3",
+        "companion_image_sha256": "bbbf05991758a66f0c6527369447e72683b8821caff616f82d0a7c1c3dc89c9f",
+        "timestamps_sha256": "352af294dc5edf7fbf1f39888a45787da4740dd41846f71705d640798ea6326e",
+        "settings_sha256": "d3e1a993f79e52273afc658a44f6bcd7486616f0e857da1a144cc7f1bef88db4",
+        "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b",
+        "sequence": "V1_02_medium",
+        "data": {
+          "mav0/cam0/data.csv": "8f99cf27fb91dabdfb198999cb925d660cf6a830be4c5cf0df1d2bfa98929e16",
+          "mav0/cam1/data.csv": "a9d55e39d60825d580b4d27f36120201c9eee7239f946d98b319588032cc3e6c",
+          "mav0/state_groundtruth_estimate0/data.csv": "fed415eee44313584b9c4f61010dac146d5e4a4a35301db25b1ecd7d4d91b5f0"
+        },
+        "tools": {
+          "run_effective_collection.py": "2fcf861d114cf7a2fa81fe91ca2f7ed606a52cb2491cb7d5abd3ceca05a5075c",
+          "run_fixed_replay.py": "a95583c64fdaa48cce83458ffec89a9e0da87cb1ec3e8138d541c7d2b071a6a0",
+          "check_effective_events.py": "bc7a581bca61479d57c3df911d12370df6f037d0f851b32cd2911363b6ecab2b",
+          "score_online_trajectory.py": "d5eeaa52d1dd1b79f16b715e4a9047bd125a8b03692c002d58947919ad114038",
+          "analyze_usability.py": "584b26244da785030e7808d5fe935d29f26fa99ce848890e5a6bbfa9fa8208c1",
+          "run_usability_batch.py": "28440cf2e577efad6c262dcf6917f30807a4f12e524631c4035bc47a42cab308"
+        }
+      },
+      "recorded_image_files": 1802,
+      "raw_directory": "/home/research/orb-effective-duration-2026-10-18/continuation/v102-start",
+      "ground-truth-diagnosis.json": {
+        "ground_truth_rows": 16702,
+        "image_frames": 1710,
+        "GT_supported_input_segments": [
+          [
+            20,
+            1689
+          ]
+        ],
+        "camera_start_ns": 1403715523912143104,
+        "gt_start_ns": 1403715524907143168,
+        "gt_end_ns": 1403715608412143104,
+        "runs": [
+          {
+            "strategy": "native_control",
+            "quality": {
+              "frames": 800,
+              "valid_frames": 800,
+              "matched_frames": 781,
+              "valid_fraction": 1.0,
+              "ground_truth_coverage": 0.97625,
+              "ATE_RMSE_m": 0.0488473560067759,
+              "ATE_p95_m": 0.08271472370792991,
+              "ATE_max_m": 0.11903890192563103,
+              "alignment": "SE3, scale fixed to 1",
+              "pose": "online left-camera position; body GT + rotated T_BS translation"
+            },
+            "gates": {
+              "absolute_ATE": true,
+              "valid_poses": true,
+              "ground_truth_coverage": false,
+              "deadline_fraction": true,
+              "throughput": true,
+              "CPU": true,
+              "RSS": true
+            },
+            "unmatched_k": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18
+            ],
+            "CPU": 0.38613486600922875,
+            "deadline_fraction": 1.0,
+            "accounting": null
+          },
+          {
+            "strategy": "fixed_sleep",
+            "quality": {
+              "frames": 800,
+              "valid_frames": 800,
+              "matched_frames": 781,
+              "valid_fraction": 1.0,
+              "ground_truth_coverage": 0.97625,
+              "ATE_RMSE_m": 0.04506753467613176,
+              "ATE_p95_m": 0.07141326694179782,
+              "ATE_max_m": 0.22507535805621753,
+              "alignment": "SE3, scale fixed to 1",
+              "pose": "online left-camera position; body GT + rotated T_BS translation"
+            },
+            "gates": {
+              "absolute_ATE": true,
+              "valid_poses": true,
+              "ground_truth_coverage": false,
+              "deadline_fraction": true,
+              "throughput": true,
+              "CPU": true,
+              "RSS": true,
+              "no_reset": true,
+              "relative_ATE": true,
+              "relative_CPU": true,
+              "accounting": true
+            },
+            "unmatched_k": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18
+            ],
+            "CPU": 0.37018389248325667,
+            "deadline_fraction": 1.0,
+            "accounting": "accounting_passed"
+          }
+        ]
+      }
+    },
+    {
+      "sequence": "V1_02_medium",
+      "offset": 20,
+      "status": "failed",
+      "reason": "predeclared_practical_or_accounting_gate",
+      "result_sha256": "94d89be594f934b8a0baad6883cfeb1b0d15b5466ceb4cc3f8ed67a734984976",
+      "inputs_sha256": "6be3e4660b9c74ea8f92d239a98b998c21e9db4f16d0b59f909193d0e485e5ce",
+      "protocol": {
+        "version": 3,
+        "stage": "E3 continuation after metadata-only segment correction",
+        "sequence": "V1_02_medium",
+        "offset": 20,
+        "evaluation_frames": 800,
+        "initialization_limit": 100,
+        "preload_limit": 901,
+        "h_ns": 50000000,
+        "tau_ns": 50000000,
+        "H": 20,
+        "cumulative_timing_limit_ns": 100000,
+        "repetitions": 3,
+        "process_threads": 1,
+        "spin_us": 0,
+        "timeout_seconds": 180,
+        "companion_alone_seconds": 30,
+        "blocks": [
+          "idle-1",
+          "opencv_companion-1",
+          "opencv_companion-2",
+          "idle-2",
+          "idle-3",
+          "opencv_companion-3"
+        ],
+        "strategy_order": [
+          [
+            "native_control",
+            "fixed_sleep"
+          ],
+          [
+            "fixed_sleep",
+            "native_control"
+          ],
+          [
+            "native_control",
+            "fixed_sleep"
+          ]
+        ],
+        "quality": {
+          "online_SE3_ATE_RMSE_max_m": 0.15,
+          "fixed_vs_native_factor": 1.25,
+          "fixed_vs_native_allowance_m": 0.02,
+          "valid_fraction_min": 0.99,
+          "ground_truth_coverage_min": 0.99,
+          "reset_count_max": 0
+        },
+        "resources": {
+          "deadline_success_fraction_min": 0.99,
+          "throughput_min_hz": 19,
+          "mean_CPU_cores_max": 1.0,
+          "fixed_vs_native_CPU_factor": 1.2,
+          "fixed_vs_native_CPU_allowance_cores": 0.02,
+          "sampled_peak_RSS_max_bytes": 2147483648,
+          "companion_p95_factor": 1.2,
+          "companion_p95_allowance_ms": 0.2
+        },
+        "baseline_rule": "30s companion-only before and after each loaded block; median of two p95 values, same image/period. Preserve drift; no adjusted post-hoc threshold.",
+        "relative_rule": "Compare each fixed run to native run within the same block; all absolute and relative gates must pass in every planned replicate.",
+        "stop_rule": "Complete a begun paired block including its after-reference; if any acquisition, fixed accounting or practical gate fails, stop subsequent blocks and E4-E6. No acceptance reruns. If all blocks pass, assess representation and determine further acquisition before probability work.",
+        "data_role": "Exploratory feasibility; not final holdout",
+        "clock_uncertainty": "deadline equality uses recorded integer ns; no proved clock uncertainty bound",
+        "scope": "Data-availability correction only; original quality/resource/period/deadline thresholds unchanged",
+        "timestamps": "Examples/Stereo/EuRoC_TimeStamps/V102.txt",
+        "settings": "Examples/Stereo/EuRoC.yaml",
+        "segment_rule": "Earliest/latest fully GT-supported 900-frame envelope; independent of SLAM quality/timing outcomes. Preserve failed offset=0 run."
+      },
+      "records": [
+        {
+          "block": "idle-1",
+          "strategy": "native_control",
+          "record": {
+            "strategy": "native_control",
+            "execution": {
+              "command": [
+                "/usr/bin/python3",
+                "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+                "--source",
+                "/home/research/orb-dispatch-check-2026-10-18/source",
+                "--data",
+                "/home/research/orb-slam3-work/data/V1_02_medium",
+                "--output",
+                "/home/research/orb-effective-duration-2026-10-18/continuation-valid/v102-valid-early/idle-1/native_control/replay",
+                "--mode",
+                "native_control",
+                "--kind",
+                "instrument",
+                "--settings",
+                "/home/research/orb-usability-work/source/Examples/Stereo/EuRoC.yaml",
+                "--timestamps",
+                "/home/research/orb-usability-work/source/Examples/Stereo/EuRoC_TimeStamps/V102.txt",
+                "--frames",
+                "800",
+                "--offset",
+                "20",
+                "--init-limit",
+                "100",
+                "--preload-limit",
+                "901",
+                "--period-ns",
+                "50000000",
+                "--threads",
+                "1",
+                "--spin-us",
+                "0",
+                "--timeout",
+                "180"
+              ],
+              "returncode": 0,
+              "timeout": false,
+              "seconds": 46.14735158900001
+            },
+            "run_json_sha256": "7862c663e4bf6c37ccfe698296f7584e09446b731bcd9269139a4c5844552554",
+            "quality": {
+              "frames": 800,
+              "valid_frames": 676,
+              "matched_frames": 676,
+              "valid_fraction": 0.845,
+              "ground_truth_coverage": 0.845,
+              "ATE_RMSE_m": 0.1359166070384118,
+              "ATE_p95_m": 0.06397678908249277,
+              "ATE_max_m": 1.4020291872026691,
+              "alignment": "SE3, scale fixed to 1",
+              "pose": "online left-camera position; body GT + rotated T_BS translation"
+            },
+            "CPU": 0.4729771106385085,
+            "throughput": 20.01355478889318,
+            "RSS": 1246892032,
+            "deadline_fraction": 1.0,
+            "reset_count": 0,
+            "data_sha256": {
+              "replay-events.csv": "7d7bdeddb697f28cedbb85de07b3633da65d00b73b466f1db6d16c1b899f4203",
+              "replay-online.csv": "018c0c9f156df7eb358f3a43fd39c5e57899ecfe4f7de4bf27d675e8dda7bdbc",
+              "replay-summary.json": "4af6324443edbbd0222f3b8dad7718184c5f0a98faa11218d9d9c3363006850b"
+            },
+            "gates": {
+              "absolute_ATE": true,
+              "valid_poses": false,
+              "ground_truth_coverage": false,
+              "deadline_fraction": true,
+              "throughput": true,
+              "CPU": true,
+              "RSS": true
+            }
+          }
+        },
+        {
+          "block": "idle-1",
+          "strategy": "fixed_sleep",
+          "record": {
+            "strategy": "fixed_sleep",
+            "execution": {
+              "command": [
+                "/usr/bin/python3",
+                "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+                "--source",
+                "/home/research/orb-dispatch-check-2026-10-18/source",
+                "--data",
+                "/home/research/orb-slam3-work/data/V1_02_medium",
+                "--output",
+                "/home/research/orb-effective-duration-2026-10-18/continuation-valid/v102-valid-early/idle-1/fixed_sleep/replay",
+                "--mode",
+                "fixed",
+                "--kind",
+                "instrument",
+                "--settings",
+                "/home/research/orb-usability-work/source/Examples/Stereo/EuRoC.yaml",
+                "--timestamps",
+                "/home/research/orb-usability-work/source/Examples/Stereo/EuRoC_TimeStamps/V102.txt",
+                "--frames",
+                "800",
+                "--offset",
+                "20",
+                "--init-limit",
+                "100",
+                "--preload-limit",
+                "901",
+                "--period-ns",
+                "50000000",
+                "--threads",
+                "1",
+                "--spin-us",
+                "0",
+                "--timeout",
+                "180"
+              ],
+              "returncode": 0,
+              "timeout": false,
+              "seconds": 45.91085722000001
+            },
+            "run_json_sha256": "19d54084f86d25a5030426f2ef9d674b34a2f4f69715c8f7e0cc256078f18e63",
+            "quality": {
+              "frames": 800,
+              "valid_frames": 676,
+              "matched_frames": 676,
+              "valid_fraction": 0.845,
+              "ground_truth_coverage": 0.845,
+              "ATE_RMSE_m": 0.1416275584496653,
+              "ATE_p95_m": 0.10549715247014921,
+              "ATE_max_m": 1.3890163952851564,
+              "alignment": "SE3, scale fixed to 1",
+              "pose": "online left-camera position; body GT + rotated T_BS translation"
+            },
+            "CPU": 0.4386350845542929,
+            "throughput": 20.00168409529691,
+            "RSS": 1241440256,
+            "deadline_fraction": 0.99625,
+            "reset_count": 2,
+            "data_sha256": {
+              "replay-events.csv": "6d9c0b4ece73bdb6e0e7443a738ace02f69953a02bdb8f824f5b38483d002728",
+              "replay-online.csv": "af925eca6f3415d3604453b5d6842fad7e7f88ab2c2724142131677a89d579cd",
+              "replay-summary.json": "12c24a8b2335e73b310a10c3536d32ca6c89c26effbafcd5b14e89a6abf44905"
+            },
+            "accounting": {
+              "directory": "/home/research/orb-effective-duration-2026-10-18/continuation-valid/v102-valid-early/idle-1/fixed_sleep/replay",
+              "status": "accounting_passed",
+              "errors": [],
+              "probability_assumptions_verified": false,
+              "identity_is_independent_validation": false,
+              "input_sha256": {
+                "run.json": "19d54084f86d25a5030426f2ef9d674b34a2f4f69715c8f7e0cc256078f18e63",
+                "replay-events.csv": "6d9c0b4ece73bdb6e0e7443a738ace02f69953a02bdb8f824f5b38483d002728",
+                "replay-online.csv": "af925eca6f3415d3604453b5d6842fad7e7f88ab2c2724142131677a89d579cd"
+              },
+              "frames": 800,
+              "windows": [
+                {
+                  "index": 0,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": false,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 229049
+                },
+                {
+                  "index": 1,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": false,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 223903
+                },
+                {
+                  "index": 2,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": false,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 160465
+                },
+                {
+                  "index": 3,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": false,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 242281
+                },
+                {
+                  "index": 4,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": false,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 195932
+                },
+                {
+                  "index": 5,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": false,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 226070
+                },
+                {
+                  "index": 6,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": false,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 177388
+                },
+                {
+                  "index": 7,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 153714
+                },
+                {
+                  "index": 8,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 180212
+                },
+                {
+                  "index": 9,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 168176
+                },
+                {
+                  "index": 10,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 151063
+                },
+                {
+                  "index": 11,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 157524
+                },
+                {
+                  "index": 12,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 146806
+                },
+                {
+                  "index": 13,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 153159
+                },
+                {
+                  "index": 14,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 130490
+                },
+                {
+                  "index": 15,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 164405
+                },
+                {
+                  "index": 16,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 123904
+                },
+                {
+                  "index": 17,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 144703
+                },
+                {
+                  "index": 18,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 185093
+                },
+                {
+                  "index": 19,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 159699
+                },
+                {
+                  "index": 20,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 172653
+                },
+                {
+                  "index": 21,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 172787
+                },
+                {
+                  "index": 22,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 189918
+                },
+                {
+                  "index": 23,
+                  "initial_state_ns": [
+                    0,
+                    13649872
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 180295
+                },
+                {
+                  "index": 24,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 140532
+                },
+                {
+                  "index": 25,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 150514
+                },
+                {
+                  "index": 26,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 149957
+                },
+                {
+                  "index": 27,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 205704
+                },
+                {
+                  "index": 28,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 157445
+                },
+                {
+                  "index": 29,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 174780
+                },
+                {
+                  "index": 30,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 171221
+                },
+                {
+                  "index": 31,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 165121
+                },
+                {
+                  "index": 32,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 171356
+                },
+                {
+                  "index": 33,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 195551
+                },
+                {
+                  "index": 34,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 217366
+                },
+                {
+                  "index": 35,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 233477
+                },
+                {
+                  "index": 36,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 205178
+                },
+                {
+                  "index": 37,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 199945
+                },
+                {
+                  "index": 38,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": false,
+                  "timely_valid_success": false,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 189393
+                },
+                {
+                  "index": 39,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": false,
+                  "timely_valid_success": false,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 135213
+                }
+              ],
+              "sampled_peak_threads": 1,
+              "keyframes_processed": 40,
+              "empty_rounds": 761,
+              "invalid_pose_frames": 124,
+              "backlog_frames": 16,
+              "max_identity_error_ns": 0,
+              "max_legacy_error_ns": 242281,
+              "legacy_failed_windows": 40,
+              "max_W_T_ns": 242207,
+              "max_W_B_ns": 13804,
+              "late_frames": 3,
+              "deadline_equal_frames": 0,
+              "min_abs_deadline_slack_ns": 1742942,
+              "empirical_success_windows": 38,
+              "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b"
+            },
+            "gates": {
+              "absolute_ATE": true,
+              "valid_poses": false,
+              "ground_truth_coverage": false,
+              "deadline_fraction": true,
+              "throughput": true,
+              "CPU": true,
+              "RSS": true,
+              "no_reset": false,
+              "relative_ATE": true,
+              "relative_CPU": true,
+              "accounting": true
+            }
+          },
+          "coverage": {
+            "evaluation_frames": 800,
+            "frames": [
+              1,
+              800
+            ],
+            "backlog_frames": 16,
+            "late_frames": 3,
+            "failed_latency_windows": 2,
+            "windows": 40,
+            "backlog_k": [
+              460,
+              479,
+              493,
+              515,
+              524,
+              537,
+              710,
+              771,
+              772,
+              773,
+              779,
+              784,
+              788,
+              792,
+              793,
+              799
+            ],
+            "late_k": [
+              771,
+              772,
+              792
+            ],
+            "duration": {
+              "WT": {
+                "n": 800,
+                "min_ms": 0.002834,
+                "median_ms": 0.1110075,
+                "p95_ms": 0.16433394999999998,
+                "max_ms": 0.242207,
+                "mean_ms": 0.11515017999999999
+              },
+              "WB": {
+                "n": 800,
+                "min_ms": 6e-05,
+                "median_ms": 7.9e-05,
+                "p95_ms": 0.000117,
+                "max_ms": 0.013804,
+                "mean_ms": 0.00011254375000000001
+              },
+              "CT": {
+                "n": 800,
+                "min_ms": 15.210713,
+                "median_ms": 20.010091,
+                "p95_ms": 25.744563649999996,
+                "max_ms": 38.155302,
+                "mean_ms": 20.5398047425
+              },
+              "CB": {
+                "n": 800,
+                "min_ms": 0.000416,
+                "median_ms": 0.0008625,
+                "p95_ms": 0.010604899999999532,
+                "max_ms": 80.559244,
+                "mean_ms": 1.3543240825
+              },
+              "ST": {
+                "n": 800,
+                "min_ms": 15.319059,
+                "median_ms": 20.111768,
+                "p95_ms": 25.88256979999999,
+                "max_ms": 38.293604,
+                "mean_ms": 20.6549549225
+              },
+              "SB": {
+                "n": 800,
+                "min_ms": 0.000494,
+                "median_ms": 0.000951,
+                "p95_ms": 0.017371599999999852,
+                "max_ms": 80.559326,
+                "mean_ms": 1.35443662625
+              },
+              "backlog": {
+                "n": 800,
+                "min_ms": 0.0,
+                "median_ms": 0.0,
+                "p95_ms": 0.0,
+                "max_ms": 50.778425,
+                "mean_ms": 0.35216269624999996
+              },
+              "latency": {
+                "n": 800,
+                "min_ms": 15.319059,
+                "median_ms": 20.117289,
+                "p95_ms": 26.804058599999998,
+                "max_ms": 79.568784,
+                "mean_ms": 21.007117618749998
+              }
+            },
+            "conditional_descriptions": {
+              "False": {
+                "WT": {
+                  "n": 784,
+                  "min_ms": 0.078589,
+                  "median_ms": 0.111478,
+                  "p95_ms": 0.16444514999999998,
+                  "max_ms": 0.242207,
+                  "mean_ms": 0.1174047219387755
+                },
+                "CT": {
+                  "n": 784,
+                  "min_ms": 15.210713,
+                  "median_ms": 19.936542,
+                  "p95_ms": 25.550755999999996,
+                  "max_ms": 38.155302,
+                  "mean_ms": 20.503895663265308
+                },
+                "ST": {
+                  "n": 784,
+                  "min_ms": 15.319059,
+                  "median_ms": 20.0502405,
+                  "p95_ms": 25.640330699999996,
+                  "max_ms": 38.293604,
+                  "mean_ms": 20.62130038520408
+                },
+                "SB": {
+                  "n": 784,
+                  "min_ms": 0.000494,
+                  "median_ms": 0.000946,
+                  "p95_ms": 0.019973199999999705,
+                  "max_ms": 80.559326,
+                  "mean_ms": 1.3820518507653061
+                }
+              },
+              "True": {
+                "WT": {
+                  "n": 16,
+                  "min_ms": 0.002834,
+                  "median_ms": 0.0041865,
+                  "p95_ms": 0.00785975,
+                  "max_ms": 0.009095,
+                  "mean_ms": 0.004677625
+                },
+                "CT": {
+                  "n": 16,
+                  "min_ms": 17.312606,
+                  "median_ms": 21.98927,
+                  "p95_ms": 26.8558865,
+                  "max_ms": 28.78445,
+                  "mean_ms": 22.299349625
+                },
+                "ST": {
+                  "n": 16,
+                  "min_ms": 17.31671,
+                  "median_ms": 21.993028,
+                  "p95_ms": 26.862706,
+                  "max_ms": 28.790359,
+                  "mean_ms": 22.30402725
+                },
+                "SB": {
+                  "n": 16,
+                  "min_ms": 0.000621,
+                  "median_ms": 0.0011925,
+                  "p95_ms": 0.0020815,
+                  "max_ms": 0.002365,
+                  "mean_ms": 0.001290625
+                }
+              }
+            },
+            "quarter_medians_ms": {
+              "ST": [
+                21.6457725,
+                18.974564,
+                20.221798,
+                20.101985
+              ],
+              "SB": [
+                0.001032,
+                0.000915,
+                0.0009705,
+                0.0009135
+              ]
+            },
+            "rank_serial_correlation": {
+              "WT": {
+                "1": 0.17490244206837985,
+                "2": 0.11661412250522284,
+                "5": 0.09450369448336088,
+                "10": 0.010086436454746333,
+                "20": 0.3384018510981923
+              },
+              "CT": {
+                "1": 0.6027975288659697,
+                "2": 0.5291256550476022,
+                "5": 0.41646553187973034,
+                "10": 0.317982863843352,
+                "20": 0.3090733598788346
+              },
+              "CB": {
+                "1": 0.14337175926407333,
+                "2": -0.002908903626243998,
+                "5": -0.0015127144997701268,
+                "10": -0.0049420126722142955,
+                "20": 0.05876310575545208
+              },
+              "ST": {
+                "1": 0.6044613567711519,
+                "2": 0.5287669553357108,
+                "5": 0.41755390707637324,
+                "10": 0.31814513118567417,
+                "20": 0.3104639199958226
+              },
+              "SB": {
+                "1": 0.1469365697557197,
+                "2": -0.008265033505027377,
+                "5": -0.0011694731714125372,
+                "10": -0.00393563197878916,
+                "20": 0.06444368051951346
+              }
+            },
+            "same_round_ST_SB_rank_correlation": 0.2308602975028706,
+            "keyframe_rounds": 39,
+            "interpretation": "Descriptive exploratory statistics only; no iid-frame inference, independence acceptance or reliability confidence statement"
+          }
+        }
+      ],
+      "E4_permitted": false,
+      "full_E3_passed": false,
+      "inputs_provenance": {
+        "protocol_sha256": "281697bf35e0b6e01ea5cf0af639ba85a19612f4c66fd99f6691f5d38c4b61e4",
+        "e2_result_sha256": "2ff3c6e6882494226bd242960c723c5090d64959976a102d763c56fd2ffe64a1",
+        "e2_inputs_sha256": "7de0a34ff469d466fdd10a5522b00b5776c1c0ab3ac268df17b424a7a4dd97ef",
+        "companion_binary_sha256": "24fd47986d61834713e2f4c130784122fcc6a021f2942805e2dd9a770b7143e3",
+        "companion_image_sha256": "f3665c27a28b8b9c5e7b19b0d936dddc05da1ce917cb834f82ecdb177b97692b",
+        "timestamps_sha256": "352af294dc5edf7fbf1f39888a45787da4740dd41846f71705d640798ea6326e",
+        "settings_sha256": "d3e1a993f79e52273afc658a44f6bcd7486616f0e857da1a144cc7f1bef88db4",
+        "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b",
+        "sequence": "V1_02_medium",
+        "data": {
+          "mav0/cam0/data.csv": "8f99cf27fb91dabdfb198999cb925d660cf6a830be4c5cf0df1d2bfa98929e16",
+          "mav0/cam1/data.csv": "a9d55e39d60825d580b4d27f36120201c9eee7239f946d98b319588032cc3e6c",
+          "mav0/state_groundtruth_estimate0/data.csv": "fed415eee44313584b9c4f61010dac146d5e4a4a35301db25b1ecd7d4d91b5f0"
+        },
+        "tools": {
+          "run_effective_collection.py": "b906ca0257d7de369d3f4517197767ee89d6f02fe03115e193faecf687465a9e",
+          "run_fixed_replay.py": "a95583c64fdaa48cce83458ffec89a9e0da87cb1ec3e8138d541c7d2b071a6a0",
+          "check_effective_events.py": "bc7a581bca61479d57c3df911d12370df6f037d0f851b32cd2911363b6ecab2b",
+          "score_online_trajectory.py": "d5eeaa52d1dd1b79f16b715e4a9047bd125a8b03692c002d58947919ad114038",
+          "analyze_usability.py": "584b26244da785030e7808d5fe935d29f26fa99ce848890e5a6bbfa9fa8208c1",
+          "run_usability_batch.py": "28440cf2e577efad6c262dcf6917f30807a4f12e524631c4035bc47a42cab308"
+        }
+      },
+      "recorded_image_files": 1802,
+      "raw_directory": "/home/research/orb-effective-duration-2026-10-18/continuation-valid/v102-valid-early",
+      "tracking-diagnosis.json": [
+        {
+          "strategy": "native_control",
+          "quality": {
+            "frames": 800,
+            "valid_frames": 676,
+            "matched_frames": 676,
+            "valid_fraction": 0.845,
+            "ground_truth_coverage": 0.845,
+            "ATE_RMSE_m": 0.1359166070384118,
+            "ATE_p95_m": 0.06397678908249277,
+            "ATE_max_m": 1.4020291872026691,
+            "alignment": "SE3, scale fixed to 1",
+            "pose": "online left-camera position; body GT + rotated T_BS translation"
+          },
+          "gates": {
+            "absolute_ATE": true,
+            "valid_poses": false,
+            "ground_truth_coverage": false,
+            "deadline_fraction": true,
+            "throughput": true,
+            "CPU": true,
+            "RSS": true
+          },
+          "resets": 0,
+          "CPU": 0.4729771106385085,
+          "deadline_fraction": 1.0,
+          "transitions": [
+            {
+              "k": -1,
+              "round": 0,
+              "frame": 0,
+              "state": 2,
+              "resets": 0,
+              "keyframes": 0
+            },
+            {
+              "k": 0,
+              "round": 1,
+              "frame": 1,
+              "state": 3,
+              "resets": 0,
+              "keyframes": 0
+            },
+            {
+              "k": 61,
+              "round": 62,
+              "frame": 62,
+              "state": 4,
+              "resets": 0,
+              "keyframes": 0
+            },
+            {
+              "k": 62,
+              "round": 63,
+              "frame": 63,
+              "state": 2,
+              "resets": 0,
+              "keyframes": 0
+            },
+            {
+              "k": 68,
+              "round": 69,
+              "frame": 69,
+              "state": 3,
+              "resets": 0,
+              "keyframes": 0
+            },
+            {
+              "k": 129,
+              "round": 130,
+              "frame": 130,
+              "state": 4,
+              "resets": 0,
+              "keyframes": 0
+            },
+            {
+              "k": 130,
+              "round": 131,
+              "frame": 131,
+              "state": 2,
+              "resets": 0,
+              "keyframes": 0
+            }
+          ],
+          "summary": {
+            "status": "passed",
+            "fixed": false,
+            "kind": "instrument",
+            "evaluated": 800,
+            "initialization_frame": 0,
+            "empty_rounds": 0,
+            "keyframes_processed": 0,
+            "invalid_pose_frames": 124,
+            "self_checks": 0,
+            "evaluation_elapsed_ns": 39972908783,
+            "threads_at_evaluation_start": 3,
+            "threads_at_evaluation_end": 3,
+            "prepare_before_wait": 0,
+            "release_diagnostics": 0,
+            "period_ns": 50000000,
+            "spin_ns": 0,
+            "offset": 20,
+            "preload_limit": 901,
+            "initialization_limit": 100,
+            "evaluation_cpu_ns": 18906270900,
+            "opencv_threads_before": 1,
+            "opencv_threads_after": 1,
+            "eigen_threads_before": 1,
+            "eigen_threads_after": 1,
+            "clock_pair_min_ns": 12,
+            "clock_pair_max_ns": 45
+          }
+        },
+        {
+          "strategy": "fixed_sleep",
+          "quality": {
+            "frames": 800,
+            "valid_frames": 676,
+            "matched_frames": 676,
+            "valid_fraction": 0.845,
+            "ground_truth_coverage": 0.845,
+            "ATE_RMSE_m": 0.1416275584496653,
+            "ATE_p95_m": 0.10549715247014921,
+            "ATE_max_m": 1.3890163952851564,
+            "alignment": "SE3, scale fixed to 1",
+            "pose": "online left-camera position; body GT + rotated T_BS translation"
+          },
+          "gates": {
+            "absolute_ATE": true,
+            "valid_poses": false,
+            "ground_truth_coverage": false,
+            "deadline_fraction": true,
+            "throughput": true,
+            "CPU": true,
+            "RSS": true,
+            "no_reset": false,
+            "relative_ATE": true,
+            "relative_CPU": true,
+            "accounting": true
+          },
+          "resets": 2,
+          "CPU": 0.4386350845542929,
+          "deadline_fraction": 0.99625,
+          "transitions": [
+            {
+              "k": -1,
+              "round": 0,
+              "frame": 0,
+              "state": 2,
+              "resets": 0,
+              "keyframes": 1
+            },
+            {
+              "k": 0,
+              "round": 1,
+              "frame": 1,
+              "state": 3,
+              "resets": 0,
+              "keyframes": 0
+            },
+            {
+              "k": 61,
+              "round": 62,
+              "frame": 62,
+              "state": 4,
+              "resets": 1,
+              "keyframes": 0
+            },
+            {
+              "k": 62,
+              "round": 63,
+              "frame": 63,
+              "state": 2,
+              "resets": 1,
+              "keyframes": 1
+            },
+            {
+              "k": 68,
+              "round": 69,
+              "frame": 69,
+              "state": 3,
+              "resets": 1,
+              "keyframes": 0
+            },
+            {
+              "k": 129,
+              "round": 130,
+              "frame": 130,
+              "state": 4,
+              "resets": 2,
+              "keyframes": 0
+            },
+            {
+              "k": 130,
+              "round": 131,
+              "frame": 131,
+              "state": 2,
+              "resets": 2,
+              "keyframes": 1
+            }
+          ],
+          "summary": {
+            "status": "passed",
+            "fixed": true,
+            "kind": "instrument",
+            "evaluated": 800,
+            "initialization_frame": 0,
+            "empty_rounds": 761,
+            "keyframes_processed": 40,
+            "invalid_pose_frames": 124,
+            "self_checks": 0,
+            "evaluation_elapsed_ns": 39996632093,
+            "threads_at_evaluation_start": 1,
+            "threads_at_evaluation_end": 1,
+            "prepare_before_wait": 0,
+            "release_diagnostics": 0,
+            "period_ns": 50000000,
+            "spin_ns": 0,
+            "offset": 20,
+            "preload_limit": 901,
+            "initialization_limit": 100,
+            "evaluation_cpu_ns": 17543926100,
+            "opencv_threads_before": 1,
+            "opencv_threads_after": 1,
+            "eigen_threads_before": 1,
+            "eigen_threads_after": 1,
+            "clock_pair_min_ns": 12,
+            "clock_pair_max_ns": 48
+          }
+        }
+      ]
+    },
+    {
+      "sequence": "V1_02_medium",
+      "offset": 0,
+      "status": "failed",
+      "reason": "predeclared_practical_or_accounting_gate",
+      "result_sha256": "c612e87b293e2fc256cd98b4889088f9cf8d2b27b5e6c40e9e9c4cbe97185b69",
+      "inputs_sha256": "c8fdbaae9542d872bd715e1838675ade26ab4be015d837b0d74480d47c366736",
+      "protocol": {
+        "version": 4,
+        "stage": "E3 continuous-sequence diagnostic and repeated feasibility",
+        "sequence": "V1_02_medium",
+        "offset": 0,
+        "evaluation_frames": 1600,
+        "initialization_limit": 100,
+        "preload_limit": 1701,
+        "h_ns": 50000000,
+        "tau_ns": 50000000,
+        "H": 20,
+        "cumulative_timing_limit_ns": 100000,
+        "repetitions": 3,
+        "process_threads": 1,
+        "spin_us": 0,
+        "timeout_seconds": 180,
+        "companion_alone_seconds": 30,
+        "blocks": [
+          "idle-1",
+          "opencv_companion-1",
+          "opencv_companion-2",
+          "idle-2",
+          "idle-3",
+          "opencv_companion-3"
+        ],
+        "strategy_order": [
+          [
+            "native_control",
+            "fixed_sleep"
+          ],
+          [
+            "fixed_sleep",
+            "native_control"
+          ],
+          [
+            "native_control",
+            "fixed_sleep"
+          ]
+        ],
+        "quality": {
+          "online_SE3_ATE_RMSE_max_m": 0.15,
+          "fixed_vs_native_factor": 1.25,
+          "fixed_vs_native_allowance_m": 0.02,
+          "valid_fraction_min": 0.99,
+          "ground_truth_coverage_min": 0.99,
+          "reset_count_max": 0
+        },
+        "resources": {
+          "deadline_success_fraction_min": 0.99,
+          "throughput_min_hz": 19,
+          "mean_CPU_cores_max": 1.0,
+          "fixed_vs_native_CPU_factor": 1.2,
+          "fixed_vs_native_CPU_allowance_cores": 0.02,
+          "sampled_peak_RSS_max_bytes": 2147483648,
+          "companion_p95_factor": 1.2,
+          "companion_p95_allowance_ms": 0.2
+        },
+        "baseline_rule": "30s companion-only before and after each loaded block; median of two p95 values, same image/period. Preserve drift; no adjusted post-hoc threshold.",
+        "relative_rule": "Compare each fixed run to native run within the same block; all absolute and relative gates must pass in every planned replicate.",
+        "stop_rule": "After first paired block with substantive failure preserve it and diagnose; do not discard failed frames or change numerical gate thresholds.",
+        "data_role": "Exploratory continuous-operation evidence; no arbitrary-mid-sequence cold-start claim and no final holdout",
+        "clock_uncertainty": "deadline equality uses recorded integer ns; no proved clock uncertainty bound",
+        "scope": "Cold-start at offset20 failed for both controls and is retained as a real limitation. This profile examines continuous operation from recorded sequence origin.",
+        "timestamps": "Examples/Stereo/EuRoC_TimeStamps/V102.txt",
+        "settings": "Examples/Stereo/EuRoC.yaml",
+        "quality_interval": {
+          "start_k": 20,
+          "end_k": 1600
+        },
+        "full_run_rule": "All 1600 frames remain in validity, reset, latency, CPU, memory and accounting gates. No outcome-dependent filtering.",
+        "quality_interval_rule": "Reference positions unavailable at raw beginning: fixed k in [20,1600) for SE3 ATE/GT coverage; original 99% valid-pose gate additionally applies to all 1600 frames.",
+        "history_rule": "Start visual/map processing at sequence origin, preserve real map updates and timing throughout. First and second halves are dependent subsegments, not independent replicates."
+      },
+      "records": [
+        {
+          "block": "idle-1",
+          "strategy": "native_control",
+          "record": {
+            "strategy": "native_control",
+            "execution": {
+              "command": [
+                "/usr/bin/python3",
+                "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+                "--source",
+                "/home/research/orb-dispatch-check-2026-10-18/source",
+                "--data",
+                "/home/research/orb-slam3-work/data/V1_02_medium",
+                "--output",
+                "/home/research/orb-effective-duration-2026-10-18/continuation-continuous/v102-continuous/idle-1/native_control/replay",
+                "--mode",
+                "native_control",
+                "--kind",
+                "instrument",
+                "--settings",
+                "/home/research/orb-usability-work/source/Examples/Stereo/EuRoC.yaml",
+                "--timestamps",
+                "/home/research/orb-usability-work/source/Examples/Stereo/EuRoC_TimeStamps/V102.txt",
+                "--frames",
+                "1600",
+                "--offset",
+                "0",
+                "--init-limit",
+                "100",
+                "--preload-limit",
+                "1701",
+                "--period-ns",
+                "50000000",
+                "--threads",
+                "1",
+                "--spin-us",
+                "0",
+                "--timeout",
+                "180"
+              ],
+              "returncode": 0,
+              "timeout": false,
+              "seconds": 89.03259139400001
+            },
+            "run_json_sha256": "acce374d0b353bb07b26ec9be12cf4e9284bdbbf3867f6d03dc60c7af113247a",
+            "quality": {
+              "frames": 1580,
+              "start_k": 20,
+              "end_k_exclusive": 1600,
+              "valid_frames": 1580,
+              "matched_frames": 1580,
+              "valid_fraction": 1.0,
+              "ground_truth_coverage": 1.0,
+              "ATE_RMSE_m": 0.48779165659947277,
+              "ATE_p95_m": 0.7541780097189742,
+              "ATE_max_m": 0.8733673390281103,
+              "alignment": "SE3, scale fixed to 1",
+              "pose": "online left-camera position; body GT + rotated T_BS translation"
+            },
+            "CPU": 0.4685211666133056,
+            "throughput": 20.00711417692584,
+            "RSS": 1876369408,
+            "deadline_fraction": 1.0,
+            "reset_count": 0,
+            "full_run_valid_fraction": 1.0,
+            "data_sha256": {
+              "replay-events.csv": "12b94c1adbc4c06deb3fe39b1f29d24795e6d549340ed7fd924631ff54486b26",
+              "replay-online.csv": "bb33213dbbd3165bd4531653c5fea845674cd2673ed045445b7071cd8ae7e3d5",
+              "replay-summary.json": "56a4010ad611aa448bb51fc5213bbb026da114e69c3b9e94a771f743370b63ef"
+            },
+            "gates": {
+              "absolute_ATE": false,
+              "valid_poses": true,
+              "full_run_valid_poses": true,
+              "ground_truth_coverage": true,
+              "deadline_fraction": true,
+              "throughput": true,
+              "CPU": true,
+              "RSS": true
+            }
+          }
+        },
+        {
+          "block": "idle-1",
+          "strategy": "fixed_sleep",
+          "record": {
+            "strategy": "fixed_sleep",
+            "execution": {
+              "command": [
+                "/usr/bin/python3",
+                "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+                "--source",
+                "/home/research/orb-dispatch-check-2026-10-18/source",
+                "--data",
+                "/home/research/orb-slam3-work/data/V1_02_medium",
+                "--output",
+                "/home/research/orb-effective-duration-2026-10-18/continuation-continuous/v102-continuous/idle-1/fixed_sleep/replay",
+                "--mode",
+                "fixed",
+                "--kind",
+                "instrument",
+                "--settings",
+                "/home/research/orb-usability-work/source/Examples/Stereo/EuRoC.yaml",
+                "--timestamps",
+                "/home/research/orb-usability-work/source/Examples/Stereo/EuRoC_TimeStamps/V102.txt",
+                "--frames",
+                "1600",
+                "--offset",
+                "0",
+                "--init-limit",
+                "100",
+                "--preload-limit",
+                "1701",
+                "--period-ns",
+                "50000000",
+                "--threads",
+                "1",
+                "--spin-us",
+                "0",
+                "--timeout",
+                "180"
+              ],
+              "returncode": 0,
+              "timeout": false,
+              "seconds": 88.35267265699999
+            },
+            "run_json_sha256": "786c9822222275cff35532f1aea8b4acb63707a391c7d2c19b8b3323ec09556c",
+            "quality": {
+              "frames": 1580,
+              "start_k": 20,
+              "end_k_exclusive": 1600,
+              "valid_frames": 1580,
+              "matched_frames": 1580,
+              "valid_fraction": 1.0,
+              "ground_truth_coverage": 1.0,
+              "ATE_RMSE_m": 0.26588509316931097,
+              "ATE_p95_m": 0.43404494669814486,
+              "ATE_max_m": 0.5192791257304143,
+              "alignment": "SE3, scale fixed to 1",
+              "pose": "online left-camera position; body GT + rotated T_BS translation"
+            },
+            "CPU": 0.43289436523063907,
+            "throughput": 20.007340174920067,
+            "RSS": 1866215424,
+            "deadline_fraction": 0.995625,
+            "reset_count": 0,
+            "full_run_valid_fraction": 1.0,
+            "data_sha256": {
+              "replay-events.csv": "f82c4fe410bb6cbcecc5220fafb776942618f4ce97c5bb1e251233c2fddf3953",
+              "replay-online.csv": "ce97bb6aaa00f20cbd9d8dcacd18067d788816ec2924a79d95cfe728d495c9e7",
+              "replay-summary.json": "2318c0976469df6a7c5505f1166f86757ed17323e31e699b179fbb486a17bde3"
+            },
+            "accounting": {
+              "directory": "/home/research/orb-effective-duration-2026-10-18/continuation-continuous/v102-continuous/idle-1/fixed_sleep/replay",
+              "status": "accounting_passed",
+              "errors": [],
+              "probability_assumptions_verified": false,
+              "identity_is_independent_validation": false,
+              "input_sha256": {
+                "run.json": "786c9822222275cff35532f1aea8b4acb63707a391c7d2c19b8b3323ec09556c",
+                "replay-events.csv": "f82c4fe410bb6cbcecc5220fafb776942618f4ce97c5bb1e251233c2fddf3953",
+                "replay-online.csv": "ce97bb6aaa00f20cbd9d8dcacd18067d788816ec2924a79d95cfe728d495c9e7"
+              },
+              "frames": 1600,
+              "windows": [
+                {
+                  "index": 0,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 197874
+                },
+                {
+                  "index": 1,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 252481
+                },
+                {
+                  "index": 2,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 172216
+                },
+                {
+                  "index": 3,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 182068
+                },
+                {
+                  "index": 4,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 166903
+                },
+                {
+                  "index": 5,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 199146
+                },
+                {
+                  "index": 6,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 154836
+                },
+                {
+                  "index": 7,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 192953
+                },
+                {
+                  "index": 8,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 234212
+                },
+                {
+                  "index": 9,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 166740
+                },
+                {
+                  "index": 10,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 238604
+                },
+                {
+                  "index": 11,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 199012
+                },
+                {
+                  "index": 12,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 464872
+                },
+                {
+                  "index": 13,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 348264
+                },
+                {
+                  "index": 14,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 197620
+                },
+                {
+                  "index": 15,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 196274
+                },
+                {
+                  "index": 16,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 260603
+                },
+                {
+                  "index": 17,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 180130
+                },
+                {
+                  "index": 18,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 202260
+                },
+                {
+                  "index": 19,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 171172
+                },
+                {
+                  "index": 20,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 160022
+                },
+                {
+                  "index": 21,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 290474
+                },
+                {
+                  "index": 22,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 178538
+                },
+                {
+                  "index": 23,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 312316
+                },
+                {
+                  "index": 24,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 154505
+                },
+                {
+                  "index": 25,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 147552
+                },
+                {
+                  "index": 26,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 179761
+                },
+                {
+                  "index": 27,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": false,
+                  "timely_valid_success": false,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 185039
+                },
+                {
+                  "index": 28,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 173622
+                },
+                {
+                  "index": 29,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 150758
+                },
+                {
+                  "index": 30,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 176398
+                },
+                {
+                  "index": 31,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 170482
+                },
+                {
+                  "index": 32,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 181537
+                },
+                {
+                  "index": 33,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 212905
+                },
+                {
+                  "index": 34,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 181734
+                },
+                {
+                  "index": 35,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 281556
+                },
+                {
+                  "index": 36,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 199426
+                },
+                {
+                  "index": 37,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 159621
+                },
+                {
+                  "index": 38,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 151599
+                },
+                {
+                  "index": 39,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 172930
+                },
+                {
+                  "index": 40,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": false,
+                  "timely_valid_success": false,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 214662
+                },
+                {
+                  "index": 41,
+                  "initial_state_ns": [
+                    1793176,
+                    1793799
+                  ],
+                  "latency_success": false,
+                  "timely_valid_success": false,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 185650
+                },
+                {
+                  "index": 42,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 235293
+                },
+                {
+                  "index": 43,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 167046
+                },
+                {
+                  "index": 44,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 174584
+                },
+                {
+                  "index": 45,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 178923
+                },
+                {
+                  "index": 46,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 318885
+                },
+                {
+                  "index": 47,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 191121
+                },
+                {
+                  "index": 48,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 180802
+                },
+                {
+                  "index": 49,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 128160
+                },
+                {
+                  "index": 50,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 170711
+                },
+                {
+                  "index": 51,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 189998
+                },
+                {
+                  "index": 52,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 275037
+                },
+                {
+                  "index": 53,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 187776
+                },
+                {
+                  "index": 54,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 181787
+                },
+                {
+                  "index": 55,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 144260
+                },
+                {
+                  "index": 56,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 167493
+                },
+                {
+                  "index": 57,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 164441
+                },
+                {
+                  "index": 58,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 173534
+                },
+                {
+                  "index": 59,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 250509
+                },
+                {
+                  "index": 60,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 167394
+                },
+                {
+                  "index": 61,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 222372
+                },
+                {
+                  "index": 62,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 404631
+                },
+                {
+                  "index": 63,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 202194
+                },
+                {
+                  "index": 64,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 253911
+                },
+                {
+                  "index": 65,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 266424
+                },
+                {
+                  "index": 66,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 191403
+                },
+                {
+                  "index": 67,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 171763
+                },
+                {
+                  "index": 68,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 177702
+                },
+                {
+                  "index": 69,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 243235
+                },
+                {
+                  "index": 70,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 159317
+                },
+                {
+                  "index": 71,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 274010
+                },
+                {
+                  "index": 72,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 218917
+                },
+                {
+                  "index": 73,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 164968
+                },
+                {
+                  "index": 74,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 179339
+                },
+                {
+                  "index": 75,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 197115
+                },
+                {
+                  "index": 76,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 179341
+                },
+                {
+                  "index": 77,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 164694
+                },
+                {
+                  "index": 78,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 162849
+                },
+                {
+                  "index": 79,
+                  "initial_state_ns": [
+                    0,
+                    0
+                  ],
+                  "latency_success": true,
+                  "timely_valid_success": true,
+                  "identity_max_abs_ns": 0,
+                  "legacy_max_abs_ns": 206149
+                }
+              ],
+              "sampled_peak_threads": 1,
+              "keyframes_processed": 96,
+              "empty_rounds": 1505,
+              "invalid_pose_frames": 0,
+              "backlog_frames": 36,
+              "max_identity_error_ns": 0,
+              "max_legacy_error_ns": 464872,
+              "legacy_failed_windows": 80,
+              "max_W_T_ns": 464799,
+              "max_W_B_ns": 361,
+              "late_frames": 7,
+              "deadline_equal_frames": 0,
+              "min_abs_deadline_slack_ns": 423628,
+              "empirical_success_windows": 77,
+              "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b"
+            },
+            "gates": {
+              "absolute_ATE": false,
+              "valid_poses": true,
+              "full_run_valid_poses": true,
+              "ground_truth_coverage": true,
+              "deadline_fraction": true,
+              "throughput": true,
+              "CPU": true,
+              "RSS": true,
+              "no_reset": true,
+              "relative_ATE": true,
+              "relative_CPU": true,
+              "accounting": true
+            }
+          },
+          "coverage": {
+            "evaluation_frames": 1600,
+            "frames": [
+              1,
+              1600
+            ],
+            "backlog_frames": 36,
+            "late_frames": 7,
+            "failed_latency_windows": 3,
+            "windows": 80,
+            "backlog_k": [
+              192,
+              207,
+              217,
+              225,
+              457,
+              477,
+              489,
+              510,
+              536,
+              545,
+              546,
+              557,
+              570,
+              748,
+              777,
+              791,
+              798,
+              803,
+              804,
+              807,
+              811,
+              812,
+              813,
+              818,
+              819,
+              820,
+              832,
+              833,
+              841,
+              1347,
+              1356,
+              1365,
+              1373,
+              1381,
+              1388,
+              1586
+            ],
+            "late_k": [
+              545,
+              803,
+              811,
+              812,
+              818,
+              819,
+              832
+            ],
+            "duration": {
+              "WT": {
+                "n": 1600,
+                "min_ms": 0.002143,
+                "median_ms": 0.1209115,
+                "p95_ms": 0.17616185,
+                "max_ms": 0.464799,
+                "mean_ms": 0.126799706875
+              },
+              "WB": {
+                "n": 1600,
+                "min_ms": 6.1e-05,
+                "median_ms": 8.1e-05,
+                "p95_ms": 0.000105,
+                "max_ms": 0.000361,
+                "mean_ms": 8.567625e-05
+              },
+              "CT": {
+                "n": 1600,
+                "min_ms": 13.940558,
+                "median_ms": 19.814885,
+                "p95_ms": 24.2373395,
+                "max_ms": 34.947669,
+                "mean_ms": 20.097866225
+              },
+              "CB": {
+                "n": 1600,
+                "min_ms": 0.000253,
+                "median_ms": 0.000799,
+                "p95_ms": 11.33435234999999,
+                "max_ms": 98.279906,
+                "mean_ms": 1.4991949393750001
+              },
+              "ST": {
+                "n": 1600,
+                "min_ms": 14.058784,
+                "median_ms": 19.929107,
+                "p95_ms": 24.3840115,
+                "max_ms": 35.089009,
+                "mean_ms": 20.224665931875002
+              },
+              "SB": {
+                "n": 1600,
+                "min_ms": 0.00034,
+                "median_ms": 0.000887,
+                "p95_ms": 11.334446449999989,
+                "max_ms": 98.279982,
+                "mean_ms": 1.499280615625
+              },
+              "backlog": {
+                "n": 1600,
+                "min_ms": 0.0,
+                "median_ms": 0.0,
+                "p95_ms": 0.0,
+                "max_ms": 67.603174,
+                "mean_ms": 0.4311915475
+              },
+              "latency": {
+                "n": 1600,
+                "min_ms": 14.058784,
+                "median_ms": 19.9332525,
+                "p95_ms": 24.97827149999999,
+                "max_ms": 94.289666,
+                "mean_ms": 20.655857479375
+              }
+            },
+            "conditional_descriptions": {
+              "False": {
+                "WT": {
+                  "n": 1564,
+                  "min_ms": 0.084897,
+                  "median_ms": 0.1214755,
+                  "p95_ms": 0.17642575,
+                  "max_ms": 0.464799,
+                  "mean_ms": 0.12961279411764706
+                },
+                "CT": {
+                  "n": 1564,
+                  "min_ms": 13.940558,
+                  "median_ms": 19.748213,
+                  "p95_ms": 24.13549925,
+                  "max_ms": 34.947669,
+                  "mean_ms": 20.03853664961637
+                },
+                "ST": {
+                  "n": 1564,
+                  "min_ms": 14.058784,
+                  "median_ms": 19.8709045,
+                  "p95_ms": 24.28204025,
+                  "max_ms": 35.089009,
+                  "mean_ms": 20.168149443734016
+                },
+                "SB": {
+                  "n": 1564,
+                  "min_ms": 0.00034,
+                  "median_ms": 0.0008845,
+                  "p95_ms": 11.849859999999964,
+                  "max_ms": 98.279982,
+                  "mean_ms": 1.5337655594629156
+                }
+              },
+              "True": {
+                "WT": {
+                  "n": 36,
+                  "min_ms": 0.002143,
+                  "median_ms": 0.003812,
+                  "p95_ms": 0.0080745,
+                  "max_ms": 0.016854,
+                  "mean_ms": 0.0045866944444444445
+                },
+                "CT": {
+                  "n": 36,
+                  "min_ms": 18.597326,
+                  "median_ms": 22.1349325,
+                  "p95_ms": 26.111068,
+                  "max_ms": 28.860177,
+                  "mean_ms": 22.675406666666667
+                },
+                "ST": {
+                  "n": 36,
+                  "min_ms": 18.601968,
+                  "median_ms": 22.13856,
+                  "p95_ms": 26.1140005,
+                  "max_ms": 28.864332,
+                  "mean_ms": 22.679993361111112
+                },
+                "SB": {
+                  "n": 36,
+                  "min_ms": 0.000589,
+                  "median_ms": 0.0009285,
+                  "p95_ms": 0.00202975,
+                  "max_ms": 0.002991,
+                  "mean_ms": 0.001101388888888889
+                }
+              }
+            },
+            "quarter_medians_ms": {
+              "ST": [
+                19.37043,
+                20.07349,
+                19.512569,
+                20.490522
+              ],
+              "SB": [
+                0.0008765,
+                0.000877,
+                0.0008745,
+                0.0009155
+              ]
+            },
+            "rank_serial_correlation": {
+              "WT": {
+                "1": 0.027311309341955362,
+                "2": -0.07155086495716263,
+                "5": 0.013193312114688556,
+                "10": -0.13694892079799112,
+                "20": 0.28686172477889743
+              },
+              "CT": {
+                "1": 0.5298006302437146,
+                "2": 0.4962426930839422,
+                "5": 0.41923481587785344,
+                "10": 0.3359109272403031,
+                "20": 0.2657451712433932
+              },
+              "CB": {
+                "1": 0.03164548430445245,
+                "2": -0.024958765266421972,
+                "5": -0.0051658477543588535,
+                "10": 0.020464517965372218,
+                "20": -0.0003372189498202339
+              },
+              "ST": {
+                "1": 0.5290874997358331,
+                "2": 0.49454743396438966,
+                "5": 0.41876645512216293,
+                "10": 0.3353506285470804,
+                "20": 0.2655073806285257
+              },
+              "SB": {
+                "1": 0.03283247821063419,
+                "2": -0.022326755701045267,
+                "5": -0.007248560183285911,
+                "10": 0.01861713318059058,
+                "20": 0.0037962327644911887
+              }
+            },
+            "same_round_ST_SB_rank_correlation": 0.08877934478580783,
+            "keyframe_rounds": 95,
+            "interpretation": "Descriptive exploratory statistics only; no iid-frame inference, independence acceptance or reliability confidence statement"
+          }
+        }
+      ],
+      "E4_permitted": false,
+      "full_E3_passed": false,
+      "inputs_provenance": {
+        "protocol_sha256": "70919b8323e78528455c00b6a363cf84f0e20174971afd63b640208c53646cde",
+        "e2_result_sha256": "2ff3c6e6882494226bd242960c723c5090d64959976a102d763c56fd2ffe64a1",
+        "e2_inputs_sha256": "7de0a34ff469d466fdd10a5522b00b5776c1c0ab3ac268df17b424a7a4dd97ef",
+        "companion_binary_sha256": "24fd47986d61834713e2f4c130784122fcc6a021f2942805e2dd9a770b7143e3",
+        "companion_image_sha256": "bbbf05991758a66f0c6527369447e72683b8821caff616f82d0a7c1c3dc89c9f",
+        "timestamps_sha256": "352af294dc5edf7fbf1f39888a45787da4740dd41846f71705d640798ea6326e",
+        "settings_sha256": "d3e1a993f79e52273afc658a44f6bcd7486616f0e857da1a144cc7f1bef88db4",
+        "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b",
+        "sequence": "V1_02_medium",
+        "data": {
+          "mav0/cam0/data.csv": "8f99cf27fb91dabdfb198999cb925d660cf6a830be4c5cf0df1d2bfa98929e16",
+          "mav0/cam1/data.csv": "a9d55e39d60825d580b4d27f36120201c9eee7239f946d98b319588032cc3e6c",
+          "mav0/state_groundtruth_estimate0/data.csv": "fed415eee44313584b9c4f61010dac146d5e4a4a35301db25b1ecd7d4d91b5f0"
+        },
+        "tools": {
+          "run_effective_collection.py": "10d698f3227731fd880c1fc44317519acd1f011c6d9231c2dab451be5ff0c4e3",
+          "run_fixed_replay.py": "a95583c64fdaa48cce83458ffec89a9e0da87cb1ec3e8138d541c7d2b071a6a0",
+          "check_effective_events.py": "bc7a581bca61479d57c3df911d12370df6f037d0f851b32cd2911363b6ecab2b",
+          "score_online_trajectory.py": "1798a04fdff8730dd7b7556c138ef391029f86a13bcf076a3e5e9686a8dffb85",
+          "analyze_usability.py": "584b26244da785030e7808d5fe935d29f26fa99ce848890e5a6bbfa9fa8208c1",
+          "run_usability_batch.py": "28440cf2e577efad6c262dcf6917f30807a4f12e524631c4035bc47a42cab308"
+        }
+      },
+      "recorded_image_files": 3402,
+      "raw_directory": "/home/research/orb-effective-duration-2026-10-18/continuation-continuous/v102-continuous",
+      "ate-diagnosis.json": [
+        {
+          "strategy": "native_control",
+          "quality": {
+            "frames": 1580,
+            "start_k": 20,
+            "end_k_exclusive": 1600,
+            "valid_frames": 1580,
+            "matched_frames": 1580,
+            "valid_fraction": 1.0,
+            "ground_truth_coverage": 1.0,
+            "ATE_RMSE_m": 0.48779165659947277,
+            "ATE_p95_m": 0.7541780097189742,
+            "ATE_max_m": 0.8733673390281103,
+            "alignment": "SE3, scale fixed to 1",
+            "pose": "online left-camera position; body GT + rotated T_BS translation"
+          },
+          "gates": {
+            "absolute_ATE": false,
+            "valid_poses": true,
+            "full_run_valid_poses": true,
+            "ground_truth_coverage": true,
+            "deadline_fraction": true,
+            "throughput": true,
+            "CPU": true,
+            "RSS": true
+          },
+          "CPU": 0.4685211666133056,
+          "RSS_MiB": 1789.4453125,
+          "deadline_fraction": 1.0,
+          "full_run_valid_fraction": 1.0,
+          "reset_counter": 0,
+          "full_run_invalid_summary": 0,
+          "full_alignment_quarters": [
+            {
+              "k": [
+                20,
+                400
+              ],
+              "n": 380,
+              "RMSE_with_single_full_run_alignment_m": 0.4043727235019339,
+              "separately_aligned_subsegment_ATE_m": 0.03437041744166366
+            },
+            {
+              "k": [
+                400,
+                800
+              ],
+              "n": 400,
+              "RMSE_with_single_full_run_alignment_m": 0.4705827705781112,
+              "separately_aligned_subsegment_ATE_m": 0.0418934035204025
+            },
+            {
+              "k": [
+                800,
+                1200
+              ],
+              "n": 400,
+              "RMSE_with_single_full_run_alignment_m": 0.5451525349821333,
+              "separately_aligned_subsegment_ATE_m": 0.30192815860485595
+            },
+            {
+              "k": [
+                1200,
+                1600
+              ],
+              "n": 400,
+              "RMSE_with_single_full_run_alignment_m": 0.5156402826396117,
+              "separately_aligned_subsegment_ATE_m": 0.03478653275242351
+            }
+          ],
+          "similarity_diagnostic_only": {
+            "scale": 0.9246551451788108,
+            "RMSE_m": 0.4666805170083659,
+            "not_used_for_acceptance": true
+          },
+          "fixed_accounting": {},
+          "native_console_reset_messages": 0
+        },
+        {
+          "strategy": "fixed_sleep",
+          "quality": {
+            "frames": 1580,
+            "start_k": 20,
+            "end_k_exclusive": 1600,
+            "valid_frames": 1580,
+            "matched_frames": 1580,
+            "valid_fraction": 1.0,
+            "ground_truth_coverage": 1.0,
+            "ATE_RMSE_m": 0.26588509316931097,
+            "ATE_p95_m": 0.43404494669814486,
+            "ATE_max_m": 0.5192791257304143,
+            "alignment": "SE3, scale fixed to 1",
+            "pose": "online left-camera position; body GT + rotated T_BS translation"
+          },
+          "gates": {
+            "absolute_ATE": false,
+            "valid_poses": true,
+            "full_run_valid_poses": true,
+            "ground_truth_coverage": true,
+            "deadline_fraction": true,
+            "throughput": true,
+            "CPU": true,
+            "RSS": true,
+            "no_reset": true,
+            "relative_ATE": true,
+            "relative_CPU": true,
+            "accounting": true
+          },
+          "CPU": 0.43289436523063907,
+          "RSS_MiB": 1779.76171875,
+          "deadline_fraction": 0.995625,
+          "full_run_valid_fraction": 1.0,
+          "reset_counter": 0,
+          "full_run_invalid_summary": 0,
+          "full_alignment_quarters": [
+            {
+              "k": [
+                20,
+                400
+              ],
+              "n": 380,
+              "RMSE_with_single_full_run_alignment_m": 0.21525305321939803,
+              "separately_aligned_subsegment_ATE_m": 0.029529989729159177
+            },
+            {
+              "k": [
+                400,
+                800
+              ],
+              "n": 400,
+              "RMSE_with_single_full_run_alignment_m": 0.26663131875513063,
+              "separately_aligned_subsegment_ATE_m": 0.0469753204686289
+            },
+            {
+              "k": [
+                800,
+                1200
+              ],
+              "n": 400,
+              "RMSE_with_single_full_run_alignment_m": 0.2903679372821007,
+              "separately_aligned_subsegment_ATE_m": 0.17315442823677354
+            },
+            {
+              "k": [
+                1200,
+                1600
+              ],
+              "n": 400,
+              "RMSE_with_single_full_run_alignment_m": 0.2825275291423982,
+              "separately_aligned_subsegment_ATE_m": 0.03854555902575338
+            }
+          ],
+          "similarity_diagnostic_only": {
+            "scale": 0.9846718978814436,
+            "RMSE_m": 0.26443081455435474,
+            "not_used_for_acceptance": true
+          },
+          "fixed_accounting": {
+            "backlog_frames": 36,
+            "late_frames": 7,
+            "max_identity_error_ns": 0,
+            "empirical_success_windows": 77
+          },
+          "native_console_reset_messages": 0
+        }
+      ]
+    }
+  ],
+  "data_manifest": {
+    "source": "https://www.research-collection.ethz.ch/server/api/core/bitstreams/02ecda9a-298f-498b-970c-b7c44334d880/content",
+    "parent_name": "vicon_room1.zip",
+    "parent_size": 6042263426,
+    "member": {
+      "name": "vicon_room1/V1_02_medium/V1_02_medium.zip",
+      "bytes": 668079368,
+      "compressed": 667976653,
+      "offset": 872423291,
+      "CRC32": 916142845,
+      "compression": 8
+    },
+    "member_CRC32_verified": true,
+    "inner_CRC32_verified": true,
+    "sha256": "0cf5d44baf7aac5d6d705dfb6c5abdd097139bc95aa252dc0c00c66d479ebfc2",
+    "zip_bytes": 668079368,
+    "expanded_bytes": 1357611297,
+    "frames": {
+      "cam0": 1710,
+      "cam1": 1711
+    },
+    "paired_frames": 1710,
+    "unpaired_frames": {
+      "cam0": [],
+      "cam1": [
+        "1403715609412143104"
+      ]
+    },
+    "ORB_timestamps_sha256": "352af294dc5edf7fbf1f39888a45787da4740dd41846f71705d640798ea6326e",
+    "all_ORB_timestamps_have_both_images": true,
+    "license": "In Copyright - Non-Commercial Use Permitted",
+    "DOI": "10.3929/ethz-b-000690084",
+    "sha256_scope": "Measured identity, not independently published expected digest",
+    "recovery": "First download and extraction completed with CRC checked, then incorrect equal-camera-count preflight rejected original extra cam1 image. Reverified same archive offline; no data deleted, replayed or redownloaded.",
+    "parent_MD5_not_verified": "Only selected member downloaded"
+  },
+  "scope": "Exploratory Windows/WSL2 non-inertial pinhole stereo; no loop closure/GBA; all failed runs retained.",
+  "displacement_diagnosis": [
+    {
+      "strategy": "native_control",
+      "description": "One-step displacement discrepancy after single whole-run SE3 rotation; diagnostic, not acceptance replacement",
+      "top5": [
+        {
+          "to_k": 907,
+          "displacement_error_m": 0.1525570718299582
+        },
+        {
+          "to_k": 917,
+          "displacement_error_m": 0.08835854111288038
+        },
+        {
+          "to_k": 874,
+          "displacement_error_m": 0.08749716628742354
+        },
+        {
+          "to_k": 905,
+          "displacement_error_m": 0.08306898383549838
+        },
+        {
+          "to_k": 279,
+          "displacement_error_m": 0.08264661048516574
+        }
+      ]
+    },
+    {
+      "strategy": "fixed_sleep",
+      "description": "One-step displacement discrepancy after single whole-run SE3 rotation; diagnostic, not acceptance replacement",
+      "top5": [
+        {
+          "to_k": 925,
+          "displacement_error_m": 0.10348935589475611
+        },
+        {
+          "to_k": 616,
+          "displacement_error_m": 0.08245521242073416
+        },
+        {
+          "to_k": 618,
+          "displacement_error_m": 0.08001171585922585
+        },
+        {
+          "to_k": 831,
+          "displacement_error_m": 0.07676024010532288
+        },
+        {
+          "to_k": 914,
+          "displacement_error_m": 0.07347152669526438
+        }
+      ]
+    }
+  ],
+  "timing_scope": "Deadline at recorded integer ns. Accounting zero residual is algebraic; neither certified clock error nor independent prediction.",
+  "not_executed": "Remaining blocks and loaded conditions of all three continuation profiles; other frozen segments; E4-E6.",
+  "next_work": [
+    "Verify online coordinate-frame consistency and origin of displacement jumps with internal evidence; current diagnostics do not identify cause.",
+    "Compare upstream/native-default functionality in a separate diagnostic before attributing error to fixed scheduling or disabling loop closure.",
+    "Keep cold-start and long-run-quality failures; do not tune thresholds, relabel sampled data as holdout, or use retrospective corrected poses as online outputs.",
+    "After concrete quality issue addressed, freeze repeat/loaded/holdout acquisition and then test all three probability conditions."
+  ],
+  "new_file_lengths": {
+    "new_raw": 793620,
+    "valid_raw": 778348,
+    "continuous_raw": 1519953,
+    "native_default_raw": 473078,
+    "configuration_diagnostic_raw": 974781
+  },
+  "native_default_diagnostic": {
+    "accepted_acquisition": true,
+    "quality": {
+      "frames": 1580,
+      "start_k": 20,
+      "end_k_exclusive": 1600,
+      "valid_frames": 1580,
+      "matched_frames": 1580,
+      "valid_fraction": 1.0,
+      "ground_truth_coverage": 1.0,
+      "ATE_RMSE_m": 0.06310605522512601,
+      "ATE_p95_m": 0.09379750393771903,
+      "ATE_max_m": 0.4337307306914189,
+      "alignment": "SE3, scale fixed to 1",
+      "pose": "online left-camera position; body GT + rotated T_BS translation"
+    },
+    "full_run_invalid_poses": 0,
+    "deadline_fraction": 1.0,
+    "CPU": 0.40565939841758253,
+    "RSS_MiB": 1825.453125,
+    "peak_threads": 5,
+    "console_loop_lines": [
+      "PR: Loop detected with Reffine Sim3",
+      "*Loop detected",
+      "*Loop detected"
+    ],
+    "absolute_ATE_passed": true,
+    "purpose": "Diagnostic only; multiple settings differ, not isolated effect or untouched upstream reproduction"
+  },
+  "final_exported_diagnostic": [
+    {
+      "strategy": "native_control",
+      "quality": {
+        "frames": 1580,
+        "start_k": 20,
+        "end_k_exclusive": 1600,
+        "valid_frames": 1580,
+        "matched_frames": 1580,
+        "valid_fraction": 1.0,
+        "ground_truth_coverage": 1.0,
+        "ATE_RMSE_m": 0.4841957300568459,
+        "ATE_p95_m": 0.7488411438428224,
+        "ATE_max_m": 0.8582428160571978,
+        "alignment": "SE3, scale fixed to 1",
+        "pose": "online left-camera position; body GT + rotated T_BS translation"
+      },
+      "not_for_acceptance": true,
+      "description": "Final reconstructed trajectory uses later keyframe corrections; unavailable at online deadline"
+    },
+    {
+      "strategy": "fixed_sleep",
+      "quality": {
+        "frames": 1580,
+        "start_k": 20,
+        "end_k_exclusive": 1600,
+        "valid_frames": 1580,
+        "matched_frames": 1580,
+        "valid_fraction": 1.0,
+        "ground_truth_coverage": 1.0,
+        "ATE_RMSE_m": 0.2658940717116385,
+        "ATE_p95_m": 0.4272266475815147,
+        "ATE_max_m": 0.5119283530222278,
+        "alignment": "SE3, scale fixed to 1",
+        "pose": "online left-camera position; body GT + rotated T_BS translation"
+      },
+      "not_for_acceptance": true,
+      "description": "Final reconstructed trajectory uses later keyframe corrections; unavailable at online deadline"
+    }
+  ],
+  "native_default_run_sha256": "21df82d069d07414f040ac432e2ac6d9474158b67260489b1e151e930751c94f",
+  "native_default_protocol_sha256": "5e29635c6d1312eae6e21538fbaa1725ea945dfe65055d8e2b7478dce1a3c4db",
+  "configuration_diagnostic": [
+    {
+      "id": "serial-with-loop",
+      "serialStereo": 1,
+      "loopClosing": 1,
+      "managedNoLoop": 0,
+      "command": [
+        "/usr/bin/python3",
+        "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+        "--source",
+        "/home/research/orb-dispatch-check-2026-10-18/source",
+        "--data",
+        "/home/research/orb-slam3-work/data/V1_02_medium",
+        "--output",
+        "/home/research/orb-effective-duration-2026-10-18/configuration-diagnostic/serial-with-loop",
+        "--mode",
+        "native_default",
+        "--kind",
+        "instrument",
+        "--frames",
+        "1600",
+        "--offset",
+        "0",
+        "--init-limit",
+        "100",
+        "--preload-limit",
+        "1701",
+        "--period-ns",
+        "50000000",
+        "--threads",
+        "1",
+        "--spin-us",
+        "0",
+        "--timeout",
+        "180",
+        "--settings",
+        "/home/research/orb-effective-duration-2026-10-18/configuration-diagnostic/serial-with-loop.yaml",
+        "--timestamps",
+        "/home/research/orb-dispatch-check-2026-10-18/source/Examples/Stereo/EuRoC_TimeStamps/V102.txt"
+      ],
+      "returncode": 0,
+      "run_sha256": "cecb1824154bfec6232d8023fb467b8060281c7ec028396bc0c72c4c88a3a3f5",
+      "quality": {
+        "frames": 1580,
+        "start_k": 20,
+        "end_k_exclusive": 1600,
+        "valid_frames": 1580,
+        "matched_frames": 1580,
+        "valid_fraction": 1.0,
+        "ground_truth_coverage": 1.0,
+        "ATE_RMSE_m": 0.16015181052474264,
+        "ATE_p95_m": 0.31609130956782516,
+        "ATE_max_m": 0.43643008562464364,
+        "alignment": "SE3, scale fixed to 1",
+        "pose": "online left-camera position; body GT + rotated T_BS translation"
+      },
+      "invalid_poses_all_frames": 0,
+      "CPU": 0.4212514337721186,
+      "RSS_MiB": 1806.390625,
+      "peak_threads": 4,
+      "deadline_fraction": 1.0,
+      "loop_messages": [
+        "PR: Loop detected with Reffine Sim3",
+        "*Loop detected"
+      ]
+    },
+    {
+      "id": "parallel-without-loop",
+      "serialStereo": 0,
+      "loopClosing": 0,
+      "managedNoLoop": 1,
+      "command": [
+        "/usr/bin/python3",
+        "/mnt/d/THU/THU/research/ORB_SLAM3/tools/run_fixed_replay.py",
+        "--source",
+        "/home/research/orb-dispatch-check-2026-10-18/source",
+        "--data",
+        "/home/research/orb-slam3-work/data/V1_02_medium",
+        "--output",
+        "/home/research/orb-effective-duration-2026-10-18/configuration-diagnostic/parallel-without-loop",
+        "--mode",
+        "native_default",
+        "--kind",
+        "instrument",
+        "--frames",
+        "1600",
+        "--offset",
+        "0",
+        "--init-limit",
+        "100",
+        "--preload-limit",
+        "1701",
+        "--period-ns",
+        "50000000",
+        "--threads",
+        "1",
+        "--spin-us",
+        "0",
+        "--timeout",
+        "180",
+        "--settings",
+        "/home/research/orb-effective-duration-2026-10-18/configuration-diagnostic/parallel-without-loop.yaml",
+        "--timestamps",
+        "/home/research/orb-dispatch-check-2026-10-18/source/Examples/Stereo/EuRoC_TimeStamps/V102.txt"
+      ],
+      "returncode": 0,
+      "run_sha256": "a89e84c750b7123fe621f9f806188edfd70d06940c540c56c5802fa2e3e866a4",
+      "quality": {
+        "frames": 1580,
+        "start_k": 20,
+        "end_k_exclusive": 1600,
+        "valid_frames": 1580,
+        "matched_frames": 1580,
+        "valid_fraction": 1.0,
+        "ground_truth_coverage": 1.0,
+        "ATE_RMSE_m": 0.19169385291879726,
+        "ATE_p95_m": 0.3106453976877389,
+        "ATE_max_m": 0.3580198484624608,
+        "alignment": "SE3, scale fixed to 1",
+        "pose": "online left-camera position; body GT + rotated T_BS translation"
+      },
+      "invalid_poses_all_frames": 0,
+      "CPU": 0.37136944284407025,
+      "RSS_MiB": 1786.74609375,
+      "peak_threads": 5,
+      "deadline_fraction": 1.0,
+      "loop_messages": []
+    }
+  ],
+  "configuration_protocol_sha256": "6987ef8489a43fd02582ce34bac71d9a5f32f405a4377f53021f6c7aedc5da4a",
+  "protected_state": {
+    "orb": {
+      "unchanged": true,
+      "head": "4452a3c4ab75b1cde34e5505a36ec3f9edcdc4c4",
+      "branch": "leonhardqwq",
+      "index_sha256": "b26757d874c136705d8bf684ae886b4d3140966ba0db0cfd39e92a991c2e243f"
+    },
+    "paper": {
+      "unchanged": true,
+      "head": "ba8358a9d2ec87a5980b7a6f680936e98a4a80aa",
+      "branch": "main",
+      "index_sha256": "f715bfdb1737c8f7f8368dbffb5cc212a091066ddc5553dbe2dcf541178d8780"
+    },
+    "library": {
+      "unchanged": true,
+      "head": "1e6ba1266cfbd6042b705244585fc288a0f28324",
+      "branch": "main",
+      "index_sha256": "8b1227cbf2999d4804c83e544dde9cd3fb10b907cde99721180813af66ed4424"
+    },
+    "CPP_and_CMake_unchanged": true
+  },
+  "final_tool_sha256": {
+    "check_effective_events.py": "bc7a581bca61479d57c3df911d12370df6f037d0f851b32cd2911363b6ecab2b",
+    "run_effective_campaign.py": "d8a58e24df511cc6696840fa10fd12022279fcf5832835923571c69ecb490efb",
+    "run_effective_collection.py": "f4d4e018f7fbfeb7748041471c2213cad2928543dd5659ac77b8e6364b564646",
+    "run_effective_duration_pilot.py": "6ba92a57cd6e9aa0ead82e07fa944087f035ea506608924767d60f520d3d56dc",
+    "summarize_effective_collection.py": "d2dab0e41f142049c6583805605d51986fc3cc344e28cd07493a3305002dae08",
+    "test_effective_collection_inputs.py": "91a0af035041c8087303dfa45a3a8fe0208448a04dccd765fbb5295deae652b0",
+    "test_effective_events.py": "1e9393afee3abf31a1117602d335eec230187281773e28a70a302fbd7472fc57",
+    "fetch_euroc_member.py": "fc080a2dea560ac17749ffe0860c8fb214ceeff9a0ea2f063dc0de37720683d7",
+    "score_online_trajectory.py": "809ecb8269c2ca5c55b5ca72dc0e8e0ad287550ae44ab1478c17e3eb3f9d476e"
+  },
+  "tool_finalization_note": "Final full-run validity uses C++ invalid_pose_frames, including nonfinite poses; existing successful continuous run summaries have zero invalid poses, so outcomes unchanged. Score CLI now exposes explicit interval.",
+  "validation": {
+    "sequence_input_tests": 9,
+    "sequence_input_environment": "WSL Ubuntu-22.04 Python 3.10",
+    "trajectory_selftest": "passed",
+    "effective_checker_named_fixtures": 17,
+    "original_CPP_binary_reused": true,
+    "git_mutation": false
+  }
+}

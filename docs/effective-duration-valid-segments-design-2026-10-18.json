@@ -1,0 +1,37 @@
+{
+  "reason": "Both first runs lacked GT for the same 19 frames before reference data starts; no tracking failure. Preserve failed runs and correct input availability.",
+  "profiles_in_order": [
+    {
+      "id": "v102-valid-early",
+      "sequence": "V1_02_medium",
+      "offset": 20,
+      "protocol": "effective-duration-v102-valid-early-protocol-2026-10-18.json",
+      "protocol_sha256": "281697bf35e0b6e01ea5cf0af639ba85a19612f4c66fd99f6691f5d38c4b61e4",
+      "ground_truth_sha256": "fed415eee44313584b9c4f61010dac146d5e4a4a35301db25b1ecd7d4d91b5f0",
+      "timestamps_sha256": "352af294dc5edf7fbf1f39888a45787da4740dd41846f71705d640798ea6326e"
+    },
+    {
+      "id": "v102-valid-late",
+      "sequence": "V1_02_medium",
+      "offset": 790,
+      "protocol": "effective-duration-v102-valid-late-protocol-2026-10-18.json",
+      "protocol_sha256": "c3af5f8627632804a97744ba8b50dd0c5e42b2d1eab79f86dc5703981e945e1f",
+      "ground_truth_sha256": "fed415eee44313584b9c4f61010dac146d5e4a4a35301db25b1ecd7d4d91b5f0",
+      "timestamps_sha256": "352af294dc5edf7fbf1f39888a45787da4740dd41846f71705d640798ea6326e"
+    },
+    {
+      "id": "v101-valid-early",
+      "sequence": "V1_01_easy",
+      "offset": 21,
+      "protocol": "effective-duration-v101-valid-early-protocol-2026-10-18.json",
+      "protocol_sha256": "9022952252a4f38d44271dd4521a6f3a7675d959737dcb7986cd7c531778ff5b",
+      "ground_truth_sha256": "701200e6924ba845ccdeea884bd717c82d1ed91f480913ea6e2e6ccb9c0fbf6d",
+      "timestamps_sha256": "ea25c15d85a622f0ef0642e034d55b4a50de055139ea06753c06c7e3c4be4072"
+    }
+  ],
+  "frozen_before_new_replays": true,
+  "not_independent_scenes_within_sequence": true,
+  "no_gate_relaxation": true,
+  "original_protocols_preserved": true,
+  "E4_permitted": false
+}

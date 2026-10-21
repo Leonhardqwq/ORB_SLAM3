@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "date": "2026-10-17",
+  "dataset": "EuRoC V1_01_easy",
+  "dataset_zip_sha256": "a920fe5b5e69a6ad19b32f1cfaf90ac2f59d45dfd1ca18cc9722e07684ba45fa",
+  "h_ns": 50000000,
+  "tau_ns": 50000000,
+  "H": 20,
+  "initialization_max_frames": 100,
+  "evaluation_frames": 400,
+  "preload_max_frames": 500,
+  "cumulative_timing_limit_ns": 100000,
+  "instrumentation_overhead_limit": 0.05,
+  "independent_runs_each": 3,
+  "deadline_is_application_safety_requirement": false,
+  "clock": "std::chrono::steady_clock",
+  "time_unit": "integer nanoseconds",
+  "output": "tracking end before mapping",
+  "graph": [["B", "T", 1], ["T", "B", 0]],
+  "probability_fitting_authorized_after": "all timing and data acceptance passed"
+}

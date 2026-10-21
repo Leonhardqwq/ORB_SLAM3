@@ -1,0 +1,21 @@
+{
+  "diagnostic_only": true,
+  "independent_repetitions_per_configuration": 1,
+  "base": "Same built fork, 1600 evaluated frames from sequence origin, h=tau=50ms, quality k=20..1599, one declared process thread policy",
+  "profiles": [
+    {
+      "id": "serial-with-loop",
+      "serialStereo": 1,
+      "loopClosing": 1,
+      "managedNoLoop": 0
+    },
+    {
+      "id": "parallel-without-loop",
+      "serialStereo": 0,
+      "loopClosing": 0,
+      "managedNoLoop": 1
+    }
+  ],
+  "interpretation": "Together with previously observed native_control and native_default: descriptive 2x2 check, not randomized replicated causal estimate. Fixed mode unchanged.",
+  "E4_permitted": false
+}

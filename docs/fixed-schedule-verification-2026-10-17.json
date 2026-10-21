@@ -1,0 +1,1340 @@
+{
+  "date": "2026-10-17",
+  "status": "stopped_at_application_step4_timing_mismatch",
+  "branch": "leonhardqwq",
+  "head": "4452a3c4ab75b1cde34e5505a36ec3f9edcdc4c4",
+  "working_tree_contains_uncommitted_source_changes": true,
+  "stages": {
+    "B1": "design_and_scoped_implementation_review_passed",
+    "B2": "passed",
+    "B3": "passed",
+    "B4": "order_passed_timing_failed",
+    "B5": "capture_passed_reconstruction_failed",
+    "B6": "not_started",
+    "application_1": "modified_scope_design_passed_original_native_failure_retained",
+    "application_2": "passed",
+    "application_3": "passed_for_preregistered_pilot",
+    "application_4": "failed",
+    "application_5": "not_started",
+    "application_6": "not_started"
+  },
+  "environment_reference": "wsl-ubuntu-verification.json",
+  "contract": "fixed-measurement.json",
+  "contract_sha256": "6e7af60a8a9fe10d38326140290f4aecd0bee53a2ec3debc9a36e964f61bd9ad",
+  "instrumentation": {
+    "instrument_elapsed_ns": [
+      19967685999,
+      19967031291,
+      19967213627
+    ],
+    "plain_elapsed_ns": [
+      19966875667,
+      19967209923,
+      19967491902
+    ],
+    "median_relative_overhead": 1.855041347198494e-07,
+    "observed_extreme_relative_overhead": 4.058381559102209e-05,
+    "limit": 0.05,
+    "scope": "Replay elapsed time including release waiting; not a pure CPU overhead estimate or a confidence bound."
+  },
+  "timing": {
+    "pilot-instrument-01": {
+      "directory": "/home/research/orb-fixed-work/runs/pilot-instrument-01",
+      "structural_errors": [],
+      "rows": 401,
+      "evaluated": 400,
+      "keyframes_processed": 11,
+      "sampled_peak_threads": 1,
+      "structure_passed": true,
+      "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b",
+      "reference": "/mnt/d/THU/THU/research/refer-papers/manuscripts/reliability-study/experiments/periodic-feedback/src/evaluate.py",
+      "timing_limit_ns": 100000,
+      "timing_passed": false,
+      "failed_windows": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        9,
+        12,
+        13,
+        14,
+        17,
+        18,
+        19
+      ],
+      "window_count": 20,
+      "max_abs_error_ns": 183805,
+      "max_gap_T_ns": 183724,
+      "max_gap_B_ns": 151,
+      "largest_errors": [
+        {
+          "k": 73,
+          "error_T_ns": 183724,
+          "error_B_ns": 183805,
+          "gap_T_ns": 183724,
+          "gap_B_ns": 81
+        },
+        {
+          "k": 397,
+          "error_T_ns": 159556,
+          "error_B_ns": 159633,
+          "gap_T_ns": 159556,
+          "gap_B_ns": 77
+        },
+        {
+          "k": 390,
+          "error_T_ns": 158811,
+          "error_B_ns": 158909,
+          "gap_T_ns": 158811,
+          "gap_B_ns": 98
+        },
+        {
+          "k": 50,
+          "error_T_ns": 148041,
+          "error_B_ns": 148115,
+          "gap_T_ns": 148041,
+          "gap_B_ns": 74
+        },
+        {
+          "k": 125,
+          "error_T_ns": 143292,
+          "error_B_ns": 143371,
+          "gap_T_ns": 143292,
+          "gap_B_ns": 79
+        },
+        {
+          "k": 342,
+          "error_T_ns": 131341,
+          "error_B_ns": 131417,
+          "gap_T_ns": 131341,
+          "gap_B_ns": 76
+        },
+        {
+          "k": 60,
+          "error_T_ns": 129816,
+          "error_B_ns": 129896,
+          "gap_T_ns": 129816,
+          "gap_B_ns": 80
+        },
+        {
+          "k": 392,
+          "error_T_ns": 127667,
+          "error_B_ns": 127748,
+          "gap_T_ns": 127667,
+          "gap_B_ns": 81
+        },
+        {
+          "k": 254,
+          "error_T_ns": 125451,
+          "error_B_ns": 125530,
+          "gap_T_ns": 125451,
+          "gap_B_ns": 79
+        },
+        {
+          "k": 266,
+          "error_T_ns": 125162,
+          "error_B_ns": 125248,
+          "gap_T_ns": 125162,
+          "gap_B_ns": 86
+        }
+      ]
+    },
+    "pilot-instrument-02": {
+      "directory": "/home/research/orb-fixed-work/runs/pilot-instrument-02",
+      "structural_errors": [],
+      "rows": 401,
+      "evaluated": 400,
+      "keyframes_processed": 11,
+      "sampled_peak_threads": 1,
+      "structure_passed": true,
+      "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b",
+      "reference": "/mnt/d/THU/THU/research/refer-papers/manuscripts/reliability-study/experiments/periodic-feedback/src/evaluate.py",
+      "timing_limit_ns": 100000,
+      "timing_passed": false,
+      "failed_windows": [
+        1,
+        3,
+        6,
+        7,
+        9,
+        10,
+        11,
+        12,
+        14,
+        15,
+        17,
+        19
+      ],
+      "window_count": 20,
+      "max_abs_error_ns": 161351,
+      "max_gap_T_ns": 161266,
+      "max_gap_B_ns": 7024,
+      "largest_errors": [
+        {
+          "k": 225,
+          "error_T_ns": 161266,
+          "error_B_ns": 161351,
+          "gap_T_ns": 161266,
+          "gap_B_ns": 85
+        },
+        {
+          "k": 314,
+          "error_T_ns": 144873,
+          "error_B_ns": 144951,
+          "gap_T_ns": 144873,
+          "gap_B_ns": 78
+        },
+        {
+          "k": 285,
+          "error_T_ns": 138818,
+          "error_B_ns": 138896,
+          "gap_T_ns": 138818,
+          "gap_B_ns": 78
+        },
+        {
+          "k": 340,
+          "error_T_ns": 124752,
+          "error_B_ns": 124831,
+          "gap_T_ns": 124752,
+          "gap_B_ns": 79
+        },
+        {
+          "k": 132,
+          "error_T_ns": 123136,
+          "error_B_ns": 123219,
+          "gap_T_ns": 123136,
+          "gap_B_ns": 83
+        },
+        {
+          "k": 394,
+          "error_T_ns": 122601,
+          "error_B_ns": 122679,
+          "gap_T_ns": 122601,
+          "gap_B_ns": 78
+        },
+        {
+          "k": 31,
+          "error_T_ns": 119841,
+          "error_B_ns": 119915,
+          "gap_T_ns": 119841,
+          "gap_B_ns": 74
+        },
+        {
+          "k": 307,
+          "error_T_ns": 119545,
+          "error_B_ns": 119625,
+          "gap_T_ns": 119545,
+          "gap_B_ns": 80
+        },
+        {
+          "k": 62,
+          "error_T_ns": 119477,
+          "error_B_ns": 119551,
+          "gap_T_ns": 119477,
+          "gap_B_ns": 74
+        },
+        {
+          "k": 200,
+          "error_T_ns": 118830,
+          "error_B_ns": 118949,
+          "gap_T_ns": 118830,
+          "gap_B_ns": 119
+        }
+      ]
+    },
+    "pilot-instrument-03": {
+      "directory": "/home/research/orb-fixed-work/runs/pilot-instrument-03",
+      "structural_errors": [],
+      "rows": 401,
+      "evaluated": 400,
+      "keyframes_processed": 11,
+      "sampled_peak_threads": 1,
+      "structure_passed": true,
+      "reference_sha256": "0cf279080a72395a7e79a420ae3a989c991db6e0493b895a9500892bd3e9ef2b",
+      "reference": "/mnt/d/THU/THU/research/refer-papers/manuscripts/reliability-study/experiments/periodic-feedback/src/evaluate.py",
+      "timing_limit_ns": 100000,
+      "timing_passed": false,
+      "failed_windows": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        19
+      ],
+      "window_count": 20,
+      "max_abs_error_ns": 161042,
+      "max_gap_T_ns": 160961,
+      "max_gap_B_ns": 187,
+      "largest_errors": [
+        {
+          "k": 111,
+          "error_T_ns": 160961,
+          "error_B_ns": 161042,
+          "gap_T_ns": 160961,
+          "gap_B_ns": 81
+        },
+        {
+          "k": 303,
+          "error_T_ns": 136495,
+          "error_B_ns": 136574,
+          "gap_T_ns": 136495,
+          "gap_B_ns": 79
+        },
+        {
+          "k": 334,
+          "error_T_ns": 135669,
+          "error_B_ns": 135747,
+          "gap_T_ns": 135669,
+          "gap_B_ns": 78
+        },
+        {
+          "k": 386,
+          "error_T_ns": 135045,
+          "error_B_ns": 135138,
+          "gap_T_ns": 135045,
+          "gap_B_ns": 93
+        },
+        {
+          "k": 2,
+          "error_T_ns": 133464,
+          "error_B_ns": 133543,
+          "gap_T_ns": 133464,
+          "gap_B_ns": 79
+        },
+        {
+          "k": 80,
+          "error_T_ns": 129284,
+          "error_B_ns": 129369,
+          "gap_T_ns": 129284,
+          "gap_B_ns": 85
+        },
+        {
+          "k": 289,
+          "error_T_ns": 124296,
+          "error_B_ns": 124386,
+          "gap_T_ns": 124296,
+          "gap_B_ns": 90
+        },
+        {
+          "k": 41,
+          "error_T_ns": 122655,
+          "error_B_ns": 122735,
+          "gap_T_ns": 122655,
+          "gap_B_ns": 80
+        },
+        {
+          "k": 71,
+          "error_T_ns": 121169,
+          "error_B_ns": 121247,
+          "gap_T_ns": 121169,
+          "gap_B_ns": 78
+        },
+        {
+          "k": 384,
+          "error_T_ns": 117674,
+          "error_B_ns": 117760,
+          "gap_T_ns": 117674,
+          "gap_B_ns": 86
+        }
+      ]
+    }
+  },
+  "observations": {
+    "pilot-instrument-01": {
+      "deadline_ms": 50,
+      "min_deadline_distance_ns": 27738848,
+      "delay_range_ns": [
+        16243053,
+        22261152
+      ],
+      "late_frames": 0,
+      "late_windows": 0,
+      "backlogged_starts": 0,
+      "max_B_service_ns": 20255493,
+      "max_T_service_ns": 22186113,
+      "max_dispatch_gap_ns": 183724,
+      "median_dispatch_gap_ns": 81873.5,
+      "max_interstage_gap_ns": 151,
+      "keyframe_rounds": [
+        115,
+        116,
+        138,
+        145,
+        153,
+        175,
+        191,
+        231,
+        280,
+        370
+      ],
+      "frame_trajectory_lines": 401
+    },
+    "pilot-instrument-02": {
+      "deadline_ms": 50,
+      "min_deadline_distance_ns": 28019477,
+      "delay_range_ns": [
+        16486657,
+        21980523
+      ],
+      "late_frames": 0,
+      "late_windows": 0,
+      "backlogged_starts": 0,
+      "max_B_service_ns": 18898544,
+      "max_T_service_ns": 21906463,
+      "max_dispatch_gap_ns": 161266,
+      "median_dispatch_gap_ns": 79136.5,
+      "max_interstage_gap_ns": 7024,
+      "keyframe_rounds": [
+        115,
+        116,
+        138,
+        145,
+        153,
+        175,
+        191,
+        231,
+        280,
+        370
+      ],
+      "frame_trajectory_lines": 401
+    },
+    "pilot-instrument-03": {
+      "deadline_ms": 50,
+      "min_deadline_distance_ns": 22057886,
+      "delay_range_ns": [
+        16815818,
+        27942114
+      ],
+      "late_frames": 0,
+      "late_windows": 0,
+      "backlogged_starts": 0,
+      "max_B_service_ns": 18799379,
+      "max_T_service_ns": 27819459,
+      "max_dispatch_gap_ns": 160961,
+      "median_dispatch_gap_ns": 83550.0,
+      "max_interstage_gap_ns": 187,
+      "keyframe_rounds": [
+        115,
+        116,
+        138,
+        145,
+        153,
+        175,
+        191,
+        231,
+        280,
+        370
+      ],
+      "frame_trajectory_lines": 401
+    }
+  },
+  "functional_checks": {
+    "bad-loop-01": {
+      "mode": "bad_loop",
+      "kind": "instrument",
+      "returncode": 1,
+      "timed_out": false,
+      "seconds": 1.5375657859999592,
+      "sampled_peak_RSS_bytes": 427397120,
+      "sampled_peak_threads": 1,
+      "resource_sample_interval_seconds": 0.02,
+      "environment_overrides": {
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1"
+      },
+      "config_sha256": "6675a57e35be6ba00eba8187363eb9c2c25afb790e14e28bc1b9c8a9537a7daf",
+      "replay": {
+        "status": "error",
+        "evaluated": 0
+      },
+      "accepted": true,
+      "purpose": "expected_rejection"
+    },
+    "bad-mode-01": {
+      "mode": "bad_mode",
+      "kind": "instrument",
+      "returncode": 1,
+      "timed_out": false,
+      "seconds": 1.5377605180000273,
+      "sampled_peak_RSS_bytes": 426295296,
+      "sampled_peak_threads": 1,
+      "resource_sample_interval_seconds": 0.02,
+      "environment_overrides": {
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1"
+      },
+      "config_sha256": "3992db55da1ae60a0e341ac4783db645dd416f0eb710af709983ad1df6849f68",
+      "replay": {
+        "status": "error",
+        "evaluated": 0
+      },
+      "accepted": true,
+      "purpose": "expected_rejection"
+    },
+    "selftest-02": {
+      "mode": "fixed",
+      "kind": "selftest",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 7.362030268000012,
+      "sampled_peak_RSS_bytes": 897781760,
+      "sampled_peak_threads": 1,
+      "resource_sample_interval_seconds": 0.02,
+      "environment_overrides": {
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1"
+      },
+      "config_sha256": "1dda84b895015756765930168ffbee61dbd14e13cf23aae8ba49df56f99d7c1f",
+      "replay": {
+        "status": "passed",
+        "fixed": true,
+        "kind": "selftest",
+        "evaluated": 50,
+        "initialization_frame": 0,
+        "empty_rounds": 48,
+        "keyframes_processed": 3,
+        "invalid_pose_frames": 0,
+        "self_checks": 12,
+        "evaluation_elapsed_ns": 2467581924,
+        "threads_at_evaluation_start": 1,
+        "threads_at_evaluation_end": 1,
+        "clock_pair_min_ns": 12,
+        "clock_pair_max_ns": 39
+      },
+      "accepted": true
+    },
+    "smoke-control-02": {
+      "mode": "native_control",
+      "kind": "instrument",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 7.360251746000017,
+      "sampled_peak_RSS_bytes": 895250432,
+      "sampled_peak_threads": 3,
+      "resource_sample_interval_seconds": 0.02,
+      "environment_overrides": {
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1"
+      },
+      "config_sha256": "5e39e60accf4c1f0d37d1118d537ee922e2a1d62d8e232ee40f44cedb22fe2c4",
+      "replay": {
+        "status": "passed",
+        "fixed": false,
+        "kind": "instrument",
+        "evaluated": 50,
+        "initialization_frame": 0,
+        "empty_rounds": 0,
+        "keyframes_processed": 0,
+        "invalid_pose_frames": 0,
+        "self_checks": 0,
+        "evaluation_elapsed_ns": 2467959684,
+        "threads_at_evaluation_start": 3,
+        "threads_at_evaluation_end": 3,
+        "clock_pair_min_ns": 12,
+        "clock_pair_max_ns": 6155
+      },
+      "accepted": true
+    },
+    "smoke-default-01": {
+      "mode": "native_default",
+      "kind": "instrument",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 6.756229254000004,
+      "sampled_peak_RSS_bytes": 903987200,
+      "sampled_peak_threads": 28,
+      "resource_sample_interval_seconds": 0.02,
+      "environment_overrides": {
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1"
+      },
+      "config_sha256": "721602964ef5ffd5b5d594900ed6ee52069bafa32ea2482e5c7987fdad2ab442",
+      "replay": {
+        "status": "passed",
+        "fixed": false,
+        "kind": "instrument",
+        "evaluated": 50,
+        "initialization_frame": 0,
+        "empty_rounds": 0,
+        "keyframes_processed": 0,
+        "invalid_pose_frames": 0,
+        "self_checks": 0,
+        "evaluation_elapsed_ns": 2461669503,
+        "threads_at_evaluation_start": 26,
+        "threads_at_evaluation_end": 26,
+        "clock_pair_min_ns": 12,
+        "clock_pair_max_ns": 40
+      },
+      "accepted": true
+    }
+  },
+  "pilot_runs": {
+    "pilot-instrument-01": {
+      "mode": "fixed",
+      "kind": "instrument",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 24.826814243999934,
+      "sampled_peak_RSS_bytes": 907087872,
+      "sampled_peak_threads": 1,
+      "resource_sample_interval_seconds": 0.02,
+      "environment_overrides": {
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1"
+      },
+      "config_sha256": "1dda84b895015756765930168ffbee61dbd14e13cf23aae8ba49df56f99d7c1f",
+      "replay": {
+        "status": "passed",
+        "fixed": true,
+        "kind": "instrument",
+        "evaluated": 400,
+        "initialization_frame": 0,
+        "empty_rounds": 390,
+        "keyframes_processed": 11,
+        "invalid_pose_frames": 0,
+        "self_checks": 0,
+        "evaluation_elapsed_ns": 19967685999,
+        "threads_at_evaluation_start": 1,
+        "threads_at_evaluation_end": 1,
+        "clock_pair_min_ns": 12,
+        "clock_pair_max_ns": 45
+      },
+      "accepted": true
+    },
+    "pilot-instrument-02": {
+      "mode": "fixed",
+      "kind": "instrument",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 24.824735162000025,
+      "sampled_peak_RSS_bytes": 909553664,
+      "sampled_peak_threads": 1,
+      "resource_sample_interval_seconds": 0.02,
+      "environment_overrides": {
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1"
+      },
+      "config_sha256": "1dda84b895015756765930168ffbee61dbd14e13cf23aae8ba49df56f99d7c1f",
+      "replay": {
+        "status": "passed",
+        "fixed": true,
+        "kind": "instrument",
+        "evaluated": 400,
+        "initialization_frame": 0,
+        "empty_rounds": 390,
+        "keyframes_processed": 11,
+        "invalid_pose_frames": 0,
+        "self_checks": 0,
+        "evaluation_elapsed_ns": 19967031291,
+        "threads_at_evaluation_start": 1,
+        "threads_at_evaluation_end": 1,
+        "clock_pair_min_ns": 12,
+        "clock_pair_max_ns": 45
+      },
+      "accepted": true
+    },
+    "pilot-instrument-03": {
+      "mode": "fixed",
+      "kind": "instrument",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 24.279219126000044,
+      "sampled_peak_RSS_bytes": 907767808,
+      "sampled_peak_threads": 1,
+      "resource_sample_interval_seconds": 0.02,
+      "environment_overrides": {
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1"
+      },
+      "config_sha256": "1dda84b895015756765930168ffbee61dbd14e13cf23aae8ba49df56f99d7c1f",
+      "replay": {
+        "status": "passed",
+        "fixed": true,
+        "kind": "instrument",
+        "evaluated": 400,
+        "initialization_frame": 0,
+        "empty_rounds": 390,
+        "keyframes_processed": 11,
+        "invalid_pose_frames": 0,
+        "self_checks": 0,
+        "evaluation_elapsed_ns": 19967213627,
+        "threads_at_evaluation_start": 1,
+        "threads_at_evaluation_end": 1,
+        "clock_pair_min_ns": 12,
+        "clock_pair_max_ns": 38
+      },
+      "accepted": true
+    },
+    "pilot-plain-01": {
+      "mode": "fixed",
+      "kind": "plain",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 24.838761831000056,
+      "sampled_peak_RSS_bytes": 905850880,
+      "sampled_peak_threads": 1,
+      "resource_sample_interval_seconds": 0.02,
+      "environment_overrides": {
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1"
+      },
+      "config_sha256": "1dda84b895015756765930168ffbee61dbd14e13cf23aae8ba49df56f99d7c1f",
+      "replay": {
+        "status": "passed",
+        "fixed": true,
+        "kind": "plain",
+        "evaluated": 400,
+        "initialization_frame": 0,
+        "empty_rounds": 390,
+        "keyframes_processed": 11,
+        "invalid_pose_frames": 0,
+        "self_checks": 0,
+        "evaluation_elapsed_ns": 19966875667,
+        "threads_at_evaluation_start": 1,
+        "threads_at_evaluation_end": 1,
+        "clock_pair_min_ns": 12,
+        "clock_pair_max_ns": 45
+      },
+      "accepted": true
+    },
+    "pilot-plain-02": {
+      "mode": "fixed",
+      "kind": "plain",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 24.879538927,
+      "sampled_peak_RSS_bytes": 909336576,
+      "sampled_peak_threads": 1,
+      "resource_sample_interval_seconds": 0.02,
+      "environment_overrides": {
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1"
+      },
+      "config_sha256": "1dda84b895015756765930168ffbee61dbd14e13cf23aae8ba49df56f99d7c1f",
+      "replay": {
+        "status": "passed",
+        "fixed": true,
+        "kind": "plain",
+        "evaluated": 400,
+        "initialization_frame": 0,
+        "empty_rounds": 390,
+        "keyframes_processed": 11,
+        "invalid_pose_frames": 0,
+        "self_checks": 0,
+        "evaluation_elapsed_ns": 19967209923,
+        "threads_at_evaluation_start": 1,
+        "threads_at_evaluation_end": 1,
+        "clock_pair_min_ns": 12,
+        "clock_pair_max_ns": 142
+      },
+      "accepted": true
+    },
+    "pilot-plain-03": {
+      "mode": "fixed",
+      "kind": "plain",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 24.824250026999948,
+      "sampled_peak_RSS_bytes": 906383360,
+      "sampled_peak_threads": 1,
+      "resource_sample_interval_seconds": 0.02,
+      "environment_overrides": {
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1"
+      },
+      "config_sha256": "1dda84b895015756765930168ffbee61dbd14e13cf23aae8ba49df56f99d7c1f",
+      "replay": {
+        "status": "passed",
+        "fixed": true,
+        "kind": "plain",
+        "evaluated": 400,
+        "initialization_frame": 0,
+        "empty_rounds": 390,
+        "keyframes_processed": 11,
+        "invalid_pose_frames": 0,
+        "self_checks": 0,
+        "evaluation_elapsed_ns": 19967491902,
+        "threads_at_evaluation_start": 1,
+        "threads_at_evaluation_end": 1,
+        "clock_pair_min_ns": 12,
+        "clock_pair_max_ns": 9588
+      },
+      "accepted": true
+    }
+  },
+  "boundary_rule_checks": 9,
+  "fixed_API_checks": 12,
+  "checker_fixtures": {
+    "exact_recurrence": "passed",
+    "injected_200us_gap": "rejected_as_expected"
+  },
+  "source_hashes": {
+    "src/Viewer.cc": "3b0192b9e010986941196e605b184af1a2910a5422d839668d60a1e4ccf2d445",
+    "src/LoopClosing.cc": "e6d4685fabb2cc91ab154259c74d95259026fa3edc4e66dc8d7095380ae6c39c",
+    "src/TwoViewReconstruction.cc": "d5dab968e29e6d063a2d04d4a545fe5acd674596a4559aa975c50b754ed54f55",
+    "src/ImuTypes.cc": "0d062e75b9367d8c93978f309504849bff00e7bad1bb34503a8bbace2e74ff36",
+    "src/Config.cc": "02894ce63d0806ccc82cc676363e9239a8bc95435d50c01c81509f7751816012",
+    "src/LocalMapping.cc": "e578c0d2f6412f1c99f68470d2fcb92634eb6ce36e197436b9ddf9e289492649",
+    "src/G2oTypes.cc": "b3ab3e6f8c7b4c78e4face22deefbb40ba9b3abea35ef51541a286b134ff7c12",
+    "src/Tracking.cc": "3d13829cf071fdb0da971e3e4479b3251214ea908bb293afda53808e2a0c9f6f",
+    "src/Optimizer.cc": "215ff5908e7c34272ab86c9386f0496bd1bd3daa770076e3270915b5f189f408",
+    "src/GeometricTools.cc": "2306547ec791ae80ade6fc5bbf10c8eef2a9a7768a93879bf952d4c39ce6299e",
+    "src/Settings.cc": "431f04d5f4f68870d7b1ca8558bec45d092753bd582cddfbb7928271163c9d2c",
+    "src/Atlas.cc": "e75fce62a43301342eddbd8a58037f7380b311af202078169e72fc7916c9ea40",
+    "src/KeyFrame.cc": "355507e1b35ff3eb30f75567c0bc2b3adb96c93d81b4e147d31696083a4b25f0",
+    "src/System.cc": "e47daa852a655b95b9de4e267515afb7088fc7de020cf78cadaef308135097ec",
+    "src/Frame.cc": "e7dcefcc6ed213dd365972c73d263d4b2a0be1730632b35f6a92523558b2d614",
+    "src/MapPoint.cc": "f8e86159e88c22ce226e5eb69952cad0b2d3f517c8f87a5e472881d40ec5ba8f",
+    "src/MapDrawer.cc": "533e4507458863b7c806ef795e99413ad83cc182eee8dabfe62ff17dbf32e798",
+    "src/KeyFrameDatabase.cc": "d8f0bd96b0c6377c24e7d12d9d87aba8013d5a3fcbc55f3428019fd1e124b457",
+    "src/Map.cc": "76a46fd4a39075c53f730485a5301311fa5095273e01fd1f7a91caee00e90068",
+    "src/Converter.cc": "49ba273af11884ef2fc16bf8edea7889f1d7f8b185c84a8e130949b9d085892f",
+    "src/FrameDrawer.cc": "1f2e01b9ea7f41aee07d5b58aaa17297380bef4ddee326bca374f7a37497ba2f",
+    "src/Sim3Solver.cc": "95859d9994d9f9e6139613ae75fd5b2b47b2448bdc182001e7a72ded3b5d1960",
+    "src/ORBextractor.cc": "388d093203497310998abae8b81f97e00acf95dd3544aa7a819fad665c4fc978",
+    "src/ORBmatcher.cc": "c28d83d33c0aecd476d229821fd8e6d76ea7cc71174f50af3e775868c329c9be",
+    "include/Converter.h": "a42b523c74b43d1b079f08357504ba248a0363bbc95b5aba7f389f5945206dd2",
+    "include/LoopClosing.h": "e9e2305327307b535aba47ca78e751c5099544b9f3006ed830ac74a8b68d42e0",
+    "include/Atlas.h": "0cf2f818165575bfcc5b308bda9f054c86b85ee72efe834447497dda117b36c0",
+    "include/KeyFrame.h": "a0e146cd27a4cc2aa791133899ddd7a437a4503f94a71a0c20fcdb337103f6d7",
+    "include/Settings.h": "d8576f19b1760ce4d64b526c05071eda03a2b53d0165ab81fd4b010ddb88df7c",
+    "include/TwoViewReconstruction.h": "8143c89f1a86a6064b245fcaecf27f23b192f1b39052f3f38c38ef3481bf4d85",
+    "include/LocalMapping.h": "f47f6f4408b230a13e0a3e719714d0c3858af88307b3313e42b00629b8b43fdd",
+    "include/Config.h": "e9e9c6c4b84445de66ec39fb5a91120689856f179d8e4af80f7a0de5dfc06bb4",
+    "include/Tracking.h": "ba988cd16a0c49c69e5296b53e0b5896d53e936915cb61faa4f7406ef1ce4fed",
+    "include/MapPoint.h": "6d80d371078222541a8ea4131f353578ed6b0f606fff8aa71f0a615b923ef38a",
+    "include/Frame.h": "9fe88db79ec427ab8cf6b6d1bb0cf2913e2038b025221f68c7540699ac026c88",
+    "include/ORBmatcher.h": "a98085aa7cdd17fdeb1b2d009b52078ef745bdf25a4e77b37ecd8cd66c7839cb",
+    "include/OptimizableTypes.h": "873c559d42f14840ee1b6704ba26659e5a8a17cd591d82bf5923f3428a33ce03",
+    "include/Viewer.h": "8905029b6168170430401c59015a9588f86ad6a57b8c6d7833052a6cfb1b3cba",
+    "include/ImuTypes.h": "33bd15160ea7a7dc7afef976cd4df211c72735381f7ee8b1f83c3bc52ec11da0",
+    "include/G2oTypes.h": "9bc1eca55ebb151d119e3def91c5544496463919ea79825c6fc9161329ade614",
+    "include/System.h": "07d6a6dd3197932818cef2bf760bcf0881e8dc9b0d312563e807c258f1e338b0",
+    "include/Optimizer.h": "e6c6a4ee26ccadb38a61653eb368cd1fd5c943b2fb04f064e2ec0fca470d8c5b",
+    "include/FrameDrawer.h": "1d0bdc3a414d57a462c5203a5ce2620a14ad17042e0885d9dabcfd555b0c91c1",
+    "include/MLPnPsolver.h": "7fc8fc1639ae5c5d5c57074e001c221bf2280a992e77be701d5495321c495280",
+    "include/MapDrawer.h": "be56f43249d8f496cae3183ae07337658814334aed977916c77071d54b2783d5",
+    "include/ORBVocabulary.h": "ad1381993e44af7ee7e062f2bbb33bb48a1d5de849289c6ff4d9b325da38ec2c",
+    "include/Sim3Solver.h": "49e25bc2442442b39742d11f9c26b0c5cd329fac6109e5c469dc86bf2163ad5d",
+    "include/SerializationUtils.h": "49bc1413401be7f1c70bc4d7df5f143c0384a2eadd41edcb4dbe655704eceab7",
+    "include/GeometricTools.h": "ceb88b8ca1bb4366b24dda20a018faf56087edca3835986408a7a76dc7b921dc",
+    "include/ORBextractor.h": "6d3349f766947d1d2a6e72c5e1caf9e52611c7e073e1e89493f3cc2aeadfaf77",
+    "include/Map.h": "34af884ae8f222b19b54d298cfb368eafe38f3f80730fb2c257169667d9fd3ef",
+    "include/KeyFrameDatabase.h": "28414b687d3c182f8ba1d022850a61dfb14693995e832aefe51981dd50034891",
+    "Examples/Stereo/stereo_fixed_replay.cc": "51a4c9b5cef3b5380e1b7581d882378f7ef4d45eba0c3285e9b7354ba5ea0ab7",
+    "CMakeLists.txt": "294789ac0b518148e933da0720a3ccc9034e5017c2dc930e8682e24dbc73ed20"
+  },
+  "compiled_artifact_hashes": {
+    "Examples/Stereo/stereo_fixed_replay": "4adba45932f8a15c65199261afff440a3569881b7f45182960c1a994b1798afc",
+    "Examples/Stereo/stereo_euroc": "c6ae7e99d9c1d00a20f00cdabe697de5ed05e706234c0902f7dd95fd4c5f2c34",
+    "lib/libORB_SLAM3.so": "fc500e1df5bffd29e4ff851fd8b26b2e719a2738d0f6b66df8a868dac99b61a4",
+    "Examples/Stereo/EuRoC_TimeStamps/V101.txt": "ea25c15d85a622f0ef0642e034d55b4a50de055139ea06753c06c7e3c4be4072"
+  },
+  "raw_artifact_hashes": {
+    "bad-loop-01/console.log": {
+      "bytes": 1893,
+      "sha256": "9df8c047b3a05a519c540457ad5727fd0090a7407f9be99a7f2e903d6bca03ad"
+    },
+    "bad-loop-01/replay-summary.json": {
+      "bytes": 33,
+      "sha256": "0539730682a79e8b2f8cf7c3b01733840fb9b84c82e1a7fbaed78758a33bf2be"
+    },
+    "bad-loop-01/run.json": {
+      "bytes": 6154,
+      "sha256": "fc7869abbe82d1c68ac45240f57bef21e74a003426e9af0c00c872d89414a40c"
+    },
+    "bad-loop-01/settings.yaml": {
+      "bytes": 3249,
+      "sha256": "6675a57e35be6ba00eba8187363eb9c2c25afb790e14e28bc1b9c8a9537a7daf"
+    },
+    "bad-mode-01/console.log": {
+      "bytes": 1845,
+      "sha256": "38c749ae5114d9e469d38036ab201d09c26d1146e8aebcd9fad98e34c0ed29a6"
+    },
+    "bad-mode-01/replay-summary.json": {
+      "bytes": 33,
+      "sha256": "0539730682a79e8b2f8cf7c3b01733840fb9b84c82e1a7fbaed78758a33bf2be"
+    },
+    "bad-mode-01/run.json": {
+      "bytes": 6154,
+      "sha256": "24a55d66b1168caf9f802f5aa0db693a0cac88dda1390652a011294f7bdc170f"
+    },
+    "bad-mode-01/settings.yaml": {
+      "bytes": 3249,
+      "sha256": "3992db55da1ae60a0e341ac4783db645dd416f0eb710af709983ad1df6849f68"
+    },
+    "pilot-instrument-01/console.log": {
+      "bytes": 2484,
+      "sha256": "bf9c4fa219ab003404a39fbb2b8b8479ce00d770912e034d0b759283e315dd34"
+    },
+    "pilot-instrument-01/replay-events.csv": {
+      "bytes": 33452,
+      "sha256": "a245b43cc269c6cb1b91ae257476c9dbb33a10a300b96e75d675c5542cbdb383"
+    },
+    "pilot-instrument-01/replay-frames.txt": {
+      "bytes": 45357,
+      "sha256": "933c39b7f29c2494d0aaf51726af445d2a7d36fbcf7a7cac1f2eff166f0c1fc1"
+    },
+    "pilot-instrument-01/replay-keyframes.txt": {
+      "bytes": 1244,
+      "sha256": "4f2d802a1d1dc76472ae74c2083db00485511364c4310e55c1a2579f9f4d6c64"
+    },
+    "pilot-instrument-01/replay-summary.json": {
+      "bytes": 322,
+      "sha256": "bcde087e055fa0d20259a992040bee94d3600e245194c1a577473cfa584492ff"
+    },
+    "pilot-instrument-01/run.json": {
+      "bytes": 6494,
+      "sha256": "d66d8e83fa1dceab1108180e7d047ccc6587a08b4588114bb267891d2abeb0cc"
+    },
+    "pilot-instrument-01/settings.yaml": {
+      "bytes": 3249,
+      "sha256": "1dda84b895015756765930168ffbee61dbd14e13cf23aae8ba49df56f99d7c1f"
+    },
+    "pilot-instrument-02/console.log": {
+      "bytes": 2484,
+      "sha256": "a7b9971f01d08842e58e87dfc1ae178051c8c8d77107512e8213ea5eb1711bba"
+    },
+    "pilot-instrument-02/replay-events.csv": {
+      "bytes": 33452,
+      "sha256": "7b86e07239d438963e50fe568e0626c24422645ee1fecc298f23a558f9cb7ae4"
+    },
+    "pilot-instrument-02/replay-frames.txt": {
+      "bytes": 45357,
+      "sha256": "933c39b7f29c2494d0aaf51726af445d2a7d36fbcf7a7cac1f2eff166f0c1fc1"
+    },
+    "pilot-instrument-02/replay-keyframes.txt": {
+      "bytes": 1244,
+      "sha256": "4f2d802a1d1dc76472ae74c2083db00485511364c4310e55c1a2579f9f4d6c64"
+    },
+    "pilot-instrument-02/replay-summary.json": {
+      "bytes": 322,
+      "sha256": "c739bd888600c525d81136b0cd29e45f312de8c956e0f4c22f24a659659bd210"
+    },
+    "pilot-instrument-02/run.json": {
+      "bytes": 6494,
+      "sha256": "14fdd704f1893eba7947f8b6dfc5a12cc0be37fc20a6d2000dd59314d2ed493a"
+    },
+    "pilot-instrument-02/settings.yaml": {
+      "bytes": 3249,
+      "sha256": "1dda84b895015756765930168ffbee61dbd14e13cf23aae8ba49df56f99d7c1f"
+    },
+    "pilot-instrument-03/console.log": {
+      "bytes": 2484,
+      "sha256": "50c210f7e611e0b91264558c4cbf26ec851fa5fbd981e4a960a333540e301b6c"
+    },
+    "pilot-instrument-03/replay-events.csv": {
+      "bytes": 33452,
+      "sha256": "237e5d778e4df18f689f6a006f3ac3eebe1bd22a8021a60985735d2b4096ffd1"
+    },
+    "pilot-instrument-03/replay-frames.txt": {
+      "bytes": 45357,
+      "sha256": "933c39b7f29c2494d0aaf51726af445d2a7d36fbcf7a7cac1f2eff166f0c1fc1"
+    },
+    "pilot-instrument-03/replay-keyframes.txt": {
+      "bytes": 1244,
+      "sha256": "4f2d802a1d1dc76472ae74c2083db00485511364c4310e55c1a2579f9f4d6c64"
+    },
+    "pilot-instrument-03/replay-summary.json": {
+      "bytes": 322,
+      "sha256": "7bdb67be9a8a3bbc107e62b3d327a06d8a440bc8e9937f353454fa9b6261e1f2"
+    },
+    "pilot-instrument-03/run.json": {
+      "bytes": 6494,
+      "sha256": "ebeb81bfaa560e93d76df37bcd71e75c5364666e513c05f99a716dcdda14abc8"
+    },
+    "pilot-instrument-03/settings.yaml": {
+      "bytes": 3249,
+      "sha256": "1dda84b895015756765930168ffbee61dbd14e13cf23aae8ba49df56f99d7c1f"
+    },
+    "pilot-plain-01/console.log": {
+      "bytes": 2464,
+      "sha256": "cb4ef75883dff4cc8cc9d6ae33025aac6d95c44e0eacf6c3eea66342a39965b4"
+    },
+    "pilot-plain-01/replay-events.csv": {
+      "bytes": 15808,
+      "sha256": "71f0b25b90e0bf465040e8729c18e38b4539476fe6b4d83d3dfa6ba3f74163c0"
+    },
+    "pilot-plain-01/replay-frames.txt": {
+      "bytes": 45357,
+      "sha256": "933c39b7f29c2494d0aaf51726af445d2a7d36fbcf7a7cac1f2eff166f0c1fc1"
+    },
+    "pilot-plain-01/replay-keyframes.txt": {
+      "bytes": 1244,
+      "sha256": "4f2d802a1d1dc76472ae74c2083db00485511364c4310e55c1a2579f9f4d6c64"
+    },
+    "pilot-plain-01/replay-summary.json": {
+      "bytes": 317,
+      "sha256": "2dde628023c4c2994a74ef6e8c2ee13b1d4d825c1dca9516eaec291552087ee7"
+    },
+    "pilot-plain-01/run.json": {
+      "bytes": 6469,
+      "sha256": "ad44ac7fe947a6510246ada7860694d26914d1b70f468bccab84febbf2648094"
+    },
+    "pilot-plain-01/settings.yaml": {
+      "bytes": 3249,
+      "sha256": "1dda84b895015756765930168ffbee61dbd14e13cf23aae8ba49df56f99d7c1f"
+    },
+    "pilot-plain-02/console.log": {
+      "bytes": 2464,
+      "sha256": "6c014f7930428e35233fd54e92e8be58ee01c1def84bfb1070484f34e1f2d5f8"
+    },
+    "pilot-plain-02/replay-events.csv": {
+      "bytes": 15808,
+      "sha256": "75b4eba0c5ce12840ee7bc9e1bfc1e01810b93051a1ccd21baa4cf1efdd81f71"
+    },
+    "pilot-plain-02/replay-frames.txt": {
+      "bytes": 45357,
+      "sha256": "933c39b7f29c2494d0aaf51726af445d2a7d36fbcf7a7cac1f2eff166f0c1fc1"
+    },
+    "pilot-plain-02/replay-keyframes.txt": {
+      "bytes": 1244,
+      "sha256": "4f2d802a1d1dc76472ae74c2083db00485511364c4310e55c1a2579f9f4d6c64"
+    },
+    "pilot-plain-02/replay-summary.json": {
+      "bytes": 318,
+      "sha256": "d90e00cd47f5f0dd72ed459e16a13cfc3a84bfd420092b5a35893cc4b2c50b6c"
+    },
+    "pilot-plain-02/run.json": {
+      "bytes": 6464,
+      "sha256": "066e5011bd5d32e6a3541292055a46e491434a4a12f362e2ef9ef93a8b5f5591"
+    },
+    "pilot-plain-02/settings.yaml": {
+      "bytes": 3249,
+      "sha256": "1dda84b895015756765930168ffbee61dbd14e13cf23aae8ba49df56f99d7c1f"
+    },
+    "pilot-plain-03/console.log": {
+      "bytes": 2464,
+      "sha256": "d9b473b2d65b436257b4da189242095c91780e436a46c4095486cf1c5894aa3e"
+    },
+    "pilot-plain-03/replay-events.csv": {
+      "bytes": 16209,
+      "sha256": "a301cb5207a1566b417a225e26dc526ed097b7d7bfa478ff6bc67dd951d158eb"
+    },
+    "pilot-plain-03/replay-frames.txt": {
+      "bytes": 45357,
+      "sha256": "933c39b7f29c2494d0aaf51726af445d2a7d36fbcf7a7cac1f2eff166f0c1fc1"
+    },
+    "pilot-plain-03/replay-keyframes.txt": {
+      "bytes": 1244,
+      "sha256": "4f2d802a1d1dc76472ae74c2083db00485511364c4310e55c1a2579f9f4d6c64"
+    },
+    "pilot-plain-03/replay-summary.json": {
+      "bytes": 319,
+      "sha256": "92f3a3ceeadc11a8b4ce99a26069d7521cb9492e0935c6edbd008e870c847230"
+    },
+    "pilot-plain-03/run.json": {
+      "bytes": 6471,
+      "sha256": "bfe1a20754caee205444e13ea67e598ca391afa50735e347db2486d0ab5873ac"
+    },
+    "pilot-plain-03/settings.yaml": {
+      "bytes": 3249,
+      "sha256": "1dda84b895015756765930168ffbee61dbd14e13cf23aae8ba49df56f99d7c1f"
+    },
+    "selftest-01/console.log": {
+      "bytes": 3044,
+      "sha256": "0f661a4dbe522ca1189ddce76abb953d0a623396c7a40c0e4ad9160121dc9a1d"
+    },
+    "selftest-01/replay-events.csv": {
+      "bytes": 4173,
+      "sha256": "2561591ba52cada6b4ff525a5669646ba7fbc0551667b38bc75257c10bb13f4f"
+    },
+    "selftest-01/replay-frames.txt": {
+      "bytes": 2866,
+      "sha256": "62dc501c5dbeba5126359de4b91d65a260f368f0f1fc418c302e73defaf4ae31"
+    },
+    "selftest-01/replay-keyframes.txt": {
+      "bytes": 114,
+      "sha256": "5dad740560002e2c662e7f12aa755e03ef3106c8cf6ad0e3957433ee1459cc43"
+    },
+    "selftest-01/replay-summary.json": {
+      "bytes": 254,
+      "sha256": "4b5ba3c46b1f2c9689054f285f7d53668a3fee8cffcbbc271d6dba5a7b754954"
+    },
+    "selftest-01/run.json": {
+      "bytes": 6393,
+      "sha256": "583bfb903ee1b9578e9d1bd66b1a117ec785c1446c74b5c05648cfd2110d92ac"
+    },
+    "selftest-01/settings.yaml": {
+      "bytes": 3249,
+      "sha256": "1dda84b895015756765930168ffbee61dbd14e13cf23aae8ba49df56f99d7c1f"
+    },
+    "selftest-02/console.log": {
+      "bytes": 3044,
+      "sha256": "6e854c24138263fab6af2e4e10824c1b2a4b4898f40889fec728fcb544c14ae2"
+    },
+    "selftest-02/replay-events.csv": {
+      "bytes": 4173,
+      "sha256": "a7bebbf5b43724a9884bbe5c144eec94d5b5db5cc484844f2d08f9264726f2b6"
+    },
+    "selftest-02/replay-frames.txt": {
+      "bytes": 2981,
+      "sha256": "828ddd27568343dc7cc0ec91eece98f930dd0d3f07998f60cc04e60f49ab2b97"
+    },
+    "selftest-02/replay-keyframes.txt": {
+      "bytes": 114,
+      "sha256": "5dad740560002e2c662e7f12aa755e03ef3106c8cf6ad0e3957433ee1459cc43"
+    },
+    "selftest-02/replay-summary.json": {
+      "bytes": 317,
+      "sha256": "a97a6623d66777f7fc4e50654d2d1ac7880b21224298f7270b61d77c694e2968"
+    },
+    "selftest-02/run.json": {
+      "bytes": 6467,
+      "sha256": "a022d73f5ea081c2507d62ea37b6cd6e7eb7d0fbf364eeda27ff0d572646c5c9"
+    },
+    "selftest-02/settings.yaml": {
+      "bytes": 3249,
+      "sha256": "1dda84b895015756765930168ffbee61dbd14e13cf23aae8ba49df56f99d7c1f"
+    },
+    "smoke-control-01/console.log": {
+      "bytes": 2480,
+      "sha256": "a0e6760f380728a00a50609740da801f53ae0cc495c3707cd7825fd86df337de"
+    },
+    "smoke-control-01/replay-events.csv": {
+      "bytes": 4177,
+      "sha256": "86c580116560755267dbf8b9aa3439408cb22e07b9e9ebc072c816003fd44567"
+    },
+    "smoke-control-01/replay-frames.txt": {
+      "bytes": 5803,
+      "sha256": "d698734cc24d8861ffd80922478fb3173aedeb624aa81e029cf1b3ae6f5bb4d9"
+    },
+    "smoke-control-01/replay-keyframes.txt": {
+      "bytes": 114,
+      "sha256": "8eaac872ff60bb6785da144d4716de902b581ff8fc7250e9511cf78d74196514"
+    },
+    "smoke-control-01/replay-summary.json": {
+      "bytes": 256,
+      "sha256": "6362a57e1cad03b63bf47100545250473c88599d6381b2e0e18b2ca294ee9e83"
+    },
+    "smoke-control-01/run.json": {
+      "bytes": 6419,
+      "sha256": "ca9ee5041993b190aa0747b44e04c1087d3163a81f07b369e54677f4bcea3031"
+    },
+    "smoke-control-01/settings.yaml": {
+      "bytes": 3249,
+      "sha256": "5e39e60accf4c1f0d37d1118d537ee922e2a1d62d8e232ee40f44cedb22fe2c4"
+    },
+    "smoke-control-02/console.log": {
+      "bytes": 2480,
+      "sha256": "172c581526c53855d95749891760732d2b0ad283cc747848eae4b350b9e69d86"
+    },
+    "smoke-control-02/replay-events.csv": {
+      "bytes": 4177,
+      "sha256": "7ea36d11c4dbd3915d85d4a800ea7644848a1e9aa2ebc5456c234934d47f9ff5"
+    },
+    "smoke-control-02/replay-frames.txt": {
+      "bytes": 5803,
+      "sha256": "d698734cc24d8861ffd80922478fb3173aedeb624aa81e029cf1b3ae6f5bb4d9"
+    },
+    "smoke-control-02/replay-keyframes.txt": {
+      "bytes": 114,
+      "sha256": "8eaac872ff60bb6785da144d4716de902b581ff8fc7250e9511cf78d74196514"
+    },
+    "smoke-control-02/replay-summary.json": {
+      "bytes": 320,
+      "sha256": "2d33a949794206acd74e50fcd0299d2087feeb6da5f5b6c712bf67ca3760aabb"
+    },
+    "smoke-control-02/run.json": {
+      "bytes": 6493,
+      "sha256": "2009fe476ec6fb4c8f2e902a8b2662f8d59344a1fc34e9d396219dec6e0c7180"
+    },
+    "smoke-control-02/settings.yaml": {
+      "bytes": 3249,
+      "sha256": "5e39e60accf4c1f0d37d1118d537ee922e2a1d62d8e232ee40f44cedb22fe2c4"
+    },
+    "smoke-default-01/console.log": {
+      "bytes": 2480,
+      "sha256": "19f696b2d3862cd9f8632d30d7a26266fcb446ca096593d4c7cc471f1553c069"
+    },
+    "smoke-default-01/replay-events.csv": {
+      "bytes": 4177,
+      "sha256": "1ed4b93c62a7d94ebc0d9e6c4a2639ce8ac5d14e011a7e81093996ef4f462d03"
+    },
+    "smoke-default-01/replay-frames.txt": {
+      "bytes": 5803,
+      "sha256": "d698734cc24d8861ffd80922478fb3173aedeb624aa81e029cf1b3ae6f5bb4d9"
+    },
+    "smoke-default-01/replay-keyframes.txt": {
+      "bytes": 114,
+      "sha256": "8eaac872ff60bb6785da144d4716de902b581ff8fc7250e9511cf78d74196514"
+    },
+    "smoke-default-01/replay-summary.json": {
+      "bytes": 320,
+      "sha256": "a0b152f2fe5b6816133b74668154fd469719f3a3c5ed85b0a1fe491476b1c9be"
+    },
+    "smoke-default-01/run.json": {
+      "bytes": 6494,
+      "sha256": "4c6789f5756ef44bc049f75a25b67aa3eb1320c857de5875da74ab4d503e8c3f"
+    },
+    "smoke-default-01/settings.yaml": {
+      "bytes": 3176,
+      "sha256": "721602964ef5ffd5b5d594900ed6ee52069bafa32ea2482e5c7987fdad2ab442"
+    },
+    "smoke-fixed-01/console.log": {
+      "bytes": 2463,
+      "sha256": "9e7ac37fdbe4c3cacb8ee18900f2aa9b7e2a7d38199a3482934d89311fcafa2b"
+    },
+    "smoke-fixed-01/replay-events.csv": {
+      "bytes": 4179,
+      "sha256": "0d3d30a43a70ebc20e8fdd6b70c2a9bb38120b600b041cc774250941aff13734"
+    },
+    "smoke-fixed-01/replay-frames.txt": {
+      "bytes": 5803,
+      "sha256": "d698734cc24d8861ffd80922478fb3173aedeb624aa81e029cf1b3ae6f5bb4d9"
+    },
+    "smoke-fixed-01/replay-keyframes.txt": {
+      "bytes": 114,
+      "sha256": "8eaac872ff60bb6785da144d4716de902b581ff8fc7250e9511cf78d74196514"
+    },
+    "smoke-fixed-01/replay-summary.json": {
+      "bytes": 256,
+      "sha256": "39300b9c80117f9f8c3d6b895eaf77d7c12c116f45c9d43bf85cf4c16cdeb198"
+    },
+    "smoke-fixed-01/run.json": {
+      "bytes": 6405,
+      "sha256": "23c7240d2c78ebf1ad6005cea516ebcede4385467c3b30419f5650b2fb25434e"
+    },
+    "smoke-fixed-01/settings.yaml": {
+      "bytes": 3249,
+      "sha256": "1dda84b895015756765930168ffbee61dbd14e13cf23aae8ba49df56f99d7c1f"
+    }
+  },
+  "protected": {
+    "git_indexes": {
+      "ORB_SLAM3": {
+        "before_sha256": "b26757d874c136705d8bf684ae886b4d3140966ba0db0cfd39e92a991c2e243f",
+        "after_sha256": "b26757d874c136705d8bf684ae886b4d3140966ba0db0cfd39e92a991c2e243f"
+      },
+      "reliability-study": {
+        "before_sha256": "f715bfdb1737c8f7f8368dbffb5cc212a091066ddc5553dbe2dcf541178d8780",
+        "after_sha256": "f715bfdb1737c8f7f8368dbffb5cc212a091066ddc5553dbe2dcf541178d8780"
+      }
+    },
+    "original_mapping_body_retained": true,
+    "windows_linux_source_match": true,
+    "native_baseline_source_files_unchanged": 60
+  },
+  "disk": {
+    "linux_directory_allocated_bytes": {
+      "source": 256901120,
+      "build": 10887168,
+      "runs": 942080
+    },
+    "linux_workspace_apparent_bytes": 266763035,
+    "windows_task_material_file_lengths_bytes": 108157117,
+    "scope": "Directory allocation and file lengths; not VHD physical growth. Prior 50 GiB environment budget retained."
+  },
+  "builds": {
+    "build-01": {
+      "command": [
+        "wsl",
+        "-d",
+        "Ubuntu-22.04",
+        "-u",
+        "research",
+        "--exec",
+        "bash",
+        "/mnt/d/THU/THU/research/refer-papers/manuscripts/reliability-study/build/orb-fixed-2026-10-17/build_fixed.sh"
+      ],
+      "returncode": 0,
+      "seconds": 423.0489574999997
+    },
+    "build-02": {
+      "command": [
+        "wsl",
+        "-d",
+        "Ubuntu-22.04",
+        "-u",
+        "research",
+        "--exec",
+        "python3",
+        "/mnt/d/THU/THU/research/refer-papers/manuscripts/reliability-study/build/orb-fixed-2026-10-17/sync_rebuild.py"
+      ],
+      "returncode": 0,
+      "seconds": 53.551997700000356
+    }
+  },
+  "limitations": [
+    "WSL Ubuntu tested; no native Windows/macOS build claim",
+    "Replay wall-clock overhead includes idle waiting; not a pure CPU overhead bound",
+    "No backlog in these pilot windows; no proved timing-feedback effect",
+    "No trajectory ground-truth error evaluation, fitted F_m/Q or reliability prediction",
+    "No stricter real-time guarantee inferred from finite pilot traces"
+  ],
+  "git_mutations": false,
+  "resume": "B4/B5 release wake-up and timing reconstruction, then repeat acceptance before probability fitting",
+  "final_checks": {
+    "protected_unmodified_baseline_files": 943,
+    "git_indexes_unchanged": true,
+    "branch_and_HEAD_unchanged": true,
+    "markdown_local_links_exist": true,
+    "tracked_diff_check": "passed_in_ORB_and_reliability_repositories",
+    "build_entry": {
+      "command": [
+        "wsl",
+        "-d",
+        "Ubuntu-22.04",
+        "-u",
+        "research",
+        "--exec",
+        "bash",
+        "/mnt/d/THU/THU/research/ORB_SLAM3/tools/build_fixed_stereo.sh",
+        "/home/research/orb-fixed-work",
+        "/home/research/orb-slam3-work",
+        "2"
+      ],
+      "returncode": 0,
+      "seconds": 4.482469900000069
+    },
+    "linux_artifacts": {
+      "command": [
+        "wsl",
+        "-d",
+        "Ubuntu-22.04",
+        "-u",
+        "research",
+        "--exec",
+        "python3",
+        "/mnt/d/THU/THU/research/refer-papers/manuscripts/reliability-study/build/orb-fixed-2026-10-17/check_final_linux.py"
+      ],
+      "returncode": 0,
+      "seconds": 0.21761270000024524
+    }
+  },
+  "tool_sha256": {
+    "tools/check_measurement.py": "7d9674563b0132735bb8ddef1481275e0e5e5547de6a974bc8435f00ec107297",
+    "tools/check_fixed_events.py": "743bc2767c4af8648da89b3013f28fc71249c4431f68f206b9b86d3fa7bf0b8a",
+    "tools/run_fixed_replay.py": "ab76c21e078a793b492ea7b434f1bdbb4785212013aeb7035de1041fe97bcc31",
+    "tools/test_fixed_events.py": "2a858843bdac2d71daee275812eb92a289a66ee3eb88c0abd0443fa8219392fa",
+    "tools/build_fixed_stereo.sh": "4876ea6c5d3110f52c1a250392cfba80a609a2a332fcc30de73c2f3069d6f2ae",
+    "tools/check_fixed_pilots.py": "65fc7a1fbc22f4bb26f9a9ac950d2a59c63c47dc3f51aa3656fcdbf3ebc86e59"
+  }
+}

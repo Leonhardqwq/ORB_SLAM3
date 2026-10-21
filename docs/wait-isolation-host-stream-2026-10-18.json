@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-18",
+  "purpose": "Two supplemental file-mode host traces to correct memory-mode retention limit",
+  "rounds": 800,
+  "period_ns": 50000000,
+  "diagnostic_threshold_ns": 100000,
+  "repetitions": 1,
+  "baseline": {
+    "work_us": [
+      0,
+      20000
+    ],
+    "spin_us": [
+      0,
+      500
+    ],
+    "probes": 0
+  },
+  "traced": {
+    "work_us": [
+      0,
+      20000
+    ],
+    "spin_us": [
+      500
+    ],
+    "probes": 1
+  },
+  "affinity_cpu": -1,
+  "trace_buffer_kib_per_cpu": 2048,
+  "trace_clock": "mono",
+  "timeout_seconds_per_run": 60,
+  "order": "rotate the work/spin Cartesian list by repetition index; serial execution",
+  "interpretation": [
+    "No work and 20ms wall-time synthetic work; the latter is not fixed CPU work.",
+    "Gap=start-max(release,previous_end); signed values retained; no probe-cost subtraction.",
+    "All scheduled runs retained; no rerun merely for a smaller maximum.",
+    "Traced and untraced phases separated; PID-filtered sched/IRQ events if available.",
+    "Guest trace cannot establish host causality; no finite-sample scheduling bound.",
+    "Global scheduling/clocksource unchanged; native software untouched."
+  ],
+  "include_irq_vectors": true,
+  "host_tracing": true,
+  "reason": "Memory ring returned zero lost counters but only retained last seconds; verify first/last actual event times in streamed traces.",
+  "host_filemode": true,
+  "host_temporary_directory": "Explicit Windows task directory",
+  "host_disk_guard_bytes": 2147483648
+}

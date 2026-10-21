@@ -1,0 +1,118 @@
+{
+  "version": 4,
+  "stage": "Contained-backend diagnostic replication, NOT E3 acceptance",
+  "sequence": "V1_02_medium",
+  "offset": 0,
+  "evaluation_frames": 1600,
+  "initialization_limit": 100,
+  "preload_limit": 1701,
+  "h_ns": 50000000,
+  "tau_ns": 50000000,
+  "H": 20,
+  "cumulative_timing_limit_ns": 100000,
+  "repetitions": 3,
+  "process_threads": 1,
+  "spin_us": 0,
+  "timeout_seconds": 240,
+  "companion_alone_seconds": 30,
+  "blocks": [
+    "idle-1",
+    "opencv_companion-1",
+    "opencv_companion-2",
+    "idle-2",
+    "idle-3",
+    "opencv_companion-3"
+  ],
+  "strategy_order": [
+    [
+      "native_control",
+      "fixed_sleep"
+    ],
+    [
+      "fixed_sleep",
+      "native_control"
+    ],
+    [
+      "native_control",
+      "fixed_sleep"
+    ]
+  ],
+  "quality": {
+    "online_SE3_ATE_RMSE_max_m": 0.15,
+    "fixed_vs_native_factor": 1.25,
+    "fixed_vs_native_allowance_m": 0.02,
+    "valid_fraction_min": 0.99,
+    "ground_truth_coverage_min": 0.99,
+    "reset_count_max": 0
+  },
+  "resources": {
+    "deadline_success_fraction_min": 0.99,
+    "throughput_min_hz": 19,
+    "mean_CPU_cores_max": 1.0,
+    "fixed_vs_native_CPU_factor": 1.2,
+    "fixed_vs_native_CPU_allowance_cores": 0.02,
+    "sampled_peak_RSS_max_bytes": 2147483648,
+    "companion_p95_factor": 1.2,
+    "companion_p95_allowance_ms": 0.2
+  },
+  "baseline_rule": "30s companion-only before and after each loaded block; median of two p95 values, same image/period. Preserve drift; no adjusted post-hoc threshold.",
+  "relative_rule": "Compare each fixed run to native run within the same block; all absolute and relative gates must pass in every planned replicate.",
+  "stop_rule": "Complete all 3 predeclared diagnostic blocks even after practical failure; stop on acquisition/code error and diagnose. Never proceed E4 on failure.",
+  "data_role": "Exploratory configuration comparison on reused V102 sequence; independent processes, not independent scenes or final holdout",
+  "clock_uncertainty": "deadline equality uses recorded integer ns; no proved clock uncertainty bound",
+  "scope": "Cold-start at offset20 failed for both controls and is retained as a real limitation. This profile examines continuous operation from recorded sequence origin.",
+  "timestamps": "Examples/Stereo/EuRoC_TimeStamps/V102.txt",
+  "settings": "Examples/Stereo/EuRoC.yaml",
+  "quality_interval": {
+    "start_k": 20,
+    "end_k": 1600
+  },
+  "full_run_rule": "All 1600 frames remain in validity, reset, latency, CPU, memory and accounting gates. No outcome-dependent filtering.",
+  "quality_interval_rule": "Reference positions unavailable at raw beginning: fixed k in [20,1600) for SE3 ATE/GT coverage; original 99% valid-pose gate additionally applies to all 1600 frames.",
+  "history_rule": "Start visual/map processing at sequence origin, preserve real map updates and timing throughout. First and second halves are dependent subsegments, not independent replicates.",
+  "quality_start_k": 20,
+  "configurations": {
+    "fixed-serial": {
+      "mode": "fixed",
+      "serial": 1,
+      "loop": 0
+    },
+    "fixed-parallel": {
+      "mode": "fixed",
+      "serial": 0,
+      "loop": 0
+    },
+    "fixed-loop": {
+      "mode": "fixed",
+      "serial": 0,
+      "loop": 1
+    },
+    "native-default": {
+      "mode": "native_default",
+      "serial": 0,
+      "loop": 0
+    }
+  },
+  "orders": [
+    [
+      "fixed-serial",
+      "fixed-parallel",
+      "fixed-loop",
+      "native-default"
+    ],
+    [
+      "native-default",
+      "fixed-loop",
+      "fixed-parallel",
+      "fixed-serial"
+    ],
+    [
+      "fixed-parallel",
+      "native-default",
+      "fixed-serial",
+      "fixed-loop"
+    ]
+  ],
+  "timing_rule": "All 1600 frames including GBA backlog; h=tau=50ms; no frame removal or post-hoc deadline change",
+  "random_seed": "No new RNG override; upstream randomization and OS scheduling remain. Distinct processes only."
+}

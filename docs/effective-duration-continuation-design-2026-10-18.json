@@ -1,0 +1,35 @@
+{
+  "stage": "E3 continuation",
+  "profiles_in_order": [
+    {
+      "id": "v102-start",
+      "protocol": "effective-duration-v102-start-protocol-2026-10-18.json",
+      "sha256": "9f13d3aeeab82c84af37571fbbd32f8fd9099bf6abc13bfecc4d024e9d4861cc"
+    },
+    {
+      "id": "v102-later",
+      "protocol": "effective-duration-v102-later-protocol-2026-10-18.json",
+      "sha256": "69977c53811d8b159f4f1331833a5902292b0da9492dff3b0016491dbe5d75b5"
+    },
+    {
+      "id": "v101-start",
+      "protocol": "effective-duration-v101-start-protocol-2026-10-18.json",
+      "sha256": "b8e7a3593860e3e5377cc7d9b37a63302d7e9363e534de5653305fd8a86a8ef1"
+    }
+  ],
+  "frozen_before_replay": true,
+  "maximum_planned_new_SLAM_runs": 36,
+  "fixed_runs": 18,
+  "invariants": [
+    "h=tau=50ms",
+    "H=20",
+    "native paired controls",
+    "same quality/resource gates",
+    "ordinary sleep; no busy wait"
+  ],
+  "unit": "Independent process run; frames/windows within run remain correlated; same-sequence runs do not constitute independent scene sampling",
+  "after_pilot": "Assess backlog counts, run-level variation, temporal dependence and obtainable precision; then predeclare development/check/holdout acquisition. Inspected pilot data are never relabeled holdout.",
+  "stop": "Do not continue downstream after substantive practical/measurement failure; diagnose without tuning gates or discarding failed data.",
+  "no_failure_requirement": "No observed deadline misses is not a failure of collection and does not establish reliability=1.",
+  "E4_permitted_by_this_design_alone": false
+}

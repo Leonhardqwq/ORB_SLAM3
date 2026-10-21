@@ -1,0 +1,33 @@
+{
+  "purpose": "baseline_configuration_only",
+  "platform": "Windows-10-10.0.19044-SP0",
+  "python": "3.12.5 (tags/v3.12.5:ff3bc82, Aug  6 2024, 20:45:27) [MSC v.1940 64 bit (AMD64)]",
+  "branch": "leonhardqwq",
+  "head": "4452a3c4ab75b1cde34e5505a36ec3f9edcdc4c4",
+  "source_sha256": {
+    "CMakeLists.txt": "a1bdb504483a8ba6723069927a4bdf4d178f1273d6569b4d7eb3732bd17e0746",
+    "src/System.cc": "9bf2ee0d9cfd662bc6f2f18a2b17f0482689960ad2bcbf430c5a47068970588f",
+    "src/Tracking.cc": "a5828543839a42e0bb499e3325e32dddfa20d5f7f00db2d9b99f58f2fbdb9743",
+    "src/LocalMapping.cc": "2ffef78466e12a36c36819fdd5916f974a75e4231e7b28b8acba94dad6f09bed",
+    "src/LoopClosing.cc": "b17be9d654564603a409fc92213f6ccc889f6969426c04b8cd74bacbfeaf3b00",
+    "src/Frame.cc": "088c8b33443e52f161c9f0485ade8f59bff5c5fa00c6fd34fc64a3988e6eb28e",
+    "src/Atlas.cc": "e21f879fc9e811280c6158fe85fc955c6df8fd0597a050664c3b1bbd2a788cf2",
+    "src/KeyFrameDatabase.cc": "d8f0bd96b0c6377c24e7d12d9d87aba8013d5a3fcbc55f3428019fd1e124b457",
+    "src/Optimizer.cc": "215ff5908e7c34272ab86c9386f0496bd1bd3daa770076e3270915b5f189f408"
+  },
+  "status": "configuration_failed",
+  "returncode": 1,
+  "elapsed_seconds": 2.25,
+  "build_attempted": false,
+  "runtime_attempted": false,
+  "log_sha256": "f6ed6c1a45ceb424e2f385351a5323138a6881286433c54ba7fba968d9c4521d",
+  "source_unchanged": true,
+  "date": "2026-10-16",
+  "cmake_version": "3.31.3",
+  "compiler": "MinGW GCC/G++ 14.2.0",
+  "blocking_dependency": "OpenCV 4.4 CMake development package not found",
+  "later_dependencies": "not yet verified",
+  "B1": "design_review_only_passed",
+  "B2": "blocked_at_native_configuration",
+  "B3_B6": "not_started"
+}

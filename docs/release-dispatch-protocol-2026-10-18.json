@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-18",
+  "reason": "timeline idle-2-fixed_hybrid k=466: 104897 ns after the final wait probe, before aT; discriminate record preparation from other delay",
+  "orders": [
+    [
+      0,
+      1
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      0,
+      1
+    ]
+  ],
+  "frames": 800,
+  "offset": 800,
+  "h_ns": 50000000,
+  "spin_us": 500,
+  "diagnostics": 1,
+  "load": "idle",
+  "gate_ns": 100000,
+  "scope": "six diagnostic runs; optional candidate default off, not broad acceptance; no spin/priority/affinity change",
+  "interpretation": "Moving record initialization cannot rule out preemption after waiting; retain all results. Do not compare old/new binaries as if only a flag differed: the six runs use one candidate binary with toggled flag."
+}

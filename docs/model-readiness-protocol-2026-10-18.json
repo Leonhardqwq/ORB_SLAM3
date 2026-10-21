@@ -1,0 +1,40 @@
+{
+  "purpose": "Measurement and data readiness for reliability assessment; low reliability is an outcome, not a model rejection",
+  "authorization": "2026-10-18 user accepted reassessment and requested continuation or resolution of actual blockers",
+  "h_ns": 50000000, "tau_ns": 50000000, "H": 20,
+  "offset": 0, "initialization_limit": 100, "evaluation_frames": 1600, "preload_limit": 1701,
+  "cumulative_timing_limit_ns": 100000, "timeout_seconds": 240,
+  "wall_ratio_limit": 1.05,
+  "quality": {"ground_truth_coverage_min": 0.99},
+  "quality_interval": {"start_k": 20, "end_k": 1600},
+  "sequences": {
+    "V1_02_medium": {"timestamps": "Examples/Stereo/EuRoC_TimeStamps/V102.txt"},
+    "V1_01_easy": {"timestamps": "Examples/Stereo/EuRoC_TimeStamps/V101.txt"}
+  },
+  "schedule": [
+    {"id":"measurement-1-instrument", "sequence":"V1_02_medium", "role":"measurement", "kind":"instrument"},
+    {"id":"measurement-1-plain", "sequence":"V1_02_medium", "role":"measurement", "kind":"plain"},
+    {"id":"measurement-2-plain", "sequence":"V1_02_medium", "role":"measurement", "kind":"plain"},
+    {"id":"measurement-2-instrument", "sequence":"V1_02_medium", "role":"measurement", "kind":"instrument"},
+    {"id":"measurement-3-instrument", "sequence":"V1_02_medium", "role":"measurement", "kind":"instrument"},
+    {"id":"measurement-3-plain", "sequence":"V1_02_medium", "role":"measurement", "kind":"plain"},
+    {"id":"cross-sequence-1", "sequence":"V1_01_easy", "role":"cross_sequence", "kind":"instrument"},
+    {"id":"cross-sequence-2", "sequence":"V1_01_easy", "role":"cross_sequence", "kind":"instrument"},
+    {"id":"cross-sequence-3", "sequence":"V1_01_easy", "role":"cross_sequence", "kind":"instrument"}
+  ],
+  "schedule_design": "Alternating within-block order fixed before collection; not randomized and not a causal estimate of instrumentation alone",
+  "stop": "Stop on acquisition, source mismatch or boundary/accounting error; after 6 measurement runs stop dependent collection if overhead gate fails. Timing/ATE/relative-cost failures do not invalidate otherwise complete measurements.",
+  "data_roles": "All prior runs exploratory. New measurement runs are prospective diagnostics on a reused sequence, not untouched final prediction holdout. V101 is cross-sequence diagnostic only. Runs, not frames, are replicates; no IID-binomial intervals across frames/windows.",
+  "diagnostics": {
+    "training": "old V102 fixed-loop blocks 1 and 2, whole runs",
+    "checks": "old block 3 exploratory; new V102 instrument runs prospective diagnostic checks; V101 separately reported, never pooled into same F",
+    "baseline": "M=1, empirical paired (S_T,S_B); Q=[1]. Second and third conditions are trivial, first is not.",
+    "history_model": "Ridge prediction of log1p effective durations from previous log1p T/B, previous 10-round means, log1p round index and backlog; diagnostic covariates only, not claimed available online or valid modes",
+    "effect_screen": "At least 10% reduction in held-run mean squared log error in 2 of 3 new V102 runs is a practically relevant history signal; no p-value or equivalence acceptance with only 3 runs",
+    "mode_candidate": "Previous-round keyframe presence, diagnostic only. Check conditional duration history and next-mode association with current durations; do not treat current loop outcome as a known mode.",
+    "E4_pass": "Not attainable from a failure to detect dependence in this pilot. Adequacy and meaningful equivalence bounds must be established before full probability acceptance.",
+    "E5": "No validated original-model reliability prediction unless E4 passes; empirical paired law is a diagnostic candidate, not true F or a certified distribution."
+  },
+  "scope": "pinhole non-inertial stereo, joined T workers, contained synchronous loop/GBA, preloaded periodic replay; native paths unchanged; no new algorithms/data/dependencies",
+  "original_practical_gates": "Retained as historical and current descriptive application metrics, not regraded as passes"
+}

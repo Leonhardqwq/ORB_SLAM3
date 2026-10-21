@@ -1,0 +1,20 @@
+{
+  "purpose": "Diagnose long-run online ATE failure; not an E3 acceptance rerun or fixed-graph experiment",
+  "sequence": "V1_02_medium",
+  "mode": "native_default",
+  "configuration": "Original EuRoC.yaml, fork's existing native default functionality; not an independently rebuilt untouched upstream binary",
+  "offset": 0,
+  "evaluation_frames": 1600,
+  "preload_limit": 1701,
+  "initialization_limit": 100,
+  "h_ns": 50000000,
+  "tau_ns": 50000000,
+  "H": 20,
+  "process_threads": 1,
+  "spin_us": 0,
+  "timeout_seconds": 180,
+  "quality_interval": {"start_k": 20, "end_k": 1600},
+  "repetitions": 1,
+  "interpretation": "Includes default asynchronous paths, including loop closure if enabled by System defaults. Multiple features differ, so this cannot isolate the causal effect of loop closure. Report the observed outcome without changing the 0.15 m criterion.",
+  "E4_permitted": false
+}
