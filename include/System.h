@@ -19,6 +19,7 @@
 
 #ifndef SYSTEM_H
 #define SYSTEM_H
+#include "TrackingDiagnostics.h"
 
 
 #include <unistd.h>
@@ -101,6 +102,21 @@ public:
 
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    bool IsFixedStereo() const { return mFixedStereo; }
+    bool SerialStereoFeatures() const { return mSerialStereoFeatures; }
+    Sophus::SE3f TrackStereoFixed(unsigned long round, const cv::Mat &left,
+        const cv::Mat &right, double timestamp);
+    std::vector<unsigned long> CompleteMappingRound(unsigned long round);
+    unsigned long FixedFrameId() const;
+    std::vector<unsigned long> FixedBackendCounts() const;
+    // Optional diagnostics: fixed owner only; context before T, result after T.
+    void SetFixedTrackingDiagnostics(bool enabled);
+    void SetFixedWorkPolicy(bool enabled, unsigned keyframes=0, unsigned points=0, bool budgetReference=false, bool referenceFirst=false, bool keyframeRequest=false, bool deferRoutineKeyframes=false, unsigned extractionCellCandidates=0);
+    void SetFixedBackendBudget(unsigned keyframes=0, unsigned points=0, unsigned maintenanceKeyframes=0, unsigned globalIterations=0, unsigned fixedKeyframes=0);
+    BackendStageRecord FixedBackendStages() const;
+    TrackingContext FixedTrackingContext();
+    TrackingStageRecord FixedTrackingStages() const;
+    unsigned long FixedResetCount() const { return mFixedResetCount; }
     // Initialize the SLAM system. It launches the Local Mapping, Loop Closing and Viewer threads.
     System(const string &strVocFile, const string &strSettingsFile, const eSensor sensor, const bool bUseViewer = true, const int initFr = 0, const string &strSequence = std::string());
 
@@ -193,6 +209,23 @@ public:
 #endif
 
 private:
+    FixedWorkPolicy mFixedWorkPolicy;
+    FixedBackendPolicy mFixedBackendPolicy;
+    BackendStageRecord mBackendStages;
+    bool mTrackingDiagnostics = false;
+    TrackingStageRecord mTrackingStages;
+    bool mFixedStereo = false;
+    bool mSerialStereoFeatures = false;
+    bool mJoinWorkers = false;
+    enum class FixedPhase { Ready, Tracking, NeedsMapping, Mapping, Fault, Closed };
+    FixedPhase mFixedPhase = FixedPhase::Ready;
+    unsigned long mFixedRound = 0;
+    unsigned long mFixedResetCount = 0;
+    double mFixedLastTimestamp = -1.0;
+    std::thread::id mFixedOwner;
+    void CheckFixedOwner() const;
+    Sophus::SE3f TrackStereoImpl(const cv::Mat &, const cv::Mat &, const double &,
+        const vector<IMU::Point>&, string);
 
     void SaveAtlas(int type);
     bool LoadAtlas(int type);
@@ -232,9 +265,9 @@ private:
 
     // System threads: Local Mapping, Loop Closing, Viewer.
     // The Tracking thread "lives" in the main execution thread that creates the System object.
-    std::thread* mptLocalMapping;
-    std::thread* mptLoopClosing;
-    std::thread* mptViewer;
+    std::thread* mptLocalMapping = nullptr;
+    std::thread* mptLoopClosing = nullptr;
+    std::thread* mptViewer = nullptr;
 
     // Reset flag
     std::mutex mMutexReset;

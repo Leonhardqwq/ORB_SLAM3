@@ -69,6 +69,7 @@ src/Map.cc
 src/MapDrawer.cc
 src/Optimizer.cc
 src/Frame.cc
+src/TrackingDiagnostics.cc
 src/KeyFrameDatabase.cc
 src/Sim3Solver.cc
 src/Viewer.cc
@@ -113,7 +114,14 @@ include/SerializationUtils.h
 include/Config.h
 include/Settings.h)
 
-add_subdirectory(Thirdparty/g2o)
+option(ORB_USE_PREBUILT_G2O "Reuse an existing g2o library without rebuilding its cache" OFF)
+if(ORB_USE_PREBUILT_G2O)
+    if(NOT EXISTS "${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o.so")
+        message(FATAL_ERROR "ORB_USE_PREBUILT_G2O requires an existing compatible libg2o.so")
+    endif()
+else()
+    add_subdirectory(Thirdparty/g2o)
+endif()
 
 target_link_libraries(${PROJECT_NAME}
 ${OpenCV_LIBS}
@@ -167,6 +175,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Stereo)
 add_executable(stereo_kitti
         Examples/Stereo/stereo_kitti.cc)
 target_link_libraries(stereo_kitti ${PROJECT_NAME})
+
+add_executable(stereo_fixed_replay Examples/Stereo/stereo_fixed_replay.cc)
+target_link_libraries(stereo_fixed_replay ${PROJECT_NAME})
 
 add_executable(stereo_euroc
         Examples/Stereo/stereo_euroc.cc)

@@ -21,6 +21,8 @@
 #include "System.h"
 #include "Converter.h"
 #include <thread>
+#include <stdexcept>
+#include <cmath>
 #include <pangolin/pangolin.h>
 #include <iomanip>
 #include <openssl/md5.h>
@@ -104,6 +106,31 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
     {
         activeLC = static_cast<int>(fsSettings["loopClosing"]) != 0;
     }
+
+    const cv::FileNode execution = fsSettings["Execution.mode"];
+    if (!execution.empty() && !execution.isString())
+        throw std::invalid_argument("Execution.mode must be a string");
+    const string mode = execution.empty() ? "native_async" : string(execution);
+    if (mode != "native_async" && mode != "fixed_stereo")
+        throw std::invalid_argument("Unknown Execution.mode");
+    mFixedStereo = mode == "fixed_stereo";
+    mFixedOwner = std::this_thread::get_id();
+    const cv::FileNode serial = fsSettings["Execution.serialStereo"];
+    mSerialStereoFeatures = serial.empty() ? mFixedStereo : int(serial) != 0;
+    const bool synchronousLoop = int(fsSettings["Execution.synchronousLoop"]) != 0;
+    if (synchronousLoop && (!mFixedStereo || !activeLC))
+        throw std::invalid_argument("synchronousLoop requires fixed_stereo and loopClosing");
+    // Research-only native control; leave the default native lifecycle intact.
+    const bool managedNoLoop = int(fsSettings["Execution.managedNoLoop"]) != 0;
+    if (managedNoLoop && (activeLC || bUseViewer))
+        throw std::invalid_argument("managedNoLoop requires no Viewer/loopClosing");
+    mJoinWorkers = managedNoLoop && !mFixedStereo;
+    if (mFixedStereo && (sensor != STEREO || bUseViewer || (activeLC && !synchronousLoop) ||
+        string(fsSettings["Camera.type"]) != "PinHole" ||
+        !mStrLoadAtlasFromFile.empty() || !mStrSaveAtlasToFile.empty()))
+        throw std::invalid_argument("fixed_stereo requires pinhole stereo, no Viewer/Atlas file and explicit synchronousLoop for loopClosing");
+    // OpenCV/Eigen thread policies belong to the embedding application.
+    // Serial left/right extraction does not change process-wide thread pools.
 
     mStrVocabularyFilePath = strVocFile;
 
@@ -194,7 +221,7 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
     //Initialize the Local Mapping thread and launch
     mpLocalMapper = new LocalMapping(this, mpAtlas, mSensor==MONOCULAR || mSensor==IMU_MONOCULAR,
                                      mSensor==IMU_MONOCULAR || mSensor==IMU_STEREO || mSensor==IMU_RGBD, strSequence);
-    mptLocalMapping = new thread(&ORB_SLAM3::LocalMapping::Run,mpLocalMapper);
+    mpLocalMapper->SetSynchronous(mFixedStereo);
     mpLocalMapper->mInitFr = initFr;
     if(settings_)
         mpLocalMapper->mThFarPoints = settings_->thFarPoints();
@@ -211,7 +238,8 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
     //Initialize the Loop Closing thread and launch
     // mSensor!=MONOCULAR && mSensor!=IMU_MONOCULAR
     mpLoopCloser = new LoopClosing(mpAtlas, mpKeyFrameDatabase, mpVocabulary, mSensor!=MONOCULAR, activeLC); // mSensor!=MONOCULAR);
-    mptLoopClosing = new thread(&ORB_SLAM3::LoopClosing::Run, mpLoopCloser);
+    mpLoopCloser->SetSynchronous(mFixedStereo);
+    mpLoopCloser->SetManagedNoLoop(mFixedStereo || managedNoLoop);
 
     //Set pointers between threads
     mpTracker->SetLocalMapper(mpLocalMapper);
@@ -222,6 +250,12 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
 
     mpLoopCloser->SetTracker(mpTracker);
     mpLoopCloser->SetLocalMapper(mpLocalMapper);
+
+    // Start workers only after parameters and cross-pointers are initialized.
+    if (!mFixedStereo) {
+        mptLocalMapping = new thread(&ORB_SLAM3::LocalMapping::Run, mpLocalMapper);
+        mptLoopClosing = new thread(&ORB_SLAM3::LoopClosing::Run, mpLoopCloser);
+    }
 
     //usleep(10*1000*1000);
 
@@ -242,6 +276,134 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
 }
 
 Sophus::SE3f System::TrackStereo(const cv::Mat &imLeft, const cv::Mat &imRight, const double &timestamp, const vector<IMU::Point>& vImuMeas, string filename)
+{
+    if (mFixedStereo) throw std::logic_error("Use TrackStereoFixed in fixed mode");
+    return TrackStereoImpl(imLeft, imRight, timestamp, vImuMeas, filename);
+}
+
+void System::CheckFixedOwner() const
+{
+    if (!mFixedStereo || std::this_thread::get_id() != mFixedOwner)
+        throw std::logic_error("Fixed API requires its single owner thread");
+}
+
+unsigned long System::FixedFrameId() const
+{
+    CheckFixedOwner();
+    return mpTracker->mCurrentFrame.mnId;
+}
+
+Sophus::SE3f System::TrackStereoFixed(unsigned long round, const cv::Mat &left,
+    const cv::Mat &right, double timestamp)
+{
+    CheckFixedOwner();
+    if (mFixedPhase != FixedPhase::Ready || round != mFixedRound)
+        throw std::logic_error("Tracking requires the next round after mapping completion");
+    if (!std::isfinite(timestamp) || timestamp <= mFixedLastTimestamp || left.empty() || right.empty())
+        throw std::invalid_argument("Invalid images or non-increasing timestamp");
+    if (!mpAtlas->CurrentMapHealthy()) throw std::runtime_error("No healthy active map");
+    mFixedPhase = FixedPhase::Tracking;
+    try {
+        ActiveFixedWorkPolicy workScope(mFixedWorkPolicy.enabled ? &mFixedWorkPolicy : nullptr);
+        ActiveTrackingRecord diagnosticScope(mTrackingDiagnostics ? &mTrackingStages : nullptr);
+        auto pose = TrackStereoImpl(left, right, timestamp, vector<IMU::Point>(), "");
+        mFixedLastTimestamp = timestamp;
+        mFixedPhase = FixedPhase::NeedsMapping;
+        return pose;
+    } catch (...) { mFixedPhase = FixedPhase::Fault; throw; }
+}
+
+void System::SetFixedWorkPolicy(bool enabled, unsigned keyframes, unsigned points, bool budgetReference, bool referenceFirst, bool keyframeRequest, bool deferRoutineKeyframes, unsigned extractionCellCandidates)
+{
+    CheckFixedOwner();
+    if(mFixedPhase != FixedPhase::Ready) throw std::logic_error("work policy requires ready phase");
+    if((deferRoutineKeyframes && (!enabled || !budgetReference)) || (keyframeRequest && !enabled) || (referenceFirst && (!enabled || !points || budgetReference)) || (budgetReference && (!enabled || !points)) || (!enabled && (keyframes || points)) || (keyframes && keyframes<2) ||
+       (points && points<100) || keyframes>256 || points>100000)
+        throw std::invalid_argument("invalid fixed work budget");
+    if(extractionCellCandidates && (!enabled || !mSerialStereoFeatures || extractionCellCandidates<4 || extractionCellCandidates>256))
+        throw std::invalid_argument("extraction cap requires fixed serial enabled policy and 4..256 candidates per cell");
+    mFixedWorkPolicy.extractionCellCandidates=extractionCellCandidates;
+    mFixedWorkPolicy.enabled=enabled;mFixedWorkPolicy.keyframes=keyframes;mFixedWorkPolicy.points=points;mFixedWorkPolicy.budgetReference=budgetReference;mFixedWorkPolicy.referenceFirst=referenceFirst;mFixedWorkPolicy.keyframeRequest=keyframeRequest;mFixedWorkPolicy.deferRoutineKeyframes=deferRoutineKeyframes;
+}
+
+void System::SetFixedBackendBudget(unsigned keyframes,unsigned points,unsigned maintenanceKeyframes,unsigned globalIterations,unsigned fixedKeyframes)
+{
+    CheckFixedOwner();
+    if(mFixedPhase!=FixedPhase::Ready) throw std::logic_error("backend policy requires ready phase");
+    if(((maintenanceKeyframes || globalIterations || fixedKeyframes) && !keyframes) || fixedKeyframes>64 || globalIterations>10 || maintenanceKeyframes>64 || bool(keyframes)!=bool(points) || (keyframes && (keyframes<2 || keyframes>64 || points<100 || points>100000)))
+        throw std::invalid_argument("invalid backend work budget");
+    mFixedBackendPolicy.keyframes=keyframes;mFixedBackendPolicy.points=points;
+    mFixedBackendPolicy.maintenanceKeyframes=maintenanceKeyframes;mFixedBackendPolicy.globalIterations=globalIterations;mFixedBackendPolicy.fixedKeyframes=fixedKeyframes;
+}
+
+BackendStageRecord System::FixedBackendStages() const
+{
+    CheckFixedOwner();
+    if(!mTrackingDiagnostics || mFixedPhase!=FixedPhase::Ready || !mFixedRound)
+        throw std::logic_error("backend stages require enabled diagnostics after B");
+    return mBackendStages;
+}
+
+void System::SetFixedTrackingDiagnostics(bool enabled)
+{
+    CheckFixedOwner();
+    if(mFixedPhase != FixedPhase::Ready) throw std::logic_error("diagnostics require ready phase");
+    mTrackingDiagnostics=enabled;
+    mTrackingStages=TrackingStageRecord{};mBackendStages=BackendStageRecord{};
+}
+
+TrackingContext System::FixedTrackingContext()
+{
+    CheckFixedOwner();
+    if(mFixedPhase != FixedPhase::Ready) throw std::logic_error("context requires ready phase");
+    TrackingContext c;
+    Map* map=mpAtlas->GetCurrentMap();
+    if(!map) throw std::runtime_error("no map for context");
+    c.mapId=map->GetId();c.mapPoints=map->MapPointsInMap();c.mapKeyframes=map->KeyFramesInMap();
+    // Fixed backend has completed; counts only, never dereference retired points.
+    { std::unique_lock<std::mutex> lock(mMutexState);
+      c.state=mpTracker->mState;c.keypoints=mTrackedKeyPointsUn.size();c.pointSlots=mTrackedMapPoints.size();
+      for(auto point:mTrackedMapPoints) if(point) ++c.nonnullPoints;
+    }
+    { std::unique_lock<std::mutex> lock(mMutexReset);c.pendingReset=mbReset || mbResetActiveMap; }
+    return c;
+}
+
+TrackingStageRecord System::FixedTrackingStages() const
+{
+    CheckFixedOwner();
+    if(!mTrackingDiagnostics || mFixedPhase != FixedPhase::NeedsMapping)
+        throw std::logic_error("stages require enabled diagnostics after T");
+    return mTrackingStages;
+}
+
+std::vector<unsigned long> System::FixedBackendCounts() const
+{
+    CheckFixedOwner();
+    return mpLoopCloser->SynchronousCounts();
+}
+
+std::vector<unsigned long> System::CompleteMappingRound(unsigned long round)
+{
+    CheckFixedOwner();
+    if (mFixedPhase != FixedPhase::NeedsMapping || round != mFixedRound)
+        throw std::logic_error("Missing, duplicate or out-of-order mapping round");
+    mFixedPhase = FixedPhase::Mapping;
+    try {
+        ActiveBackendScope scope(mFixedBackendPolicy.keyframes ? &mFixedBackendPolicy : nullptr,
+                                 mTrackingDiagnostics ? &mBackendStages : nullptr);
+        auto ids = mpLocalMapper->ProcessRound(mpTracker->mCurrentFrame.mnId);
+        { ScopedBackendStage stage(BackendStage::Loop);mpLoopCloser->ProcessRound(); }
+        if (mpLocalMapper->isStopped() || mpLocalMapper->stopRequested())
+            throw std::logic_error("Mapper still stopped after synchronous backend");
+        ++mFixedRound;
+        mFixedPhase = FixedPhase::Ready;
+        return ids;
+    } catch (...) { mFixedPhase = FixedPhase::Fault; throw; }
+}
+
+Sophus::SE3f System::TrackStereoImpl(const cv::Mat &imLeft, const cv::Mat &imRight,
+    const double &timestamp, const vector<IMU::Point>& vImuMeas, string filename)
 {
     if(mSensor!=STEREO && mSensor!=IMU_STEREO)
     {
@@ -327,6 +489,7 @@ Sophus::SE3f System::TrackStereo(const cv::Mat &imLeft, const cv::Mat &imRight, 
 
 Sophus::SE3f System::TrackRGBD(const cv::Mat &im, const cv::Mat &depthmap, const double &timestamp, const vector<IMU::Point>& vImuMeas, string filename)
 {
+    if (mFixedStereo) throw std::logic_error("fixed_stereo accepts only its stereo API");
     if(mSensor!=RGBD  && mSensor!=IMU_RGBD)
     {
         cerr << "ERROR: you called TrackRGBD but input sensor was not set to RGBD." << endl;
@@ -398,6 +561,7 @@ Sophus::SE3f System::TrackRGBD(const cv::Mat &im, const cv::Mat &depthmap, const
 
 Sophus::SE3f System::TrackMonocular(const cv::Mat &im, const double &timestamp, const vector<IMU::Point>& vImuMeas, string filename)
 {
+    if (mFixedStereo) throw std::logic_error("fixed_stereo accepts only its stereo API");
 
     {
         unique_lock<mutex> lock(mMutexReset);
@@ -477,12 +641,14 @@ Sophus::SE3f System::TrackMonocular(const cv::Mat &im, const double &timestamp, 
 
 void System::ActivateLocalizationMode()
 {
+    if (mFixedStereo) throw std::logic_error("Operation unsupported during fixed replay");
     unique_lock<mutex> lock(mMutexMode);
     mbActivateLocalizationMode = true;
 }
 
 void System::DeactivateLocalizationMode()
 {
+    if (mFixedStereo) throw std::logic_error("Operation unsupported during fixed replay");
     unique_lock<mutex> lock(mMutexMode);
     mbDeactivateLocalizationMode = true;
 }
@@ -502,18 +668,46 @@ bool System::MapChanged()
 
 void System::Reset()
 {
+    if (mFixedStereo) { CheckFixedOwner(); ++mFixedResetCount; }
     unique_lock<mutex> lock(mMutexReset);
     mbReset = true;
 }
 
 void System::ResetActiveMap()
 {
+    if (mFixedStereo) { CheckFixedOwner(); ++mFixedResetCount; }
     unique_lock<mutex> lock(mMutexReset);
     mbResetActiveMap = true;
 }
 
 void System::Shutdown()
 {
+    if (mFixedStereo) {
+        CheckFixedOwner();
+        if (mFixedPhase == FixedPhase::Closed) return;
+        if (mFixedPhase == FixedPhase::NeedsMapping) CompleteMappingRound(mFixedRound);
+        if (mFixedPhase == FixedPhase::Tracking || mFixedPhase == FixedPhase::Mapping)
+            throw std::logic_error("Cannot shutdown inside an active fixed stage");
+        mpLocalMapper->FinishSynchronously();
+        mpLoopCloser->FinishSynchronously();
+        mFixedPhase = FixedPhase::Closed;
+        unique_lock<mutex> lock(mMutexReset);
+        mbShutDown = true;
+        return;
+    }
+    // Do not wait for an empty queue: a mapper stopped for localization cannot
+    // consume it. RequestFinish exits that stopped loop and join completes the
+    // current unit. Pending keyframes are not promised to be drained at shutdown.
+    // The Viewer reads System/Tracking state. Stop it before the caller exports
+    // trajectories or destroys its stack-allocated System. The Viewer menu can
+    // itself call Shutdown, so that thread must not attempt to join itself.
+    if (mpViewer) {
+        mpViewer->RequestFinish();
+        mpViewer->Release();
+        if (mptViewer && mptViewer->joinable() &&
+            mptViewer->get_id() != std::this_thread::get_id())
+            mptViewer->join();
+    }
     {
         unique_lock<mutex> lock(mMutexReset);
         mbShutDown = true;
@@ -523,6 +717,10 @@ void System::Shutdown()
 
     mpLocalMapper->RequestFinish();
     mpLoopCloser->RequestFinish();
+    if (mJoinWorkers) {
+        if (mptLocalMapping && mptLocalMapping->joinable()) mptLocalMapping->join();
+        if (mptLoopClosing && mptLoopClosing->joinable()) mptLoopClosing->join();
+    }
     /*if(mpViewer)
     {
         mpViewer->RequestFinish();
@@ -1366,6 +1564,7 @@ bool System::isFinished()
 
 void System::ChangeDataset()
 {
+    if (mFixedStereo) throw std::logic_error("Operation unsupported during fixed replay");
     if(mpAtlas->GetCurrentMap()->KeyFramesInMap() < 12)
     {
         mpTracker->ResetActiveMap();

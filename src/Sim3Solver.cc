@@ -18,6 +18,8 @@
 
 
 #include "Sim3Solver.h"
+#include <stdexcept>
+#include "HornRotation.h"
 
 #include <vector>
 #include <cmath>
@@ -37,12 +39,11 @@ Sim3Solver::Sim3Solver(KeyFrame *pKF1, KeyFrame *pKF2, const vector<MapPoint *> 
     mnIterations(0), mnBestInliers(0), mbFixScale(bFixScale),
     pCamera1(pKF1->mpCamera), pCamera2(pKF2->mpCamera)
 {
-    bool bDifferentKFs = false;
+    const bool bDifferentKFs = !vpKeyFrameMatchedMP.empty();
     if(vpKeyFrameMatchedMP.empty())
-    {
-        bDifferentKFs = true;
         vpKeyFrameMatchedMP = vector<KeyFrame*>(vpMatched12.size(), pKF2);
-    }
+    if(vpKeyFrameMatchedMP.size()!=vpMatched12.size())
+        throw std::invalid_argument("Sim3 observer/match size mismatch");
 
     mpKF1 = pKF1;
     mpKF2 = pKF2;
@@ -81,8 +82,10 @@ Sim3Solver::Sim3Solver(KeyFrame *pKF1, KeyFrame *pKF2, const vector<MapPoint *> 
             if(pMP1->isBad() || pMP2->isBad())
                 continue;
 
-            if(bDifferentKFs)
+            if(bDifferentKFs) {
                 pKFm = vpKeyFrameMatchedMP[i1];
+                if(!pKFm || pKFm->isBad()) continue;
+            }
 
             int indexKF1 = get<0>(pMP1->GetIndexInKeyFrame(pKF1));
             int indexKF2 = get<0>(pMP2->GetIndexInKeyFrame(pKFm));
@@ -185,7 +188,7 @@ Eigen::Matrix4f Sim3Solver::iterate(int nIterations, bool &bNoMore, vector<bool>
             vAvailableIndices.pop_back();
         }
 
-        ComputeSim3(P3Dc1i,P3Dc2i);
+        if(!ComputeSim3(P3Dc1i,P3Dc2i)) continue; // invalid hypothesis consumes its RANSAC iteration
 
         CheckInliers();
 
@@ -258,7 +261,7 @@ Eigen::Matrix4f Sim3Solver::iterate(int nIterations, bool &bNoMore, vector<bool>
             vAvailableIndices.pop_back();
         }
 
-        ComputeSim3(P3Dc1i,P3Dc2i);
+        if(!ComputeSim3(P3Dc1i,P3Dc2i)) continue; // invalid hypothesis consumes its RANSAC iteration
 
         CheckInliers();
 
@@ -308,8 +311,9 @@ void Sim3Solver::ComputeCentroid(Eigen::Matrix3f &P, Eigen::Matrix3f &Pr, Eigen:
 }
 
 
-void Sim3Solver::ComputeSim3(Eigen::Matrix3f &P1, Eigen::Matrix3f &P2)
+bool Sim3Solver::ComputeSim3(Eigen::Matrix3f &P1, Eigen::Matrix3f &P2)
 {
+    if(!P1.allFinite() || !P2.allFinite()) return false;
     // Custom implementation of:
     // Horn 1987, Closed-form solution of absolute orientataion using unit quaternions
 
@@ -352,6 +356,7 @@ void Sim3Solver::ComputeSim3(Eigen::Matrix3f &P1, Eigen::Matrix3f &P2)
     // Step 4: Eigenvector of the highest eigenvalue
     Eigen::EigenSolver<Eigen::Matrix4f> eigSolver;
     eigSolver.compute(N);
+    if(eigSolver.info()!=Eigen::Success) return false;
 
     Eigen::Vector4f eval = eigSolver.eigenvalues().real();
     Eigen::Matrix4f evec = eigSolver.eigenvectors().real(); //evec[0] is the quaternion of the desired rotation
@@ -359,13 +364,10 @@ void Sim3Solver::ComputeSim3(Eigen::Matrix3f &P1, Eigen::Matrix3f &P2)
     int maxIndex; // should be zero
     eval.maxCoeff(&maxIndex);
 
-    Eigen::Vector3f vec = evec.block<3,1>(1,maxIndex); //extract imaginary part of the quaternion (sin*axis)
-
-    // Rotation angle. sin is the norm of the imaginary part, cos is the real part
-    double ang=atan2(vec.norm(),evec(0,maxIndex));
-
-    vec = 2*ang*vec/vec.norm(); //Angle-axis representation. quaternion angle is the half
-    mR12i = Sophus::SO3f::exp(vec).matrix();
+    // The original axis-angle conversion divides by the imaginary norm,
+    // which is zero for a valid identity rotation (q = +/-[1,0,0,0]).
+    // Convert the unit quaternion directly, retaining the same Horn solution.
+    if(!HornQuaternionRotation(evec.col(maxIndex),mR12i)) return false;
 
     // Step 5: Rotate set 2
     Eigen::Matrix3f P3 = mR12i*Pr2;
@@ -382,10 +384,13 @@ void Sim3Solver::ComputeSim3(Eigen::Matrix3f &P1, Eigen::Matrix3f &P2)
         aux_P3 = P3.array() * P3.array();
         double den = aux_P3.sum();
 
+        if(!(den>0) || !std::isfinite(nom) || !std::isfinite(den)) return false;
         ms12i = nom/den;
     }
     else
         ms12i = 1.0f;
+
+    if(!(ms12i>0) || !std::isfinite(ms12i)) return false;
 
     // Step 7: Translation
     mt12i = O1 - ms12i * mR12i * O2;
@@ -409,6 +414,7 @@ void Sim3Solver::ComputeSim3(Eigen::Matrix3f &P1, Eigen::Matrix3f &P2)
 
     Eigen::Vector3f tinv = -sRinv * mt12i;
     mT21i.block<3,1>(0,3) = tinv;
+    return mT12i.allFinite() && mT21i.allFinite();
 }
 
 

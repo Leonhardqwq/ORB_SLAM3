@@ -18,6 +18,10 @@
 
 
 #include "Tracking.h"
+#include "TrackingDiagnostics.h"
+#include "ProjectionBudget.h"
+#include <stdexcept>
+#include <unordered_set>
 
 #include "ORBmatcher.h"
 #include "FrameDrawer.h"
@@ -1441,6 +1445,7 @@ void Tracking::SetViewer(Viewer *pViewer)
 
 void Tracking::SetStepByStep(bool bSet)
 {
+    if (bSet && mpSystem->IsFixedStereo()) throw std::logic_error("Step mode unsupported in fixed replay");
     bStepByStep = bSet;
 }
 
@@ -1491,7 +1496,7 @@ Sophus::SE3f Tracking::GrabImageStereo(const cv::Mat &imRectLeft, const cv::Mat 
     //cout << "Incoming frame creation" << endl;
 
     if (mSensor == System::STEREO && !mpCamera2)
-        mCurrentFrame = Frame(mImGray,imGrayRight,timestamp,mpORBextractorLeft,mpORBextractorRight,mpORBVocabulary,mK,mDistCoef,mbf,mThDepth,mpCamera);
+        mCurrentFrame = Frame(mImGray,imGrayRight,timestamp,mpORBextractorLeft,mpORBextractorRight,mpORBVocabulary,mK,mDistCoef,mbf,mThDepth,mpCamera,nullptr,IMU::Calib(),mpSystem->SerialStereoFeatures());
     else if(mSensor == System::STEREO && mpCamera2)
         mCurrentFrame = Frame(mImGray,imGrayRight,timestamp,mpORBextractorLeft,mpORBextractorRight,mpORBVocabulary,mK,mDistCoef,mbf,mThDepth,mpCamera,mpCamera2,mTlr);
     else if(mSensor == System::IMU_STEREO && !mpCamera2)
@@ -1898,6 +1903,7 @@ void Tracking::Track()
 
     if(mState==NOT_INITIALIZED)
     {
+        ScopedTrackingStage initializationStage(TrackingStage::Initialization);
         if(mSensor==System::STEREO || mSensor==System::RGBD || mSensor==System::IMU_STEREO || mSensor==System::IMU_RGBD)
         {
             StereoInitialization();
@@ -1907,6 +1913,7 @@ void Tracking::Track()
             MonocularInitialization();
         }
 
+        initializationStage.stop();
         //mpFrameDrawer->Update(this);
 
         if(mState!=OK) // If rightly initialized, mState=OK
@@ -1929,6 +1936,7 @@ void Tracking::Track()
         std::chrono::steady_clock::time_point time_StartPosePred = std::chrono::steady_clock::now();
 #endif
 
+        ScopedTrackingStage predictionStage(TrackingStage::PosePrediction);
         // Initial camera pose estimation using motion model or relocalization (if tracking is lost)
         if(!mbOnlyTracking)
         {
@@ -2119,6 +2127,7 @@ void Tracking::Track()
 #ifdef REGISTER_TIMES
         std::chrono::steady_clock::time_point time_StartLMTrack = std::chrono::steady_clock::now();
 #endif
+        predictionStage.stop();
         // If we have an initial estimation of the camera pose and matching. Track the local map.
         if(!mbOnlyTracking)
         {
@@ -2241,6 +2250,7 @@ void Tracking::Track()
 #ifdef REGISTER_TIMES
             std::chrono::steady_clock::time_point time_StartNewKF = std::chrono::steady_clock::now();
 #endif
+            ScopedTrackingStage keyframeStage(TrackingStage::Keyframe);
             bool bNeedKF = NeedNewKeyFrame();
 
             // Check if we need to insert a new keyframe
@@ -2256,6 +2266,7 @@ void Tracking::Track()
             vdNewKF_ms.push_back(timeNewKF);
 #endif
 
+            keyframeStage.stop();
             // We allow points with high innovation (considererd outliers by the Huber Function)
             // pass to the new keyframe, so that bundle adjustment will finally decide
             // if they are outliers or not. We don't want next frame to estimate its position
@@ -2953,8 +2964,8 @@ bool Tracking::TrackLocalMap()
     // We retrieve the local map and try to find matches to points in the local map.
     mTrackedFr++;
 
-    UpdateLocalMap();
-    SearchLocalPoints();
+    { ScopedTrackingStage stage(TrackingStage::LocalUpdate); UpdateLocalMap(); }
+    { ScopedTrackingStage stage(TrackingStage::LocalSearch); SearchLocalPoints(); }
 
     // TOO check outliers before PO
     int aux1 = 0, aux2=0;
@@ -2966,6 +2977,7 @@ bool Tracking::TrackLocalMap()
                 aux2++;
         }
 
+    ScopedTrackingStage optimizeStage(TrackingStage::LocalOptimize);
     int inliers;
     if (!mpAtlas->isImuInitialized())
         Optimizer::PoseOptimization(&mCurrentFrame);
@@ -2992,6 +3004,7 @@ bool Tracking::TrackLocalMap()
         }
     }
 
+    optimizeStage.stop();
     aux1 = 0, aux2 = 0;
     for(int i=0; i<mCurrentFrame.N; i++)
         if( mCurrentFrame.mvpMapPoints[i])
@@ -3098,6 +3111,23 @@ bool Tracking::NeedNewKeyFrame()
     if(nKFs<=2)
         nMinObs=2;
     int nRefMatches = mpReferenceKF->TrackedMapPoints(nMinObs);
+    const int rawRefMatches=nRefMatches;
+    int eligibleRefMatches=nRefMatches;
+    const auto* budgetPolicy=CurrentFixedWorkPolicy();
+    if(budgetPolicy && budgetPolicy->points) {
+        // Compare reference coverage against this budget's available working
+        // set. Previous tracked points remain eligible even if lost this round;
+        // do not silently remove current failures from the denominator.
+        std::unordered_set<MapPoint*> eligible;
+        eligible.reserve(mvpLocalMapPoints.size()+mLastFrame.mvpMapPoints.size()+mCurrentFrame.mvpMapPoints.size());
+        for(auto p:mvpLocalMapPoints) if(p) eligible.insert(p);
+        for(auto p:mLastFrame.mvpMapPoints) if(p) eligible.insert(p);
+        for(auto p:mCurrentFrame.mvpMapPoints) if(p) eligible.insert(p);
+        eligibleRefMatches=0;
+        for(auto p:mpReferenceKF->GetMapPointMatches())
+            if(p && eligible.count(p) && !p->isBad() && p->Observations()>=nMinObs) ++eligibleRefMatches;
+        if(budgetPolicy->budgetReference) nRefMatches=eligibleRefMatches;
+    }
 
     // Local Mapping accept keyframes?
     bool bLocalMappingIdle = mpLocalMapper->AcceptKeyFrames();
@@ -3160,6 +3190,18 @@ bool Tracking::NeedNewKeyFrame()
     const bool c1c = mSensor!=System::MONOCULAR && mSensor!=System::IMU_MONOCULAR && mSensor!=System::IMU_STEREO && mSensor!=System::IMU_RGBD && (mnMatchesInliers<nRefMatches*0.25 || bNeedToInsertClose) ;
     // Condition 2: Few tracked points compared to reference keyframe. Lots of visual odometry compared to map matches.
     const bool c2 = (((mnMatchesInliers<nRefMatches*thRefRatio || bNeedToInsertClose)) && mnMatchesInliers>15);
+    // Optional external opportunity, after the native stop/localization/
+    // relocalization guards. Never create a keyframe on failed tracking. The
+    // existing bOK, mapper acceptance, queue and CreateNewKeyFrame guards stay.
+    const bool scheduledKF = budgetPolicy && budgetPolicy->keyframeRequest &&
+        mSensor==System::STEREO && mState==OK && mnMatchesInliers>=50;
+    // Optional routine-only deferral. Native urgent/close-point/max-interval,
+    // bootstrap and tracking/relocalization guards are preserved.
+    const bool deferRoutine = c1b && c2 && ShouldDeferRoutineKeyframe(budgetPolicy,
+        mSensor==System::STEREO,mState==OK,nKFs>2,c1a,c1c,mnMatchesInliers);
+    RecordFixedKeyframe(rawRefMatches,eligibleRefMatches,nRefMatches,mnMatchesInliers,nTrackedClose,nNonTrackedClose,
+        (c1a?1:0)|(c1b?2:0)|(c1c?4:0)|(mnMatchesInliers<rawRefMatches*thRefRatio?8:0)|
+        (mnMatchesInliers<eligibleRefMatches*thRefRatio?16:0)|(bNeedToInsertClose?32:0)|(c2?64:0)|(mnMatchesInliers>15?128:0)|(scheduledKF?256:0)|(deferRoutine?512:0));
 
     //std::cout << "NeedNewKF: c1a=" << c1a << "; c1b=" << c1b << "; c1c=" << c1c << "; c2=" << c2 << std::endl;
     // Temporal condition for Inertial cases
@@ -3184,7 +3226,7 @@ bool Tracking::NeedNewKeyFrame()
     else
         c4=false;
 
-    if(((c1a||c1b||c1c) && c2)||c3 ||c4)
+    if((((c1a||c1b||c1c) && c2) && !deferRoutine)||c3 ||c4 ||scheduledKF)
     {
         // If the mapping accepts keyframes, insert keyframe.
         // Otherwise send a signal to interrupt BA
@@ -3419,9 +3461,80 @@ void Tracking::UpdateLocalMap()
     // This is for visualization
     mpAtlas->SetReferenceMapPoints(mvpLocalMapPoints);
 
-    // Update
+    const auto* policy=CurrentFixedWorkPolicy();
+    if(policy) {
+        // Optional local working set only: never delete global map/loop data.
+        // Vote aggregation remains uncapped and is included in T; the budget
+        // bounds selected KFs and points, NOT all CPU work or wall-clock time.
+        map<KeyFrame*,int> votes;
+        uint64_t observations=0,slots=0;
+        for(int i=0;i<mCurrentFrame.N;++i) {
+            MapPoint* p=mCurrentFrame.mvpMapPoints[i];
+            if(!p) continue;
+            if(p->isBad()) {mCurrentFrame.mvpMapPoints[i]=nullptr;continue;}
+            const auto obs=p->GetObservations();
+            observations+=obs.size();
+            for(const auto& o:obs) ++votes[o.first];
+        }
+        vector<pair<KeyFrame*,int>> ranked;
+        for(const auto& v:votes) if(!v.first->isBad()) ranked.push_back(v);
+        sort(ranked.begin(),ranked.end(),[](const pair<KeyFrame*,int>& a,const pair<KeyFrame*,int>& b) {
+            return a.second!=b.second ? a.second>b.second : a.first->mnId<b.first->mnId;
+        });
+        mvpLocalKeyFrames.clear();
+        const auto add=[&](KeyFrame* k) {
+            if(!k || k->isBad() || k->mnTrackReferenceForFrame==mCurrentFrame.mnId ||
+               (policy->keyframes && mvpLocalKeyFrames.size()>=policy->keyframes)) return false;
+            mvpLocalKeyFrames.push_back(k);k->mnTrackReferenceForFrame=mCurrentFrame.mnId;return true;
+        };
+        for(const auto& v:ranked) add(v.first);
+        const size_t seeds=mvpLocalKeyFrames.size();
+        for(size_t i=0;i<seeds;++i) {
+            if((policy->keyframes && mvpLocalKeyFrames.size()>=policy->keyframes) ||
+               (!policy->keyframes && mvpLocalKeyFrames.size()>80)) break;
+            KeyFrame* k=mvpLocalKeyFrames[i];
+            for(auto n:k->GetBestCovisibilityKeyFrames(10)) if(add(n)) break;
+            auto children=k->GetChilds();vector<KeyFrame*> ordered(children.begin(),children.end());
+            sort(ordered.begin(),ordered.end(),[](KeyFrame* a,KeyFrame* b){return a->mnId<b->mnId;});
+            for(auto child:ordered) if(add(child)) break;
+            if(add(k->GetParent())) break;
+        }
+        if(!ranked.empty()) {mpReferenceKF=ranked.front().first;mCurrentFrame.mpReferenceKF=mpReferenceKF;}
+        // Interleave feature-index order from ranked keyframes, avoiding a
+        // quota filled entirely by one view. Copies/duplicates/invalid slots
+        // count as real overhead; no padding or hidden asynchronous work.
+        vector<vector<MapPoint*>> matches;
+        size_t longest=0;
+        for(auto k:mvpLocalKeyFrames) {matches.push_back(k->GetMapPointMatches());longest=std::max(longest,matches.back().size());}
+        mvpLocalMapPoints.clear();
+        if(policy->referenceFirst) {
+            std::unordered_set<MapPoint*> matched;
+            for(auto p:mCurrentFrame.mvpMapPoints) if(p && !p->isBad()) matched.insert(p);
+            const auto reference=mpReferenceKF ? mpReferenceKF->GetMapPointMatches() : vector<MapPoint*>{};
+            auto selection=SelectProjectionCandidates(reference,matches,matched,policy->points,
+                [&](MapPoint* p) {return !p->isBad() && p->mnTrackReferenceForFrame!=mCurrentFrame.mnId;});
+            mvpLocalMapPoints=std::move(selection.points);
+            for(auto p:mvpLocalMapPoints) p->mnTrackReferenceForFrame=mCurrentFrame.mnId;
+            RecordProjectionSelection(selection.referenceSelected,selection.matchedSlots);
+            RecordFixedWork(mvpLocalKeyFrames.size(),mvpLocalMapPoints.size(),selection.slots,observations);
+            return;
+        }
+        for(size_t i=0;i<longest && (!policy->points || mvpLocalMapPoints.size()<policy->points);++i) {
+            for(const auto& v:matches) {
+                if(policy->points && mvpLocalMapPoints.size()>=policy->points) break;
+                if(i>=v.size()) continue;
+                ++slots;MapPoint* p=v[i];
+                if(!p || p->isBad() || p->mnTrackReferenceForFrame==mCurrentFrame.mnId) continue;
+                mvpLocalMapPoints.push_back(p);p->mnTrackReferenceForFrame=mCurrentFrame.mnId;
+            }
+        }
+        RecordFixedWork(mvpLocalKeyFrames.size(),mvpLocalMapPoints.size(),slots,observations);
+        return;
+    }
+    // Original default path, including sensor-specific behavior, retained.
     UpdateLocalKeyFrames();
     UpdateLocalPoints();
+    RecordFixedWork(mvpLocalKeyFrames.size(),mvpLocalMapPoints.size(),0,0);
 }
 
 void Tracking::UpdateLocalPoints()

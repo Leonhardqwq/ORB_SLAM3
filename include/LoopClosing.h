@@ -60,6 +60,13 @@ public:
 
     // Main function
     void Run();
+    void ProcessRound();
+    std::vector<unsigned long> SynchronousCounts() const {
+        return {mSyncProcessed, mSyncCorrections, mSyncMerges, mSyncGBA};
+    }
+    void SetSynchronous(bool value) { mSynchronous = value; }
+    void SetManagedNoLoop(bool value) { mManagedNoLoop = value; }
+    void FinishSynchronously() { if (mSynchronous) SetFinish(); }
 
     void InsertKeyFrame(KeyFrame *pKF);
 
@@ -119,6 +126,9 @@ public:
 protected:
 
     bool CheckNewKeyFrames();
+    bool ProcessOneQueuedKeyFrame();
+    void StartGlobalBundleAdjustment(Map* map, unsigned long id);
+    void ClearSynchronousCandidates();
 
 
     //Methods to implement the new place recognition algorithm
@@ -239,6 +249,10 @@ protected:
 
     // To (de)activate LC
     bool mbActiveLC = true;
+    bool mSynchronous = false;
+    unsigned long mSyncProcessed = 0, mSyncCorrections = 0, mSyncMerges = 0, mSyncGBA = 0;
+    bool mManagedNoLoop = false;
+    std::set<std::pair<unsigned long, unsigned long>> mRegisteredWithoutLoop;
 
 #ifdef REGISTER_LOOP
     string mstrFolderLoop;

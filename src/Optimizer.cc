@@ -18,6 +18,8 @@
 
 
 #include "Optimizer.h"
+#include "TrackingDiagnostics.h"
+#include <algorithm>
 
 
 #include <complex>
@@ -277,7 +279,7 @@ void Optimizer::BundleAdjustment(const vector<KeyFrame *> &vpKFs, const vector<M
     // Optimize!
     optimizer.setVerbose(false);
     optimizer.initializeOptimization();
-    optimizer.optimize(nIterations);
+    RecordGlobalBAIterations(optimizer.optimize(nIterations));
     Verbose::PrintMess("BA: End of the optimization", Verbose::VERBOSITY_NORMAL);
 
     // Recover optimized data
@@ -1122,10 +1124,19 @@ void Optimizer::LocalBundleAdjustment(KeyFrame *pKF, bool* pbStopFlag, Map* pMap
     pKF->mnBALocalForKF = pKF->mnId;
     Map* pCurrentMap = pKF->GetMap();
 
-    const vector<KeyFrame*> vNeighKFs = pKF->GetVectorCovisibleKeyFrames();
+    const auto* work=CurrentFixedBackendPolicy();
+    vector<KeyFrame*> vNeighKFs = pKF->GetVectorCovisibleKeyFrames();
+    if(work) std::stable_sort(vNeighKFs.begin(),vNeighKFs.end(),[pKF](KeyFrame* a,KeyFrame* b) {
+        const int wa=pKF->GetWeight(a),wb=pKF->GetWeight(b);
+        return wa!=wb ? wa>wb : a->mnId<b->mnId;
+    });
     for(int i=0, iend=vNeighKFs.size(); i<iend; i++)
     {
         KeyFrame* pKFi = vNeighKFs[i];
+        if(work) {
+            if(pKFi==pKF || pKFi->isBad() || pKFi->GetMap()!=pCurrentMap) continue;
+            if(lLocalKeyFrames.size()>=work->keyframes) break;
+        }
         pKFi->mnBALocalForKF = pKF->mnId;
         if(!pKFi->isBad() && pKFi->GetMap() == pCurrentMap)
             lLocalKeyFrames.push_back(pKFi);
@@ -1159,8 +1170,25 @@ void Optimizer::LocalBundleAdjustment(KeyFrame *pKF, bool* pbStopFlag, Map* pMap
         }
     }
 
+    if(work && lLocalMapPoints.size()>work->points) {
+        // Retain strong current-frame observations first. Dropped candidates
+        // remain in the full map; only this local optimization's subset changes.
+        struct Candidate { MapPoint* point; bool current; int observations; };
+        vector<Candidate> candidates;candidates.reserve(lLocalMapPoints.size());
+        for(auto point:lLocalMapPoints)
+            candidates.push_back({point,std::get<0>(point->GetIndexInKeyFrame(pKF))>=0,point->Observations()});
+        std::sort(candidates.begin(),candidates.end(),[](const Candidate& a,const Candidate& b) {
+            if(a.current!=b.current) return a.current>b.current;
+            if(a.observations!=b.observations) return a.observations>b.observations;
+            return a.point->mnId<b.point->mnId;
+        });
+        lLocalMapPoints.clear();
+        for(unsigned i=0;i<work->points;++i) lLocalMapPoints.push_back(candidates[i].point);
+    }
+
     // Fixed Keyframes. Keyframes that see Local MapPoints but that are not Local Keyframes
     list<KeyFrame*> lFixedCameras;
+    map<KeyFrame*,unsigned> fixedSupport;
     for(list<MapPoint*>::iterator lit=lLocalMapPoints.begin(), lend=lLocalMapPoints.end(); lit!=lend; lit++)
     {
         map<KeyFrame*,tuple<int,int>> observations = (*lit)->GetObservations();
@@ -1168,6 +1196,8 @@ void Optimizer::LocalBundleAdjustment(KeyFrame *pKF, bool* pbStopFlag, Map* pMap
         {
             KeyFrame* pKFi = mit->first;
 
+            if(work && work->fixedKeyframes && pKFi->mnBALocalForKF!=pKF->mnId &&
+               !pKFi->isBad() && pKFi->GetMap()==pCurrentMap) ++fixedSupport[pKFi];
             if(pKFi->mnBALocalForKF!=pKF->mnId && pKFi->mnBAFixedForKF!=pKF->mnId )
             {                
                 pKFi->mnBAFixedForKF=pKF->mnId;
@@ -1176,10 +1206,58 @@ void Optimizer::LocalBundleAdjustment(KeyFrame *pKF, bool* pbStopFlag, Map* pMap
             }
         }
     }
+    const unsigned fixedCandidates=lFixedCameras.size();
+    const unsigned candidatePoints=lLocalMapPoints.size();
+    set<KeyFrame*> retainedCameras;
+    if(work && work->fixedKeyframes) {
+        // Prefer anchors sharing the most selected points; tie-break by stable ID.
+        // Unselected cameras and observations remain in the complete map.
+        lFixedCameras.sort([&](KeyFrame* a,KeyFrame* b) {
+            const unsigned sa=fixedSupport[a],sb=fixedSupport[b];
+            return sa!=sb ? sa>sb : a->mnId<b->mnId;
+        });
+        while(lFixedCameras.size()>work->fixedKeyframes) lFixedCameras.pop_back();
+        retainedCameras.insert(lLocalKeyFrames.begin(),lLocalKeyFrames.end());
+        retainedCameras.insert(lFixedCameras.begin(),lFixedCameras.end());
+        // Keep structural depth constraints: stereo depth or >=2 camera views.
+        // This is not a guarantee against all geometric degeneracies.
+        lLocalMapPoints.remove_if([&](MapPoint* point) {
+            unsigned views=0;bool depth=false;
+            for(KeyFrame* camera:retainedCameras) {
+                const auto indices=point->GetIndexInKeyFrame(camera);
+                const int left=get<0>(indices),right=get<1>(indices);
+                if(left>=0 || right>=0) ++views;
+                if(left>=0 && static_cast<size_t>(left)<camera->mvuRight.size() && camera->mvuRight[left]>=0) depth=true;
+                if(camera->mpCamera2 && left>=0 && right>=0) depth=true;
+            }
+            return !depth && views<2;
+        });
+        // Do not introduce an unanchored pose component after observer selection.
+        // A rejected subset leaves the full map/poses intact; diagnostics count it.
+        map<KeyFrame*,set<KeyFrame*>> neighbors;
+        for(MapPoint* point:lLocalMapPoints) {
+            KeyFrame* first=nullptr;
+            for(KeyFrame* camera:retainedCameras) {
+                const auto indices=point->GetIndexInKeyFrame(camera);
+                if(get<0>(indices)<0 && get<1>(indices)<0) continue;
+                if(!first) first=camera;
+                else { neighbors[first].insert(camera);neighbors[camera].insert(first); }
+            }
+        }
+        set<KeyFrame*> reached(lFixedCameras.begin(),lFixedCameras.end());
+        for(KeyFrame* camera:lLocalKeyFrames)
+            if(camera->mnId==pMap->GetInitKFid()) reached.insert(camera);
+        vector<KeyFrame*> queue(reached.begin(),reached.end());
+        for(size_t i=0;i<queue.size();++i)
+            for(KeyFrame* next:neighbors[queue[i]])
+                if(reached.insert(next).second) queue.push_back(next);
+        for(KeyFrame* camera:lLocalKeyFrames)
+            if(!reached.count(camera)) { RecordLocalBAAnchorRejection();return; }
+    }
     num_fixedKF = lFixedCameras.size() + num_fixedKF;
 
 
-    if(num_fixedKF == 0)
+    if(num_fixedKF == 0 || (work && work->fixedKeyframes && lLocalMapPoints.empty()))
     {
         Verbose::PrintMess("LM-LBA: There are 0 fixed KF in the optimizations, LBA aborted", Verbose::VERBOSITY_NORMAL);
         return;
@@ -1290,7 +1368,14 @@ void Optimizer::LocalBundleAdjustment(KeyFrame *pKF, bool* pbStopFlag, Map* pMap
         optimizer.addVertex(vPoint);
         nPoints++;
 
-        const map<KeyFrame*,tuple<int,int>> observations = pMP->GetObservations();
+        map<KeyFrame*,tuple<int,int>> observations;
+        if(work && work->fixedKeyframes) {
+            // Avoid constructing residual candidates for every historical observer.
+            for(KeyFrame* camera:retainedCameras) {
+                const auto indices=pMP->GetIndexInKeyFrame(camera);
+                if(get<0>(indices)>=0 || get<1>(indices)>=0) observations.emplace(camera,indices);
+            }
+        } else observations=pMP->GetObservations();
 
         //Set edges
         for(map<KeyFrame*,tuple<int,int>>::const_iterator mit=observations.begin(), mend=observations.end(); mit!=mend; mit++)
@@ -1402,6 +1487,7 @@ void Optimizer::LocalBundleAdjustment(KeyFrame *pKF, bool* pbStopFlag, Map* pMap
         }
     }
     num_edges = nEdges;
+    RecordBackendWork(lLocalKeyFrames.size(),lLocalMapPoints.size(),nEdges,lFixedCameras.size(),fixedCandidates,candidatePoints-lLocalMapPoints.size());
 
     if(pbStopFlag)
         if(*pbStopFlag)

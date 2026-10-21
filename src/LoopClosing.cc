@@ -18,6 +18,7 @@
 
 
 #include "LoopClosing.h"
+#include "TrackingDiagnostics.h"
 
 #include "Sim3Solver.h"
 #include "Converter.h"
@@ -94,6 +95,22 @@ void LoopClosing::Run()
     while(1)
     {
 
+        if (!ProcessOneQueuedKeyFrame()) continue;
+
+        ResetIfRequested();
+
+        if(CheckFinish()){
+            break;
+        }
+
+        usleep(5000);
+    }
+
+    SetFinish();
+}
+
+bool LoopClosing::ProcessOneQueuedKeyFrame()
+{
         //NEW LOOP AND MERGE DETECTION ALGORITHM
         //----------------------------
 
@@ -150,7 +167,7 @@ void LoopClosing::Run()
                                 mnMergeNumNotFound = 0;
                                 mbMergeDetected = false;
                                 Verbose::PrintMess("scale bad estimated. Abort merging", Verbose::VERBOSITY_NORMAL);
-                                continue;
+                                return false;
                             }
                             // If inertial, force only yaw
                             if ((mpTracker->mSensor==System::IMU_MONOCULAR || mpTracker->mSensor==System::IMU_STEREO || mpTracker->mSensor==System::IMU_RGBD) &&
@@ -296,23 +313,66 @@ void LoopClosing::Run()
             mpLastCurrentKF = mpCurrentKF;
         }
 
-        ResetIfRequested();
+    return true;
+}
 
-        if(CheckFinish()){
-            break;
-        }
-
-        usleep(5000);
+void LoopClosing::ProcessRound()
+{
+    if (!mSynchronous) throw std::logic_error("Synchronous loop API required");
+    {
+        unique_lock<mutex> lock(mMutexFinish);
+        if (mbFinishRequested) throw std::logic_error("Backend already closed");
+        // Run() normally performs this transition; synchronous mode has no Run thread.
+        mbFinished = false;
     }
+    if (mpThreadGBA || isRunningGBA()) throw std::logic_error("GBA escaped backend boundary");
+    while (CheckNewKeyFrames()) {
+        if (!mbActiveLC) throw std::logic_error("Inactive loop queue was not drained");
+        ProcessOneQueuedKeyFrame();
+        ++mSyncProcessed;
+    }
+    ResetIfRequested();
+    if (mpThreadGBA || isRunningGBA() || !isFinishedGBA())
+        throw std::logic_error("GBA escaped backend boundary");
+}
 
-    SetFinish();
+void LoopClosing::StartGlobalBundleAdjustment(Map* map, unsigned long id)
+{
+    if (mSynchronous) {
+        RunGlobalBundleAdjustment(map, id);
+        if (isRunningGBA() || !isFinishedGBA())
+            throw std::logic_error("Synchronous GBA did not finish");
+        ++mSyncGBA;
+    } else mpThreadGBA = new thread(&LoopClosing::RunGlobalBundleAdjustment, this, map, id);
+}
+
+void LoopClosing::ClearSynchronousCandidates()
+{
+    // Reset is called on the owner before Tracking clears/replaces its map.
+    std::set<KeyFrame*> pinned;
+    if (mnLoopNumCoincidences) { pinned.insert(mpLoopLastCurrentKF); pinned.insert(mpLoopMatchedKF); }
+    if (mnMergeNumCoincidences) { pinned.insert(mpMergeLastCurrentKF); pinned.insert(mpMergeMatchedKF); }
+    for (auto k : pinned) if (k) { k->mbCurrentPlaceRecognition = false; k->SetErase(); }
+    mpLastCurrentKF = nullptr;
+    mpLoopLastCurrentKF = mpLoopMatchedKF = nullptr;
+    mpMergeLastCurrentKF = mpMergeMatchedKF = nullptr;
+    mnLoopNumCoincidences = mnMergeNumCoincidences = 0;
+    mnLoopNumNotFound = mnMergeNumNotFound = 0;
+    mbLoopDetected = mbMergeDetected = false;
+    mvpLoopMatchedMPs.clear(); mvpLoopMPs.clear();
+    mvpMergeMatchedMPs.clear(); mvpMergeMPs.clear();
 }
 
 void LoopClosing::InsertKeyFrame(KeyFrame *pKF)
 {
     unique_lock<mutex> lock(mMutexLoopQueue);
-    if(pKF->mnId!=0)
-        mlpLoopKeyFrameQueue.push_back(pKF);
+    if(pKF->mnId!=0) {
+        if (!mbActiveLC && mManagedNoLoop) {
+            // No unattended loop queue. Preserve relocalization's BoW database.
+            const auto identity = std::make_pair(pKF->GetMap()->GetId(), pKF->mnId);
+            if (mRegisteredWithoutLoop.insert(identity).second) mpKeyFrameDB->add(pKF);
+        } else mlpLoopKeyFrameQueue.push_back(pKF);
+    }
 }
 
 bool LoopClosing::CheckNewKeyFrames()
@@ -968,11 +1028,12 @@ int LoopClosing::FindMatchesByProjection(KeyFrame* pCurrentKF, KeyFrame* pMatche
 
 void LoopClosing::CorrectLoop()
 {
+    if (mSynchronous) ++mSyncCorrections;
     //cout << "Loop detected!" << endl;
 
     // Send a stop signal to Local Mapping
     // Avoid new keyframes are inserted while correcting the loop
-    mpLocalMapper->RequestStop();
+    mpLocalMapper->StopForLoopCorrection();
     mpLocalMapper->EmptyQueue(); // Proccess keyframes in the queue
 
     // If a Global Bundle Adjustment is running, abort it
@@ -1203,7 +1264,7 @@ void LoopClosing::CorrectLoop()
         mbStopGBA = false;
         mnCorrectionGBA = mnNumCorrection;
 
-        mpThreadGBA = new thread(&LoopClosing::RunGlobalBundleAdjustment, this, pLoopMap, mpCurrentKF->mnId);
+        StartGlobalBundleAdjustment(pLoopMap, mpCurrentKF->mnId);
     }
 
     // Loop closed. Release Local Mapping.
@@ -1214,6 +1275,7 @@ void LoopClosing::CorrectLoop()
 
 void LoopClosing::MergeLocal()
 {
+    if (mSynchronous) ++mSyncMerges;
     int numTemporalKFs = 25; //Temporal KFs in the local window if the map is inertial.
 
     //Relationship to rebuild the essential graph, it is used two times, first in the local window and later in the rest of the map
@@ -1245,7 +1307,7 @@ void LoopClosing::MergeLocal()
 
     //Verbose::PrintMess("MERGE-VISUAL: Request Stop Local Mapping", Verbose::VERBOSITY_DEBUG);
     //cout << "Request Stop Local Mapping" << endl;
-    mpLocalMapper->RequestStop();
+    mpLocalMapper->StopForLoopCorrection();
     // Wait until Local Mapping has effectively stopped
     while(!mpLocalMapper->isStopped())
     {
@@ -1704,7 +1766,7 @@ void LoopClosing::MergeLocal()
             }
         }
 
-        mpLocalMapper->RequestStop();
+        mpLocalMapper->StopForLoopCorrection();
         // Wait until Local Mapping has effectively stopped
         while(!mpLocalMapper->isStopped())
         {
@@ -1766,7 +1828,7 @@ void LoopClosing::MergeLocal()
         mbRunningGBA = true;
         mbFinishedGBA = false;
         mbStopGBA = false;
-        mpThreadGBA = new thread(&LoopClosing::RunGlobalBundleAdjustment,this, pMergeMap, mpCurrentKF->mnId);
+        StartGlobalBundleAdjustment(pMergeMap, mpCurrentKF->mnId);
     }
 
     mpMergeMatchedKF->AddMergeEdge(mpCurrentKF);
@@ -1818,7 +1880,7 @@ void LoopClosing::MergeLocal2()
 
 
     //cout << "Request Stop Local Mapping" << endl;
-    mpLocalMapper->RequestStop();
+    mpLocalMapper->StopForLoopCorrection();
     // Wait until Local Mapping has effectively stopped
     while(!mpLocalMapper->isStopped())
     {
@@ -2204,6 +2266,8 @@ void LoopClosing::RequestReset()
         mbResetRequested = true;
     }
 
+    if (mSynchronous) { ResetIfRequested(); return; }
+
     while(1)
     {
         {
@@ -2223,6 +2287,8 @@ void LoopClosing::RequestResetActiveMap(Map *pMap)
         mpMapToReset = pMap;
     }
 
+    if (mSynchronous) { ResetIfRequested(); return; }
+
     while(1)
     {
         {
@@ -2237,10 +2303,15 @@ void LoopClosing::RequestResetActiveMap(Map *pMap)
 void LoopClosing::ResetIfRequested()
 {
     unique_lock<mutex> lock(mMutexReset);
+    if (mSynchronous && (mbResetRequested || mbResetActiveMapRequested)) ClearSynchronousCandidates();
     if(mbResetRequested)
     {
         cout << "Loop closer reset requested..." << endl;
         mlpLoopKeyFrameQueue.clear();
+        {
+            unique_lock<mutex> queueLock(mMutexLoopQueue);
+            mRegisteredWithoutLoop.clear();
+        }
         mLastLoopKFid=0;  //TODO old variable, it is not use in the new algorithm
         mbResetRequested=false;
         mbResetActiveMapRequested = false;
@@ -2259,6 +2330,13 @@ void LoopClosing::ResetIfRequested()
                 ++it;
         }
 
+        {
+            unique_lock<mutex> queueLock(mMutexLoopQueue);
+            for (auto it = mRegisteredWithoutLoop.begin(); it != mRegisteredWithoutLoop.end();) {
+                if (it->first == mpMapToReset->GetId()) it = mRegisteredWithoutLoop.erase(it);
+                else ++it;
+            }
+        }
         mLastLoopKFid=mpAtlas->GetLastInitKFid(); //TODO old variable, it is not use in the new algorithm
         mbResetActiveMapRequested=false;
 
@@ -2280,9 +2358,12 @@ void LoopClosing::RunGlobalBundleAdjustment(Map* pActiveMap, unsigned long nLoop
 
     const bool bImuInit = pActiveMap->isImuInitialized();
 
-    if(!bImuInit)
-        Optimizer::GlobalBundleAdjustemnt(pActiveMap,10,&mbStopGBA,nLoopKF,false);
-    else
+    if(!bImuInit) {
+        const auto* policy=CurrentFixedBackendPolicy();
+        const unsigned iterations=policy && policy->globalIterations ? policy->globalIterations : 10;
+        ScopedGlobalBAOptimization measure(iterations);
+        Optimizer::GlobalBundleAdjustemnt(pActiveMap,iterations,&mbStopGBA,nLoopKF,false);
+    } else
         Optimizer::FullInertialBA(pActiveMap,7,false,nLoopKF,&mbStopGBA);
 
 #ifdef REGISTER_TIMES
@@ -2317,7 +2398,7 @@ void LoopClosing::RunGlobalBundleAdjustment(Map* pActiveMap, unsigned long nLoop
             Verbose::PrintMess("Global Bundle Adjustment finished", Verbose::VERBOSITY_NORMAL);
             Verbose::PrintMess("Updating map ...", Verbose::VERBOSITY_NORMAL);
 
-            mpLocalMapper->RequestStop();
+            mpLocalMapper->StopForLoopCorrection();
             // Wait until Local Mapping has effectively stopped
 
             while(!mpLocalMapper->isStopped() && !mpLocalMapper->isFinished())

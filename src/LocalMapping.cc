@@ -1,3 +1,4 @@
+#include <algorithm>
 /**
 * This file is part of ORB-SLAM3
 *
@@ -18,6 +19,7 @@
 
 
 #include "LocalMapping.h"
+#include "TrackingDiagnostics.h"
 #include "LoopClosing.h"
 #include "ORBmatcher.h"
 #include "Optimizer.h"
@@ -26,6 +28,7 @@
 
 #include<mutex>
 #include<chrono>
+#include<stdexcept>
 
 namespace ORB_SLAM3
 {
@@ -73,6 +76,35 @@ void LocalMapping::Run()
         // Check if there are keyframes in the queue
         if(CheckNewKeyFrames() && !mbBadImu)
         {
+            ProcessOneKeyFrame();
+        }
+        else if(Stop() && !mbBadImu)
+        {
+            // Safe area to stop
+            while(isStopped() && !CheckFinish())
+            {
+                usleep(3000);
+            }
+            if(CheckFinish())
+                break;
+        }
+
+        ResetIfRequested();
+
+        // Tracking will see that Local Mapping is busy
+        SetAcceptKeyFrames(true);
+
+        if(CheckFinish())
+            break;
+
+        usleep(3000);
+    }
+
+    SetFinish();
+}
+
+void LocalMapping::ProcessOneKeyFrame()
+{
 #ifdef REGISTER_TIMES
             double timeLBA_ms = 0;
             double timeKFCulling_ms = 0;
@@ -80,7 +112,7 @@ void LocalMapping::Run()
             std::chrono::steady_clock::time_point time_StartProcessKF = std::chrono::steady_clock::now();
 #endif
             // BoW conversion and insertion in Map
-            ProcessNewKeyFrame();
+            { ScopedBackendStage stage(BackendStage::Insert); ProcessNewKeyFrame(); }
 #ifdef REGISTER_TIMES
             std::chrono::steady_clock::time_point time_EndProcessKF = std::chrono::steady_clock::now();
 
@@ -89,7 +121,7 @@ void LocalMapping::Run()
 #endif
 
             // Check recent MapPoints
-            MapPointCulling();
+            { ScopedBackendStage stage(BackendStage::CullPoints); MapPointCulling(); }
 #ifdef REGISTER_TIMES
             std::chrono::steady_clock::time_point time_EndMPCulling = std::chrono::steady_clock::now();
 
@@ -98,14 +130,14 @@ void LocalMapping::Run()
 #endif
 
             // Triangulate new MapPoints
-            CreateNewMapPoints();
+            { ScopedBackendStage stage(BackendStage::CreatePoints); CreateNewMapPoints(); }
 
             mbAbortBA = false;
 
             if(!CheckNewKeyFrames())
             {
                 // Find more matches in neighbor keyframes and fuse point duplications
-                SearchInNeighbors();
+                { ScopedBackendStage stage(BackendStage::Fuse); SearchInNeighbors(); }
             }
 
 #ifdef REGISTER_TIMES
@@ -151,7 +183,7 @@ void LocalMapping::Run()
                     }
                     else
                     {
-                        Optimizer::LocalBundleAdjustment(mpCurrentKeyFrame,&mbAbortBA, mpCurrentKeyFrame->GetMap(),num_FixedKF_BA,num_OptKF_BA,num_MPs_BA,num_edges_BA);
+                        { ScopedBackendStage stage(BackendStage::LocalBA); Optimizer::LocalBundleAdjustment(mpCurrentKeyFrame,&mbAbortBA, mpCurrentKeyFrame->GetMap(),num_FixedKF_BA,num_OptKF_BA,num_MPs_BA,num_edges_BA); }
                         b_doneLBA = true;
                     }
 
@@ -188,7 +220,7 @@ void LocalMapping::Run()
 
 
                 // Check redundant local Keyframes
-                KeyFrameCulling();
+                { ScopedBackendStage stage(BackendStage::CullKeyframes); KeyFrameCulling(); }
 
 #ifdef REGISTER_TIMES
                 std::chrono::steady_clock::time_point time_EndKFCulling = std::chrono::steady_clock::now();
@@ -255,30 +287,42 @@ void LocalMapping::Run()
             double timeLocalMap = std::chrono::duration_cast<std::chrono::duration<double,std::milli> >(time_EndLocalMap - time_StartProcessKF).count();
             vdLMTotal_ms.push_back(timeLocalMap);
 #endif
-        }
-        else if(Stop() && !mbBadImu)
-        {
-            // Safe area to stop
-            while(isStopped() && !CheckFinish())
-            {
-                usleep(3000);
-            }
-            if(CheckFinish())
-                break;
-        }
+}
 
-        ResetIfRequested();
-
-        // Tracking will see that Local Mapping is busy
-        SetAcceptKeyFrames(true);
-
-        if(CheckFinish())
-            break;
-
-        usleep(3000);
+std::vector<unsigned long> LocalMapping::ProcessRound(unsigned long sourceFrame)
+{
+    if (!mSynchronous) throw std::logic_error("ProcessRound requires synchronous mapper");
+    {
+        unique_lock<mutex> lock(mMutexFinish);
+        if (mbFinishRequested) throw std::logic_error("Backend already closed");
+        // Run() normally performs this transition; synchronous mode has no Run thread.
+        mbFinished = false;
     }
-
-    SetFinish();
+    if (mProcessingRound || isStopped()) throw std::logic_error("Mapper is not ready");
+    mProcessingRound = true;
+    // Any exception faults System; there is no subsequent usable round.
+    std::vector<unsigned long> ids;
+    const int count = KeyframesInQueue();
+    SetAcceptKeyFrames(false);
+    for (int i = 0; i < count; ++i) {
+        unsigned long id, mapId;
+        {
+            unique_lock<mutex> lock(mMutexNewKFs);
+            if (mlNewKeyFrames.empty()) throw std::logic_error("Missing keyframe");
+            auto key = mlNewKeyFrames.front();
+            if (key->mnFrameId != sourceFrame) throw std::logic_error("Keyframe crossed a round boundary");
+            id = key->mnId; mapId = key->GetMap()->GetId();
+        }
+        if (!mProcessedFixed.insert(std::make_pair(mapId, id)).second)
+            throw std::logic_error("Repeated keyframe processing");
+        ProcessOneKeyFrame();
+        ids.push_back(id);
+    }
+    if (KeyframesInQueue() != 0) throw std::logic_error("Unexpected concurrent keyframe insertion");
+    ResetIfRequested();
+    SetAcceptKeyFrames(true);
+    mProcessingRound = false;
+    return ids;
 }
 
 void LocalMapping::InsertKeyFrame(KeyFrame *pKF)
@@ -713,6 +757,8 @@ void LocalMapping::CreateNewMapPoints()
 
 void LocalMapping::SearchInNeighbors()
 {
+    const auto* work=CurrentFixedBackendPolicy();
+    const unsigned targetLimit=work && !mbInertial ? work->maintenanceKeyframes : 0;
     // Retrieve neighbor keyframes
     int nn = 10;
     if(mbMonocular)
@@ -724,6 +770,7 @@ void LocalMapping::SearchInNeighbors()
         KeyFrame* pKFi = *vit;
         if(pKFi->isBad() || pKFi->mnFuseTargetForKF == mpCurrentKeyFrame->mnId)
             continue;
+        if(targetLimit && vpTargetKFs.size()>=targetLimit) break;
         vpTargetKFs.push_back(pKFi);
         pKFi->mnFuseTargetForKF = mpCurrentKeyFrame->mnId;
     }
@@ -732,12 +779,14 @@ void LocalMapping::SearchInNeighbors()
     // Extend to some second neighbors if abort is not requested
     for(int i=0, imax=vpTargetKFs.size(); i<imax; i++)
     {
+        if(targetLimit && vpTargetKFs.size()>=targetLimit) break;
         const vector<KeyFrame*> vpSecondNeighKFs = vpTargetKFs[i]->GetBestCovisibilityKeyFrames(20);
         for(vector<KeyFrame*>::const_iterator vit2=vpSecondNeighKFs.begin(), vend2=vpSecondNeighKFs.end(); vit2!=vend2; vit2++)
         {
             KeyFrame* pKFi2 = *vit2;
             if(pKFi2->isBad() || pKFi2->mnFuseTargetForKF==mpCurrentKeyFrame->mnId || pKFi2->mnId==mpCurrentKeyFrame->mnId)
                 continue;
+            if(targetLimit && vpTargetKFs.size()>=targetLimit) break;
             vpTargetKFs.push_back(pKFi2);
             pKFi2->mnFuseTargetForKF=mpCurrentKeyFrame->mnId;
         }
@@ -762,6 +811,7 @@ void LocalMapping::SearchInNeighbors()
         }
     }
 
+    RecordBackendMaintenance(vpTargetKFs.size(),0,0);
     // Search matches by projection from current KF in target KFs
     ORBmatcher matcher;
     vector<MapPoint*> vpMapPointMatches = mpCurrentKeyFrame->GetMapPointMatches();
@@ -820,6 +870,15 @@ void LocalMapping::SearchInNeighbors()
 
     // Update connections in covisibility graph
     mpCurrentKeyFrame->UpdateConnections();
+}
+
+void LocalMapping::StopForLoopCorrection()
+{
+    if (mSynchronous && (mProcessingRound || KeyframesInQueue() != 0))
+        throw std::logic_error("Synchronous loop requires an idle, empty mapper");
+    RequestStop();
+    if (mSynchronous && !Stop())
+        throw std::logic_error("Synchronous mapper could not stop at boundary");
 }
 
 void LocalMapping::RequestStop()
@@ -908,6 +967,25 @@ void LocalMapping::KeyFrameCulling()
     const int Nd = 21;
     mpCurrentKeyFrame->UpdateBestCovisibles();
     vector<KeyFrame*> vpLocalKeyFrames = mpCurrentKeyFrame->GetVectorCovisibleKeyFrames();
+    const auto* work=CurrentFixedBackendPolicy();
+    const unsigned cullLimit=work && !mbInertial ? work->maintenanceKeyframes : 0;
+    const auto candidates=vpLocalKeyFrames.size();
+    if(cullLimit) {
+        vpLocalKeyFrames.erase(std::remove_if(vpLocalKeyFrames.begin(),vpLocalKeyFrames.end(),[](KeyFrame* k) {
+            return k->isBad() || k->mnId==k->GetMap()->GetInitKFid();
+        }),vpLocalKeyFrames.end());
+        std::sort(vpLocalKeyFrames.begin(),vpLocalKeyFrames.end(),[](KeyFrame* a,KeyFrame* b) {return a->mnId<b->mnId;});
+        if(mFixedCullCursorValid) {
+            auto next=std::upper_bound(vpLocalKeyFrames.begin(),vpLocalKeyFrames.end(),mFixedCullCursor,
+                [](unsigned long id,KeyFrame* k) {return id<k->mnId;});
+            std::rotate(vpLocalKeyFrames.begin(),next,vpLocalKeyFrames.end());
+        }
+        if(vpLocalKeyFrames.size()>cullLimit) vpLocalKeyFrames.resize(cullLimit);
+        if(!vpLocalKeyFrames.empty()) {
+            mFixedCullCursor=vpLocalKeyFrames.back()->mnId;mFixedCullCursorValid=true;
+        }
+    }
+    RecordBackendMaintenance(0,candidates,vpLocalKeyFrames.size());
 
     float redundant_th;
     if(!mbInertial)
@@ -1062,6 +1140,8 @@ void LocalMapping::RequestReset()
     }
     cout << "LM: Map reset, waiting..." << endl;
 
+    if (mSynchronous) { mProcessedFixed.clear(); ResetIfRequested(); return; }
+
     while(1)
     {
         {
@@ -1083,6 +1163,8 @@ void LocalMapping::RequestResetActiveMap(Map* pMap)
         mpMapToReset = pMap;
     }
     cout << "LM: Active map reset, waiting..." << endl;
+
+    if (mSynchronous) { mProcessedFixed.clear(); ResetIfRequested(); return; }
 
     while(1)
     {

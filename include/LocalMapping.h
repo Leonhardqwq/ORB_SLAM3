@@ -50,12 +50,16 @@ public:
 
     // Main function
     void Run();
+    void SetSynchronous(bool value) { mSynchronous = value; }
+    void FinishSynchronously() { if (mSynchronous) SetFinish(); }
+    std::vector<unsigned long> ProcessRound(unsigned long sourceFrame);
 
     void InsertKeyFrame(KeyFrame* pKF);
     void EmptyQueue();
 
     // Thread Synch
     void RequestStop();
+    void StopForLoopCorrection();
     void RequestReset();
     void RequestResetActiveMap(Map* pMap);
     bool Stop();
@@ -130,6 +134,10 @@ public:
     int nLBA_abort;
 #endif
 protected:
+    bool mSynchronous = false;
+    bool mProcessingRound = false;
+    std::set<std::pair<unsigned long, unsigned long>> mProcessedFixed;
+    void ProcessOneKeyFrame();
 
     bool CheckNewKeyFrames();
     void ProcessNewKeyFrame();
@@ -164,6 +172,9 @@ protected:
     std::list<KeyFrame*> mlNewKeyFrames;
 
     KeyFrame* mpCurrentKeyFrame;
+    // IDs, never pointers: safe across active/full resets and map changes.
+    unsigned long mFixedCullCursor=0;
+    bool mFixedCullCursorValid=false;
 
     std::list<MapPoint*> mlpRecentAddedMapPoints;
 

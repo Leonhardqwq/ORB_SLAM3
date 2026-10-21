@@ -380,6 +380,11 @@ void Viewer::Run()
             break;
     }
 
+    // Destroy the windows on their owning render thread. Leaving the Pangolin
+    // context in the global registry defers GL/X11 destruction to process exit,
+    // after the render thread has gone away (observed crash with Mesa/Xvfb).
+    cv::destroyWindow("ORB-SLAM3: Current Frame");
+    pangolin::DestroyWindow("ORB-SLAM3: Map Viewer");
     SetFinish();
 }
 

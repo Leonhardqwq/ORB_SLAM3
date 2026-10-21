@@ -60,6 +60,8 @@
 #include <iostream>
 
 #include "ORBextractor.h"
+#include "TrackingDiagnostics.h"
+#include "FixedExtractionBudget.h"
 
 
 using namespace cv;
@@ -782,6 +784,9 @@ namespace ORB_SLAM3
     {
         allKeypoints.resize(nlevels);
 
+        const auto* fixedPolicy=CurrentFixedWorkPolicy();
+        const unsigned cellCap=fixedPolicy ? fixedPolicy->extractionCellCandidates : 0;
+        uint64_t cells=0,candidates=0,retained=0,capped=0,maximum=0;
         const float W = 35;
 
         for (int level = 0; level < nlevels; ++level)
@@ -858,6 +863,12 @@ namespace ORB_SLAM3
                         }*/
                     }
 
+                    if(fixedPolicy) {
+                        ++cells;candidates+=vKeysCell.size();
+                        if(cellCap && vKeysCell.size()>cellCap) ++capped;
+                        LimitExtractionCell(vKeysCell,cellCap);
+                        retained+=vKeysCell.size();maximum=std::max(maximum,uint64_t(vKeysCell.size()));
+                    }
                     if(!vKeysCell.empty())
                     {
                         for(vector<cv::KeyPoint>::iterator vit=vKeysCell.begin(); vit!=vKeysCell.end();vit++)
@@ -890,6 +901,7 @@ namespace ORB_SLAM3
             }
         }
 
+        if(fixedPolicy) RecordExtractionWork(cells,candidates,retained,capped,maximum);
         // compute orientations
         for (int level = 0; level < nlevels; ++level)
             computeOrientation(mvImagePyramid[level], allKeypoints[level], umax);
