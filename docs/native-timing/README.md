@@ -1,6 +1,6 @@
 # 原生 KITTI 时延实验入口
 
-本工具仅链接原生 ORB-SLAM3 库，增加外部回放与观测；不修改 Tracking、LocalMapping、LoopClosing。基线为 `4452a3c4ab75b1cde34e5505a36ec3f9edcdc4c4`，工作分支为 `research/native-timing`。协议和研究结果位于相邻 refer-papers 仓库的 `manuscripts/reliability-study/projects/native-slam-timing/experiments/orb-slam3/native-timing/`。
+普通回放工具链接原生 ORB-SLAM3 库，增加外部回放与观测。内部观测工具只在独立源码副本中插入探针，保留 Tracking、LocalMapping、LoopClosing 的算法与调度语义。基线为 `4452a3c4ab75b1cde34e5505a36ec3f9edcdc4c4`，工作分支为 `research/native-timing`。协议和研究结果位于相邻 refer-papers 仓库的 `manuscripts/reliability-study/projects/native-slam-timing/experiments/orb-slam3/native-timing/`。
 
 KITTI 的 Rectified 配置触发上游设置打印缺陷：访问未创建的第二相机对象。随附 `rectified-settings-print.patch` 只跳过这项不适用的打印；数据标定、算法和调度不变。首次失败预跑留在 `pilot/`，修复后的检查用 `--phase pilot --attempt 2`。
 
@@ -83,6 +83,71 @@ ATE 只做 SE(3) 对齐、不拟合尺度。状态回到初始化后另划地图
 
 ## 历史工具的适用范围
 
-本次收录的脚本保留了 2026-10-27、10-29 实验使用的版本。`run_trace_batch.py` 固定使用 `trace-2026-10-29/`、01/05/07 各三次、07 预跑与三组开关对照；它读取并冻结协议，但任务参数并非由协议驱动。此版本用于追溯历史运行，不应用于启动新批次，也不应据其退出码判定事件记录完整。后续批次管理修复单独提交，不改写历史工具快照或实验结果。
+提交 `5382b1dae8b11aeaa50ce107f8c5ff38164a3370` 保存了 2026-10-27、10-29 实验使用的工具。该提交的旧 `run_trace_batch.py` 固定使用 `trace-2026-10-29/`、01/05/07 各三次、07 预跑与三组开关对照；它读取并冻结协议，但任务参数并非由协议驱动。此版本用于追溯历史运行，不应用于启动新批次，也不应据其退出码判定事件记录完整。当前版本已修复观测批次管理，见下一节；历史提交和实验结果保留。`run_batch.py` 仍为首批历史工具，本轮没有扩展其运行管理。
 
 `plot_results.py` 是首批 01/05/07、五次重复及 100/200/500 ms 门槛的专用绘图入口；调整研究设置时需要另行核对分析和图表，不能仅替换输入目录。
+
+
+## 新的内部观测批次
+
+当前 `run_trace_batch.py` 要求显式传入 `--work`，不再默认写入旧 `trace-2026-10-29`。`--root` 指向含 `data/kitti` 的原生运行根，`--work` 指向本批构建目录，内含 `source-v2`、`observer/native_kitti`，输出位于其 `runs/<phase>/`。两者均在启动时转为绝对路径。
+
+协议沿用论文侧 `extended-analysis-2026-10-29.json` 的结构。新批次先复制为新协议文件并改 `batch` 标识；`batch` 用于记录，实际目录由 `--work` 决定。`instrumentation_plan` 中下列参数实际驱动任务：
+
+| 参数 | 执行含义 |
+| --- | --- |
+| `sequences`、`repetitions` | 正式阶段的序列与每序列重复次数 |
+| `pilot_frames`、`pilot_sequence` | 预跑帧数与序列；序列默认采用 `overhead_sequence` |
+| `overhead_sequence`、`overhead_frames`、`overhead_pairs` | 记录开关对照的序列、帧数与配对数；每对交替开关顺序 |
+| `formal_frames` | 正式运行帧数上限；默认 0 表示完整序列 |
+| `seed` | 每个重复块内序列顺序的随机种子，默认 20261029 |
+| `timeout_seconds`、`pause_seconds` | 每次启动至退出的超时阈值、相邻尝试间隔；默认 1800 与 5 秒 |
+
+`retain_native_scheduling` 必须为 `true`；`playback` 只接受 `periodic` 或历史写法 `periodic, original KITTI timestamps`。回放固定为灰度双目、完整观测、关闭 Viewer，不清缓存、不主动等待后台排空。`record`、`outputs`、`topology_focus` 是说明文字，不动态开关探针；实际事件集合仍由 `prepare_trace.py` 决定。其他未知执行字段会被拒绝。序列 00–02、03、04–12 分别选择对应的上游配置；是否已下载所选数据需另行核对。
+
+下面是 Linux/WSL 的构建与运行模板。使用新的空目录和协议副本；`NATIVE_ROOT/source` 应是前文准备好的兼容修复基线。
+
+```bash
+ORB_TOOLS="$ORB_REPO/tools/native-timing"
+TRACE_WORK="$NATIVE_ROOT/trace-new-batch"  # 改为本次独立批次目录
+NEW_PROTOCOL="/absolute/path/to/new-trace-protocol.json"
+# 从论文侧配置复制到 NEW_PROTOCOL，修改 batch 和实际采样参数后继续。
+python3 "$ORB_TOOLS/prepare_trace.py" --base "$NATIVE_ROOT/source" --output "$TRACE_WORK/source-v2"
+cmake -S "$TRACE_WORK/source-v2" -B "$TRACE_WORK/build" -DCMAKE_BUILD_TYPE=Release -DPangolin_DIR="$PANGOLIN_CONFIG"
+cmake --build "$TRACE_WORK/build" --target ORB_SLAM3 -j2
+cmake -S "$TRACE_WORK/tools" -B "$TRACE_WORK/observer" -DORB_SOURCE="$TRACE_WORK/source-v2" -DCMAKE_BUILD_TYPE=Release -DPangolin_DIR="$PANGOLIN_CONFIG"
+cmake --build "$TRACE_WORK/observer" -j2
+python3 "$ORB_TOOLS/run_trace_batch.py" --root "$NATIVE_ROOT" --work "$TRACE_WORK" --phase pilot --protocol "$NEW_PROTOCOL"
+python3 "$ORB_TOOLS/run_trace_batch.py" --root "$NATIVE_ROOT" --work "$TRACE_WORK" --phase overhead --protocol "$NEW_PROTOCOL"
+# 检查预跑与观测开销后，再启动正式阶段。
+python3 "$ORB_TOOLS/run_trace_batch.py" --root "$NATIVE_ROOT" --work "$TRACE_WORK" --phase formal --protocol "$NEW_PROTOCOL"
+```
+
+每阶段冻结完整协议、实际执行参数、任务列表、绝对路径，以及程序、库、词袋、对应配置、时间戳和运行脚本的 SHA256。图像内容仍依赖已有下载清单，本次不逐图重新计算哈希。新格式不会接管旧格式冻结目录；续跑时任何冻结项变化都会拒绝，失败记录不被覆盖或重跑。已经存在但缺少完整元数据的运行目录也不会覆盖。
+
+`completed` 要求退出码为 0、帧表数量及时间边界有效、`runner.json` 完成信息一致；开启观测时还要求事件 CSV 结构有效、存在时钟原点和对应数量的帧身份记录、每个输入帧各有一个先后有效的调用起止事件。这只验证记录完整性，不等于定位质量通过，也不检验所有内部事件的语义。后台未闭合区间可以是正常退出时的删失，保留在原数据中。
+
+启动失败记录为 `start_error`，非零退出为 `execution_error`，缺失或损坏输出为 `output_error`，超时为 `timeout`，可捕获中断为 `interrupted`。异常信息、已产生的帧数和日志均保留；结果以临时文件加替换的方式写入。超时先终止进程组，5 秒后仍未退出则强制结束并回收。Ctrl+C 或 SIGTERM 会尝试收尾；断电、SIGKILL 等不可捕获中断仍可能留下 `running`，需人工检查进程和日志，再使用新目录重试，不能直接改成成功。
+
+`finished.json` 列出计划数、已读取／执行的尝试数、各状态计数和 `all_completed`，文件存在本身不代表全部成功。批次含失败时返回非零；中断返回 130。新运行脚本从 Linux/WSL 启动，Windows 仅运行可移植的管理逻辑测试。
+
+恢复旧工具可从历史提交导出到一个新建空目录，不切换当前工作分支：
+
+```bash
+HIST_TOOLS="/absolute/path/to/new-historical-tools"
+mkdir -p "$HIST_TOOLS"
+git -C "$ORB_REPO" archive 5382b1dae8b11aeaa50ce107f8c5ff38164a3370 tools/native-timing docs/native-timing AGENTS.md | tar -x -C "$HIST_TOOLS"
+```
+
+历史归档的恢复和复算仍按论文侧结果说明执行；不要用当前 runner 续写历史冻结批次。
+
+## 本次管理修复检查（2026-11-07）
+
+从仓库根执行 `python -B tools/native-timing/test_run_trace_batch.py -v`（Linux 使用 `python3`）。只依赖标准库，以临时目录和短 Python 子进程检查：协议驱动任务、配置选择、冻结输入与拒绝覆盖、正常输出、跟踪丢失和后台删失保留、缺帧／缺完成信息／缺事件、坏事件记录、非零退出、启动失败、超时回收、中断收尾和失败批次汇总。
+
+- Windows Python 3.13.13：16 项中 15 项通过，1 项 POSIX 专用测试跳过。
+- WSL2 Ubuntu 22.04 / Python 3.10.12：16 项全部通过，包括进程忽略 SIGTERM 后的强制终止。
+- 只读检查旧 `trace-2026-10-29/runs` 的 16 次运行（9 次正式、6 次开关对照、1 次预跑），均通过新输出校验；未修改这些记录。
+- 历史工具在独立提交中保留；六个原有 Python 脚本语法、迁移后的证据链接及补丁对应关系已检查。
+
+本次没有重新编译或运行 ORB-SLAM3，也没有重算时延研究结果；以上是批次管理逻辑与既有记录兼容性的检查。
