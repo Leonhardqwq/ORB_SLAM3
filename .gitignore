@@ -91,3 +91,8 @@ my_settings.txt
 borrar/*
 
 */ExecMean.txt
+
+# Native timing: tools and compact evidence are tracked; local outputs are not.
+/tools/native-timing/__pycache__/
+/tools/native-timing/.venv/
+/output/native-timing/
